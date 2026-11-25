@@ -49,11 +49,17 @@ public class InputConfirmMulligan extends InputSyncronizedBase {
     private final CardCollection selected = new CardCollection();
     private final Player player;
     private final Player startingPlayer;
+    private final int cardsToReturn;
 
     public InputConfirmMulligan(final PlayerControllerHuman controller, final Player humanPlayer, final Player startsGame) {
+        this(controller, humanPlayer, startsGame, 0);
+    }
+
+    public InputConfirmMulligan(final PlayerControllerHuman controller, final Player humanPlayer, final Player startsGame, final int cardsToReturn) {
         super(controller);
         player = humanPlayer;
         startingPlayer = startsGame;
+        this.cardsToReturn = cardsToReturn;
     }
 
     /** {@inheritDoc} */
@@ -73,6 +79,9 @@ public class InputConfirmMulligan extends InputSyncronizedBase {
 
         getController().getGui().updateButtons(getOwner(), localizer.getMessage("lblKeep"), localizer.getMessage("lblMulligan"), true, true, true);
         sb.append(localizer.getMessage("lblDoYouWantToKeepYourHand"));
+        if (cardsToReturn > 0) {
+            sb.append("\n").append(String.format(localizer.getMessage("lblKeepThenReturnForLondon"), cardsToReturn));
+        }
 
         showMessage(sb.toString());
     }

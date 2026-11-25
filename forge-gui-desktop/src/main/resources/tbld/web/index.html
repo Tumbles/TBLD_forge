@@ -19,6 +19,8 @@
   .cards { display: flex; flex-wrap: wrap; gap: 4px; }
   .card { background: #353842; border: 1px solid #555; border-radius: 4px; padding: 4px 6px; cursor: pointer; max-width: 220px; }
   .card:hover { border-color: #8cf; }
+  .card.selectable { border-color: #6a6; }
+  .card.chosen { border-color: #fc6; box-shadow: 0 0 0 2px #fc6; }
   .card.tapped { opacity: 0.55; font-style: italic; }
   .card .name { font-weight: 600; }
   .card .meta { color: #aaa; font-size: 0.85em; }
@@ -28,6 +30,8 @@
   #dialog { display: none; border: 1px solid #fc6; }
   #dialog .opt { display: block; margin: 3px 0; }
   #stack .item { cursor: pointer; margin: 2px 0; }
+  #restart { float: right; font-size: 0.85em; }
+  #chosen { display: none; }
   #log { flex: 1; overflow-y: auto; font-size: 0.85em; color: #aaa; }
   #tip { position: fixed; pointer-events: none; background: #111; border: 1px solid #666; padding: 6px; max-width: 280px; white-space: pre-wrap; display: none; z-index: 10; }
 </style>
@@ -41,8 +45,9 @@
 <div id="game">
   <div id="board"></div>
   <div id="side">
-    <div class="panel"><div id="status"></div></div>
+    <div class="panel"><button id="restart">Restart game</button><div id="status"></div></div>
     <div class="panel"><div id="prompt"></div><div id="buttons"></div></div>
+    <div class="panel" id="chosen"></div>
     <div class="panel" id="dialog"></div>
     <div class="panel"><div class="zone-label">Stack</div><div id="stack"></div></div>
     <div class="panel" id="log"></div>
@@ -55,6 +60,11 @@ const seat = new URLSearchParams(location.search).get("seat");
 let ws = null;
 let state = null;
 let dialogQueue = [];
+let selection = null;
+
+function refId(o) { return o && typeof o === "object" ? (o.card ?? o.player ?? o.stack ?? o.entity) : undefined; }
+function chosenCardIds() { return new Set(((selection && selection.chosen) || []).filter(o => o && o.card !== undefined).map(o => o.card)); }
+function selectableCardIds() { return new Set(selection ? [...(selection.cards || []), ...(selection.actionable || [])] : []); }
 
 function el(tag, cls, text) {
   const e = document.createElement(tag);
@@ -75,6 +85,14 @@ function connect() {
 function handle(msg) {
   if (msg.t === "hello") { document.getElementById("status").textContent = "Seat " + msg.seat + ". Waiting for the other player..."; return; }
   if (msg.t === "state") { state = msg.state; render(); return; }
+  if (msg.t === "reset") {
+    dialogQueue = []; selection = null;
+    document.getElementById("dialog").style.display = "none";
+    document.getElementById("prompt").textContent = "";
+    document.getElementById("buttons").replaceChildren();
+    document.getElementById("status").textContent = "Starting a new game...";
+    return;
+  }
   if (msg.t !== "call") return;
   const a = msg.a;
   switch (msg.m) {
@@ -82,6 +100,7 @@ function handle(msg) {
     case "updateButtons": renderButtons(a[1], a[2], a[3], a[4]); break;
     case "message": case "showErrorDialog": queueDialog({ kind: "message", title: a[1], text: a[0] }); break;
     case "flashIncorrectAction": flash(); break;
+    case "setSelection": selection = a[0]; if (state) render(); break;
     default:
       if (msg.rid !== undefined) queueDialog({ kind: msg.m, rid: msg.rid, a });
   }
@@ -108,7 +127,10 @@ function cardText(c) {
 }
 
 function renderCard(c) {
-  const d = el("div", "card" + (c.tapped ? " tapped" : ""));
+  let cls = "card" + (c.tapped ? " tapped" : "");
+  if (chosenCardIds().has(c.id)) cls += " chosen";
+  else if (selectableCardIds().has(c.id)) cls += " selectable";
+  const d = el("div", cls);
   if (c.hidden) { d.append(el("div", "name", "Hidden card")); return d; }
   d.append(el("div", "name", c.name));
   let meta = c.type || "";
@@ -162,7 +184,11 @@ function render() {
     }
     box.append(h);
     box.append(zone("Battlefield", p.battlefield));
-    if (Array.isArray(p.hand)) box.append(zone("Hand", p.hand));
+    if (Array.isArray(p.hand)) {
+      // Cards chosen for the current prompt leave the hand and are shown under the prompt
+      const chosen = chosenCardIds();
+      box.append(zone("Hand", p.hand.filter(c => !chosen.has(c.id))));
+    }
     if (p.graveyard.length) box.append(zone("Graveyard", p.graveyard));
     if (p.exile.length) box.append(zone("Exile", p.exile));
     board.append(box);
@@ -173,8 +199,35 @@ function render() {
   st.replaceChildren();
   if (!state.stack.length) st.append(el("div", "zone-label", "(empty)"));
   state.stack.forEach(s => { const d = el("div", "item", s.text); d.onclick = () => act("stack", s.id); st.append(d); });
+  renderChosen();
   const log = document.getElementById("log");
   log.replaceChildren(...state.log.map(l => el("div", "", l)));
+}
+
+function renderChosen() {
+  const box = document.getElementById("chosen");
+  const chosen = (selection && selection.chosen) || [];
+  box.replaceChildren();
+  if (!chosen.length) { box.style.display = "none"; return; }
+  box.style.display = "block";
+  box.append(el("div", "zone-label", "Chosen (click one to undo)"));
+  const row = el("div", "cards");
+  const cardsById = {};
+  for (const p of state.players) for (const z of [p.battlefield, p.graveyard, p.exile, Array.isArray(p.hand) ? p.hand : []]) for (const c of z) cardsById[c.id] = c;
+  for (const o of chosen) {
+    if (o && o.card !== undefined && cardsById[o.card]) {
+      const d = renderCard(cardsById[o.card]);
+      row.append(d);
+    } else {
+      const d = el("div", "card", label(o));
+      if (o && o.player !== undefined) d.onclick = () => act("player", o.player);
+      row.append(d);
+    }
+  }
+  box.append(row);
+  const clear = el("button", "", "Undo all");
+  clear.onclick = () => { for (const o of chosen) { if (o.card !== undefined) act("card", o.card); else if (o.player !== undefined) act("player", o.player); } };
+  box.append(clear);
 }
 
 function label(o) {
@@ -243,6 +296,9 @@ function showDialog() {
   }
 }
 
+document.getElementById("restart").onclick = () => {
+  if (window.confirm("Abandon this game and start a new one?")) send({ t: "restart" });
+};
 if (seat) connect();
 </script>
 </body>

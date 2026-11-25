@@ -23,12 +23,19 @@ public class LondonMulligan extends AbstractMulligan {
     @Override
     public void mulliganDraw() {
         player.drawCards(handSizeAfterNextMulligan());
-        int tuckingCards = tuckCardsDuringMulligan();
-        CardCollection hand = new CardCollection(player.getCardsIn(ZoneType.Hand));
+    }
 
-        for (final Card c : player.getController().tuckCardsViaMulligan(hand, tuckingCards)) {
-            player.getGame().getAction().moveToLibrary(c, -1, null);
+    /** CR 103.5: a player who keeps puts one card on the bottom of their library for each mulligan taken. */
+    @Override
+    public void keep() {
+        final int tuckingCards = tuckCardsDuringMulligan();
+        if (tuckingCards > 0) {
+            final CardCollection hand = new CardCollection(player.getCardsIn(ZoneType.Hand));
+            for (final Card c : player.getController().tuckCardsViaMulligan(hand, tuckingCards)) {
+                player.getGame().getAction().moveToLibrary(c, -1, null);
+            }
         }
+        super.keep();
     }
 
     @Override

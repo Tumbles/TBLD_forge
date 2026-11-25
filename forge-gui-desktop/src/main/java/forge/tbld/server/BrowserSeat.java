@@ -4,7 +4,6 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonNull;
 import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
 import com.google.gson.JsonPrimitive;
 import forge.card.MagicColor;
 import forge.deck.CardPool;
@@ -19,6 +18,7 @@ import forge.game.player.PlayerView;
 import forge.game.spellability.SpellAbilityView;
 import forge.game.spellability.StackItemView;
 import forge.game.zone.ZoneType;
+import forge.gamemodes.match.Selection;
 import forge.gamemodes.net.IRemote;
 import forge.gamemodes.net.event.IdentifiableNetEvent;
 import forge.gamemodes.net.event.NetEvent;
@@ -41,9 +41,10 @@ import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutionException;
+import java.util.function.Supplier;
 
 /**
- * One player's connection to a match. The engine's calls on this player's GUI arrive here as
+ * One player's seat in one match. The engine's calls on this player's GUI arrive here as
  * {@link GuiGameEvent}s; we send each to the browser as JSON, together with a snapshot of the game
  * state as this player is allowed to see it. Calls that need an answer block until the browser
  * replies. Actions from the browser are passed to this player's {@link IGameController}.
@@ -61,9 +62,11 @@ public final class BrowserSeat implements IRemote {
             ProtocolMethod.applyMacroState, ProtocolMethod.awaitNextInput);
 
     private final int seatIndex;
+    private final Supplier<Channel> channel;
     private final ProtocolGuiGame gui;
-    private volatile Channel channel;
     private volatile PlayerView player;
+    /** Set when the match is abandoned; the seat then ignores the engine and answers nothing. */
+    private volatile boolean retired;
 
     /** Questions waiting for the browser's answer, by request id. */
     private final Map<Integer, CompletableFuture<JsonElement>> pending = new ConcurrentHashMap<>();
@@ -72,14 +75,17 @@ public final class BrowserSeat implements IRemote {
     private volatile String lastPrompt;
     private volatile String lastButtons;
     private volatile String lastState;
+    private volatile String lastSelection;
 
     /** Objects in the last snapshot, by id, for resolving the browser's clicks. */
     private volatile Map<Integer, CardView> visibleCards = Map.of();
     private volatile Map<Integer, PlayerView> visiblePlayers = Map.of();
     private volatile Map<Integer, StackItemView> visibleStack = Map.of();
 
-    public BrowserSeat(final int seatIndex) {
+    /** {@code channel} supplies this seat's current browser connection, or null while disconnected. */
+    public BrowserSeat(final int seatIndex, final Supplier<Channel> channel) {
         this.seatIndex = seatIndex;
+        this.channel = channel;
         this.gui = new ProtocolGuiGame(this);
     }
 
@@ -91,19 +97,13 @@ public final class BrowserSeat implements IRemote {
         return gui;
     }
 
-    public boolean isConnected() {
-        final Channel c = channel;
-        return c != null && c.isActive();
+    public PlayerView getPlayer() {
+        return player;
     }
 
-    /** Attaches a browser connection, replacing any previous one, and brings it up to date. */
-    public void attach(final Channel newChannel) {
-        channel = newChannel;
-        final JsonObject hello = new JsonObject();
-        hello.addProperty("t", "hello");
-        hello.addProperty("seat", seatIndex);
-        write(hello.toString());
-        for (final String m : new String[] { lastState, lastPrompt, lastButtons }) {
+    /** Sends a newly connected browser everything it needs to show the current situation. */
+    public void resend() {
+        for (final String m : new String[] { lastState, lastSelection, lastPrompt, lastButtons }) {
             if (m != null) {
                 write(m);
             }
@@ -113,14 +113,25 @@ public final class BrowserSeat implements IRemote {
         }
     }
 
-    public void detach(final Channel oldChannel) {
-        if (channel == oldChannel) {
-            channel = null;
+    /** Detaches this seat from its match: unanswered questions get no answer, and later engine calls are ignored. */
+    public void retire() {
+        retired = true;
+        for (final CompletableFuture<JsonElement> f : pending.values()) {
+            f.complete(JsonNull.INSTANCE);
         }
     }
 
+    /** This seat's controller in the engine, or null before the match has started. */
+    public IGameController getController() {
+        final PlayerView me = player;
+        return me == null ? null : gui.getGameController(me);
+    }
+
     private void write(final String json) {
-        final Channel c = channel;
+        if (retired) {
+            return;
+        }
+        final Channel c = channel.get();
         if (c != null && c.isActive()) {
             c.writeAndFlush(new TextWebSocketFrame(json));
         }
@@ -130,14 +141,14 @@ public final class BrowserSeat implements IRemote {
 
     @Override
     public void send(final NetEvent event) {
-        if (event instanceof GuiGameEvent g) {
+        if (!retired && event instanceof GuiGameEvent g) {
             handleCall(g, null);
         }
     }
 
     @Override
     public Object sendAndWait(final IdentifiableNetEvent event) {
-        if (!(event instanceof GuiGameEvent g)) {
+        if (retired || !(event instanceof GuiGameEvent g)) {
             return null;
         }
         final Object auto = autoAnswer(g);
@@ -147,6 +158,9 @@ public final class BrowserSeat implements IRemote {
         final int rid = g.getId();
         final CompletableFuture<JsonElement> future = new CompletableFuture<>();
         pending.put(rid, future);
+        if (retired) {
+            future.complete(JsonNull.INSTANCE);
+        }
         handleCall(g, rid);
         try {
             return decodeReply(g, future.get());
@@ -203,6 +217,8 @@ public final class BrowserSeat implements IRemote {
             lastPrompt = callJson;
         } else if (method == ProtocolMethod.updateButtons) {
             lastButtons = callJson;
+        } else if (method == ProtocolMethod.setSelection) {
+            lastSelection = callJson;
         }
         write(callJson);
     }
@@ -329,8 +345,7 @@ public final class BrowserSeat implements IRemote {
     // ------------------------------------------------------------------ browser -> engine
 
     /** Handles one message from the browser. */
-    public void receive(final String text) {
-        final JsonObject msg = JsonParser.parseString(text).getAsJsonObject();
+    public void receive(final JsonObject msg) {
         final String t = msg.has("t") ? msg.get("t").getAsString() : "";
         if ("reply".equals(t)) {
             final CompletableFuture<JsonElement> f = pending.get(msg.get("rid").getAsInt());
@@ -342,8 +357,7 @@ public final class BrowserSeat implements IRemote {
         if (!"act".equals(t)) {
             return;
         }
-        final PlayerView me = player;
-        final IGameController controller = me == null ? null : gui.getGameController(me);
+        final IGameController controller = retired ? null : getController();
         if (controller == null) {
             return;
         }
@@ -428,6 +442,16 @@ public final class BrowserSeat implements IRemote {
             j.addProperty("name", ge.getName());
             return j;
         }
+        if (o instanceof Selection sel) {
+            final JsonObject j = new JsonObject();
+            j.add("cards", ids(sel.cards()));
+            j.addProperty("min", sel.min());
+            j.addProperty("max", sel.max());
+            j.add("targets", encode(sel.targets()));
+            j.add("chosen", encode(sel.chosen()));
+            j.add("actionable", ids(sel.actionable()));
+            return j;
+        }
         if (o instanceof PaperCard pc) {
             return new JsonPrimitive(pc.getName());
         }
@@ -452,6 +476,16 @@ public final class BrowserSeat implements IRemote {
             return JsonNull.INSTANCE;
         }
         return new JsonPrimitive(o.toString());
+    }
+
+    private static JsonArray ids(final List<? extends CardView> cards) {
+        final JsonArray arr = new JsonArray();
+        if (cards != null) {
+            for (final CardView cv : cards) {
+                arr.add(cv.getId());
+            }
+        }
+        return arr;
     }
 
     private JsonObject cardRef(final CardView cv) {

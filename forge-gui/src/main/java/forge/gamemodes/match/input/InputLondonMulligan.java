@@ -62,7 +62,7 @@ public class InputLondonMulligan extends InputSyncronizedBase {
 
         StringBuilder sb = new StringBuilder();
 
-        getController().getGui().updateButtons(getOwner(), localizer.getMessage("lblOK"), localizer.getMessage("lblAuto"), cardsLeft == 0, cardsLeft != 0, true);
+        getController().getGui().updateButtons(getOwner(), localizer.getMessage("lblOK"), "", cardsLeft == 0, false, true);
 
         sb.append(String.format(localizer.getMessage("lblReturnForLondon"), cardsLeft));
 

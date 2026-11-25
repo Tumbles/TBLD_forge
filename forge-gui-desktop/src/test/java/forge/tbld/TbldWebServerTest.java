@@ -23,9 +23,10 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
- * Plays a game between two scripted browser clients over the web server. Each client keeps its
- * opening hand, answers every question with the first legal option, and presses the OK button
- * (pass priority, done attacking, ...) whenever it is enabled.
+ * Plays a game between two scripted browser clients over the web server. Each client answers
+ * every question with the first legal option and presses the OK button (pass priority, done
+ * attacking, ...) whenever it is enabled. Seat 2 takes one mulligan. Then seat 1 restarts the
+ * match, and the test checks that a new game begins.
  */
 public class TbldWebServerTest extends AITest {
 
@@ -43,8 +44,8 @@ public class TbldWebServerTest extends AITest {
             AssertJUnit.assertEquals(200, page.statusCode());
             AssertJUnit.assertTrue(page.body().contains("TBLD"));
 
-            final Bot bot1 = new Bot(http, port, 1);
-            final Bot bot2 = new Bot(http, port, 2);
+            final Bot bot1 = new Bot(http, port, 1, 0);
+            final Bot bot2 = new Bot(http, port, 2, 1);
 
             final long deadline = System.currentTimeMillis() + 180000;
             while (System.currentTimeMillis() < deadline
@@ -60,6 +61,24 @@ public class TbldWebServerTest extends AITest {
             AssertJUnit.assertTrue("seat 1 saw its own hand", bot1.sawOwnHand);
             AssertJUnit.assertFalse("seat 1 saw seat 2's hand", bot1.sawOpponentHand);
             AssertJUnit.assertFalse("seat 2 saw seat 1's hand", bot2.sawOpponentHand);
+
+            // London mulligan: the cards go to the bottom only after the hand is kept
+            AssertJUnit.assertTrue("seat 2 was not asked to put a card on the bottom", bot2.returnPrompts.get() > 0);
+            AssertJUnit.assertFalse("seat 2 was asked to put a card on the bottom before keeping", bot2.returnPromptBeforeKeep);
+            AssertJUnit.assertTrue("seat 2 never had 6 cards in hand and 34 in library", bot2.sawMulliganResult);
+
+            // Restart
+            bot1.restart();
+            final long restartDeadline = System.currentTimeMillis() + 60000;
+            while (System.currentTimeMillis() < restartDeadline
+                    && !(bot1.statesAfterReset.get() > 0 && bot2.statesAfterReset.get() > 0)) {
+                Thread.sleep(250);
+            }
+            AssertJUnit.assertTrue("seat 1 got no new game after restart", bot1.statesAfterReset.get() > 0);
+            AssertJUnit.assertTrue("seat 2 got no new game after restart", bot2.statesAfterReset.get() > 0);
+            AssertJUnit.assertTrue("new game did not start at turn 0 or 1; first turn " + bot1.firstTurnAfterReset,
+                    bot1.firstTurnAfterReset <= 1);
+            AssertJUnit.assertTrue("errors after restart: " + bot1.errors + bot2.errors, bot1.errors.isEmpty() && bot2.errors.isEmpty());
         } finally {
             server.stop();
         }
@@ -67,6 +86,15 @@ public class TbldWebServerTest extends AITest {
 
     private static final class Bot implements WebSocket.Listener {
         final int seat;
+        final int mulligansToTake;
+        int mulligansTaken;
+        volatile boolean keepPressed;
+        volatile boolean returnPromptBeforeKeep;
+        volatile boolean sawMulliganResult;
+        final AtomicInteger returnPrompts = new AtomicInteger();
+        volatile boolean resetReceived;
+        final AtomicInteger statesAfterReset = new AtomicInteger();
+        volatile int firstTurnAfterReset = Integer.MAX_VALUE;
         final WebSocket ws;
         final StringBuilder partial = new StringBuilder();
         final AtomicInteger maxTurn = new AtomicInteger();
@@ -80,8 +108,9 @@ public class TbldWebServerTest extends AITest {
         volatile JsonArray myHand = new JsonArray();
         volatile long lastMessage = System.currentTimeMillis();
 
-        Bot(final HttpClient http, final int port, final int seat) throws Exception {
+        Bot(final HttpClient http, final int port, final int seat, final int mulligansToTake) throws Exception {
             this.seat = seat;
+            this.mulligansToTake = mulligansToTake;
             this.ws = http.newWebSocketBuilder()
                     .buildAsync(URI.create("ws://localhost:" + port + "/ws?seat=" + seat), this)
                     .get(10, TimeUnit.SECONDS);
@@ -102,12 +131,34 @@ public class TbldWebServerTest extends AITest {
             watchdog.start();
         }
 
-        private void respondToButtons(final JsonArray a) {
+        private synchronized void respondToButtons(final JsonArray a) {
+            final String label1 = a.get(1).isJsonNull() ? "" : a.get(1).getAsString();
+            final String label2 = a.get(2).isJsonNull() ? "" : a.get(2).getAsString();
+            if ("Keep".equals(label1) && "Mulligan".equals(label2)) {
+                if (mulligansTaken < mulligansToTake) {
+                    mulligansTaken++;
+                    lastButtons = null;
+                    act("cancel", -1);
+                } else {
+                    keepPressed = true;
+                    act("ok", -1);
+                }
+                return;
+            }
             if (a.get(3).getAsBoolean()) {
                 act("ok", -1);
-            } else if (prompt.toLowerCase().contains("discard") && !myHand.isEmpty()) {
-                act("card", myHand.get(0).getAsJsonObject().get("id").getAsInt());
+            } else {
+                final String p = prompt.toLowerCase();
+                if ((p.contains("discard") || p.contains("return")) && !myHand.isEmpty()) {
+                    act("card", myHand.get(0).getAsJsonObject().get("id").getAsInt());
+                }
             }
+        }
+
+        void restart() {
+            final JsonObject o = new JsonObject();
+            o.addProperty("t", "restart");
+            sendJson(o);
         }
 
         @Override
@@ -165,8 +216,18 @@ public class TbldWebServerTest extends AITest {
         private void handle(final JsonObject msg) {
             lastMessage = System.currentTimeMillis();
             final String t = msg.get("t").getAsString();
+            if ("reset".equals(t)) {
+                resetReceived = true;
+                lastButtons = null;
+                return;
+            }
             if ("state".equals(t)) {
                 final JsonObject s = msg.getAsJsonObject("state");
+                if (s.has("turn") && resetReceived) {
+                    if (statesAfterReset.getAndIncrement() == 0) {
+                        firstTurnAfterReset = s.get("turn").getAsInt();
+                    }
+                }
                 if (s.has("turn")) {
                     maxTurn.accumulateAndGet(s.get("turn").getAsInt(), Math::max);
                     gameOver = s.get("gameOver").getAsBoolean();
@@ -177,6 +238,9 @@ public class TbldWebServerTest extends AITest {
                         final JsonElement hand = p.get("hand");
                         if (mine && hand.isJsonArray()) {
                             myHand = hand.getAsJsonArray();
+                            if (mulligansToTake > 0 && keepPressed && myHand.size() == 6 && p.get("library").getAsInt() == 34) {
+                                sawMulliganResult = true;
+                            }
                             if (!myHand.isEmpty()) {
                                 sawOwnHand = true;
                             }
@@ -197,7 +261,17 @@ public class TbldWebServerTest extends AITest {
             if (!msg.has("rid")) {
                 if ("showPromptMessage".equals(m)) {
                     prompt = a.get(1).isJsonNull() ? "" : a.get(1).getAsString();
-                } else if ("updateButtons".equals(m)) {
+                    if (prompt.contains("Return ") && prompt.contains("bottom of your library")) {
+                        returnPrompts.incrementAndGet();
+                        if (!keepPressed) {
+                            returnPromptBeforeKeep = true;
+                        }
+                    }
+                }
+                    final JsonArray buttons = lastButtons;
+                    if (buttons != null && !buttons.get(3).getAsBoolean()) {
+                        respondToButtons(buttons);
+                    } else if ("updateButtons".equals(m)) {
                     lastButtons = a;
                     respondToButtons(a);
                 }
