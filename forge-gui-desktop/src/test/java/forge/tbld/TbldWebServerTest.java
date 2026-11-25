@@ -121,6 +121,7 @@ public class TbldWebServerTest extends AITest {
         volatile boolean sawOwnHand;
         volatile boolean sawOpponentHand;
         volatile String prompt = "";
+        final java.util.Set<Integer> chosen = java.util.concurrent.ConcurrentHashMap.newKeySet();
         volatile JsonArray lastButtons;
         volatile JsonArray myHand = new JsonArray();
         volatile long lastMessage = System.currentTimeMillis();
@@ -186,8 +187,15 @@ public class TbldWebServerTest extends AITest {
                 return;
             }
             final String p = prompt.toLowerCase();
-            if ((p.contains("discard") || p.contains("return")) && !myHand.isEmpty()) {
-                act("card", myHand.get(0).getAsJsonObject().get("id").getAsInt());
+            if (p.contains("discard") || p.contains("return")) {
+                // Pick a card that is not already chosen; clicking a chosen card would unchoose it
+                for (final JsonElement c : myHand) {
+                    final int id = c.getAsJsonObject().get("id").getAsInt();
+                    if (!chosen.contains(id)) {
+                        act("card", id);
+                        return;
+                    }
+                }
             }
         }
 
@@ -325,6 +333,14 @@ public class TbldWebServerTest extends AITest {
             }
             final JsonArray a = msg.getAsJsonArray("a");
             if (!msg.has("rid")) {
+                if ("setSelection".equals(m) && a.get(0).isJsonObject()) {
+                    chosen.clear();
+                    for (final JsonElement c : a.get(0).getAsJsonObject().getAsJsonArray("chosen")) {
+                        if (c.isJsonObject() && c.getAsJsonObject().has("card")) {
+                            chosen.add(c.getAsJsonObject().get("card").getAsInt());
+                        }
+                    }
+                }
                 if ("showPromptMessage".equals(m)) {
                     prompt = a.get(1).isJsonNull() ? "" : a.get(1).getAsString();
                     if (prompt.contains("Return ") && prompt.contains("bottom of your library")) {

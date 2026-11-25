@@ -373,8 +373,15 @@ final class TbldBot implements WebSocket.Listener {
 
         if ((pl.contains("discard") || pl.contains("return")) && !okEnabled) {
             final JsonElement hand = me.get("hand");
-            if (hand.isJsonArray() && !hand.getAsJsonArray().isEmpty()) {
-                act("card", hand.getAsJsonArray().get(0).getAsJsonObject().get("id").getAsInt(), "discard");
+            final Set<Integer> chosen = idSet("chosen");
+            if (hand.isJsonArray()) {
+                for (final JsonElement c : hand.getAsJsonArray()) {
+                    final int id = c.getAsJsonObject().get("id").getAsInt();
+                    if (!chosen.contains(id)) {
+                        act("card", id, "discard");
+                        return;
+                    }
+                }
             }
             return;
         }

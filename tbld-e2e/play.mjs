@@ -136,6 +136,7 @@ async function step(s) {
     return;
   }
   if ((p.includes("discard") || p.includes("return")) && v.buttons.length && !b["OK"] && v.me.hand.length) {
+    // Chosen cards are not shown in the hand, so any hand card is unchosen
     return click(s, `[data-me="1"] [data-zone="Hand"] .card >> nth=0`, "discard/bottom " + v.me.hand[0].name, turn);
   }
   // Priority in my own main phase with an empty stack: land, then creatures, then other spells
