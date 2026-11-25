@@ -34,6 +34,8 @@ final class TbldBot implements WebSocket.Listener {
 
     final int seat;
     final boolean aggressive;
+    private final int mulligansToTake;
+    private int mulligansTaken;
     private final WebSocket ws;
     private final StringBuilder partial = new StringBuilder();
     private final ScheduledExecutorService timer = Executors.newSingleThreadScheduledExecutor(r -> {
@@ -72,11 +74,23 @@ final class TbldBot implements WebSocket.Listener {
     volatile boolean spellResolved;
     volatile boolean sawOpponentHand;
     volatile int myLife = Integer.MIN_VALUE;
+    volatile boolean keepPressed;
+    volatile int returnPrompts;
+    volatile boolean returnPromptBeforeKeep;
+    volatile boolean sawMulliganResult;
+    volatile boolean resetReceived;
+    volatile int statesAfterReset;
+    volatile int firstTurnAfterReset = Integer.MAX_VALUE;
     volatile int opponentLife = Integer.MIN_VALUE;
 
     TbldBot(final HttpClient http, final int port, final int seat, final boolean aggressive) throws Exception {
+        this(http, port, seat, aggressive, 0);
+    }
+
+    TbldBot(final HttpClient http, final int port, final int seat, final boolean aggressive, final int mulligansToTake) throws Exception {
         this.seat = seat;
         this.aggressive = aggressive;
+        this.mulligansToTake = mulligansToTake;
         this.ws = http.newWebSocketBuilder()
                 .buildAsync(URI.create("ws://localhost:" + port + "/ws?seat=" + seat), this)
                 .get(10, TimeUnit.SECONDS);
@@ -91,6 +105,12 @@ final class TbldBot implements WebSocket.Listener {
                 decide();
             }
         }, 1500, 1000, TimeUnit.MILLISECONDS);
+    }
+
+    void restart() {
+        final JsonObject o = new JsonObject();
+        o.addProperty("t", "restart");
+        send(o);
     }
 
     void close() {
@@ -125,7 +145,22 @@ final class TbldBot implements WebSocket.Listener {
         lastMessage = System.currentTimeMillis();
         final String t = msg.get("t").getAsString();
         switch (t) {
-            case "state" -> observe(msg.getAsJsonObject("state"));
+            case "reset" -> {
+                resetReceived = true;
+                gameOver = false;
+                buttons = null;
+                spentButtons = null;
+                selection = null;
+                landTurn = -1;
+                attempted.clear();
+            }
+            case "state" -> {
+                final JsonObject s = msg.getAsJsonObject("state");
+                if (resetReceived && s.has("turn") && statesAfterReset++ == 0) {
+                    firstTurnAfterReset = s.get("turn").getAsInt();
+                }
+                observe(s);
+            }
             case "call" -> {
                 final String m = msg.get("m").getAsString();
                 final JsonArray a = msg.getAsJsonArray("a");
@@ -134,7 +169,15 @@ final class TbldBot implements WebSocket.Listener {
                     return;
                 }
                 switch (m) {
-                    case "showPromptMessage" -> prompt = a.get(1).isJsonNull() ? "" : a.get(1).getAsString();
+                    case "showPromptMessage" -> {
+                        prompt = a.get(1).isJsonNull() ? "" : a.get(1).getAsString();
+                        if (prompt.contains("Return ") && prompt.contains("bottom of your library")) {
+                            returnPrompts++;
+                            if (!keepPressed) {
+                                returnPromptBeforeKeep = true;
+                            }
+                        }
+                    }
                     case "updateButtons" -> {
                         buttons = a;
                         spentButtons = null;
@@ -169,6 +212,10 @@ final class TbldBot implements WebSocket.Listener {
             final boolean mine = p.get("id").getAsInt() == me;
             if (mine) {
                 myLife = p.get("life").getAsInt();
+                if (keepPressed && p.get("hand").isJsonArray() && p.getAsJsonArray("hand").size() == 6
+                        && p.get("library").getAsInt() == 34) {
+                    sawMulliganResult = true;
+                }
             } else {
                 opponentLife = p.get("life").getAsInt();
                 if (p.get("hand").isJsonArray()) {
@@ -282,7 +329,13 @@ final class TbldBot implements WebSocket.Listener {
         }
 
         if ("Keep".equals(label1) && "Mulligan".equals(label2)) {
-            act("ok", -1, "keep");
+            if (mulligansTaken < mulligansToTake) {
+                mulligansTaken++;
+                act("cancel", -1, "mulligan");
+            } else {
+                keepPressed = true;
+                act("ok", -1, "keep");
+            }
             return;
         }
         if ("Auto".equals(label1) && okEnabled) {
