@@ -1,0 +1,42 @@
+name: TBLD build
+
+on:
+  push:
+    branches: [master]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+          cache: 'maven'
+
+      - name: Install virtual framebuffer
+        run: command -v Xvfb >/dev/null 2>&1 || { sudo apt update && sudo apt install -y xvfb; }
+
+      - name: Build desktop package
+        run: mvn -U -B -P windows-linux install -DskipTests -T 1C
+
+      - name: Run TBLD tests
+        run: |
+          export DISPLAY=":1"
+          Xvfb :1 -screen 0 800x600x8 &
+          mvn -B -pl forge-gui-desktop surefire:test -Dtest='forge.tbld.*Test' -Dsurefire.failIfNoSpecifiedTests=false
+
+      - name: Locate package
+        id: pkg
+        run: echo "dir=$(find forge-installer/target -maxdepth 1 -type d -name 'forge-installer-*' | head -1)" >> "$GITHUB_OUTPUT"
+
+      - name: Upload desktop package
+        uses: actions/upload-artifact@v4
+        with:
+          name: tbld-forge-desktop
+          path: ${{ steps.pkg.outputs.dir }}
+          retention-days: 14
