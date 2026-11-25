@@ -40,14 +40,16 @@ jobs:
         run: |
           pkg="${{ steps.pkg.outputs.dir }}"
           jar=$(cd "$pkg" && ls forge-gui-desktop-*-jar-with-dependencies.jar | head -1)
-          (cd "$pkg" && java -jar "$jar" tbld 8090 > "$RUNNER_TEMP/server.log" 2>&1 &)
+          (cd "$pkg" && java -Dtbld.debug=true -jar "$jar" tbld 8090 > "$RUNNER_TEMP/server.log" 2>&1 &)
           cd tbld-e2e
           npm install --no-audit --no-fund
           npx playwright install --with-deps chromium
           for i in $(seq 1 180); do grep -q "TBLD server running" "$RUNNER_TEMP/server.log" && break; sleep 1; done
           if ! node play.mjs http://localhost:8090/; then
-            echo "---- server log (last 80 lines) ----"
-            tail -80 "$RUNNER_TEMP/server.log"
+            echo "---- server log: seat 2 main phase prompts ----"
+            grep "\[tbld\] seat 2" "$RUNNER_TEMP/server.log" | grep -B3 -A3 "Main phase" | tail -60
+            echo "---- server log (last 40 lines) ----"
+            tail -40 "$RUNNER_TEMP/server.log"
             exit 1
           fi
 

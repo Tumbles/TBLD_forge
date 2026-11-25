@@ -63,6 +63,9 @@ public final class BrowserSeat implements IRemote {
             ProtocolMethod.setGameView, ProtocolMethod.applyDelta, ProtocolMethod.applyYieldUpdate,
             ProtocolMethod.applyMacroState);
 
+    /** Logs prompts, buttons and selections to standard output. Set with -Dtbld.debug=true. */
+    private static final boolean DEBUG = Boolean.getBoolean("tbld.debug");
+
     private final int seatIndex;
     private final Supplier<Channel> channel;
     private final ProtocolGuiGame gui;
@@ -239,6 +242,10 @@ public final class BrowserSeat implements IRemote {
             call.addProperty("rid", rid);
         }
         final String callJson = call.toString();
+        if (DEBUG && (method == ProtocolMethod.setSelection || method == ProtocolMethod.updateButtons
+                || method == ProtocolMethod.showPromptMessage)) {
+            System.out.println("[tbld] seat " + seatIndex + " " + (callJson.length() > 300 ? callJson.substring(0, 300) : callJson));
+        }
         if (rid != null) {
             pendingMessages.put(rid, callJson);
         } else if (method == ProtocolMethod.showPromptMessage) {
