@@ -143,7 +143,7 @@
                 </executions>
                 <configuration>
                     <basedir>${basedir}/${configSourceDirectory}</basedir>
-                    <filesToInclude>forge.sh, forge.command, forge.cmd</filesToInclude>
+                    <filesToInclude>forge.sh, forge.command, forge.cmd, tbld-server.cmd</filesToInclude>
                     <outputBasedir>${project.build.directory}</outputBasedir>
                     <outputDir>.</outputDir>
                     <regex>false</regex>

@@ -112,8 +112,16 @@ public final class Main {
                 System.out.println("Dedicated server mode.\nNot implemented.");
                 break;
 
+            case "tbld":
+                try {
+                    forge.tbld.server.TbldWebServer.run(args);
+                } catch (final InterruptedException e) {
+                    Thread.currentThread().interrupt();
+                }
+                break;
+
             default:
-                System.out.println("Unknown mode.\nKnown modes are 'sim', 'parse', 'server'");
+                System.out.println("Unknown mode.\nKnown modes are 'sim', 'parse', 'server', 'tbld'");
                 break;
         }
 
@@ -127,7 +135,7 @@ public final class Main {
      * not a mode and only prints usage, so it is deliberately not listed here.
      */
     public static boolean isCommandLineMode(final String mode) {
-        return "sim".equals(mode) || "parse".equals(mode) || "server".equals(mode);
+        return "sim".equals(mode) || "parse".equals(mode) || "server".equals(mode) || "tbld".equals(mode);
     }
 
     @SuppressWarnings("deprecation")

@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>TBLD</title>
+<style>
+  body { font-family: system-ui, sans-serif; margin: 0; background: #1c1d22; color: #ddd; font-size: 14px; }
+  #lobby { padding: 2em; }
+  #lobby a { color: #8cf; font-size: 1.3em; margin-right: 1.5em; }
+  #game { display: none; grid-template-columns: 1fr 320px; gap: 8px; padding: 8px; height: 100vh; box-sizing: border-box; }
+  #board { overflow-y: auto; }
+  #side { display: flex; flex-direction: column; gap: 8px; overflow: hidden; }
+  .panel { background: #26282f; border-radius: 6px; padding: 8px; }
+  .player h3 { margin: 0 0 4px 0; font-size: 1.05em; }
+  .player.active h3::after { content: "  (active)"; color: #fc6; font-weight: normal; }
+  .player .target { cursor: pointer; text-decoration: underline dotted; }
+  .zone { margin: 4px 0; }
+  .zone-label { color: #999; font-size: 0.85em; }
+  .cards { display: flex; flex-wrap: wrap; gap: 4px; }
+  .card { background: #353842; border: 1px solid #555; border-radius: 4px; padding: 4px 6px; cursor: pointer; max-width: 220px; }
+  .card:hover { border-color: #8cf; }
+  .card.tapped { opacity: 0.55; font-style: italic; }
+  .card .name { font-weight: 600; }
+  .card .meta { color: #aaa; font-size: 0.85em; }
+  .card .tags { color: #fc6; font-size: 0.85em; }
+  #prompt { white-space: pre-wrap; min-height: 2.5em; }
+  #buttons button, #dialog button { margin: 4px 4px 0 0; padding: 6px 12px; font-size: 1em; }
+  #dialog { display: none; border: 1px solid #fc6; }
+  #dialog .opt { display: block; margin: 3px 0; }
+  #stack .item { cursor: pointer; margin: 2px 0; }
+  #log { flex: 1; overflow-y: auto; font-size: 0.85em; color: #aaa; }
+  #tip { position: fixed; pointer-events: none; background: #111; border: 1px solid #666; padding: 6px; max-width: 280px; white-space: pre-wrap; display: none; z-index: 10; }
+</style>
+</head>
+<body>
+<div id="lobby">
+  <h2>TBLD test table</h2>
+  <p>Open one seat in each of two tabs. The game starts when both seats are connected.</p>
+  <a href="?seat=1">Seat 1</a><a href="?seat=2">Seat 2</a>
+</div>
+<div id="game">
+  <div id="board"></div>
+  <div id="side">
+    <div class="panel"><div id="status"></div></div>
+    <div class="panel"><div id="prompt"></div><div id="buttons"></div></div>
+    <div class="panel" id="dialog"></div>
+    <div class="panel"><div class="zone-label">Stack</div><div id="stack"></div></div>
+    <div class="panel" id="log"></div>
+  </div>
+</div>
+<div id="tip"></div>
+<script>
+"use strict";
+const seat = new URLSearchParams(location.search).get("seat");
+let ws = null;
+let state = null;
+let dialogQueue = [];
+
+function el(tag, cls, text) {
+  const e = document.createElement(tag);
+  if (cls) e.className = cls;
+  if (text !== undefined) e.textContent = text;
+  return e;
+}
+function send(obj) { if (ws && ws.readyState === 1) ws.send(JSON.stringify(obj)); }
+function act(m, id) { send(id === undefined ? { t: "act", m } : { t: "act", m, id }); }
+function reply(rid, v) { send({ t: "reply", rid, v }); }
+
+function connect() {
+  ws = new WebSocket((location.protocol === "https:" ? "wss://" : "ws://") + location.host + "/ws?seat=" + seat);
+  ws.onmessage = ev => handle(JSON.parse(ev.data));
+  ws.onclose = () => { document.getElementById("status").textContent = "Disconnected. Reconnecting..."; setTimeout(connect, 2000); };
+}
+
+function handle(msg) {
+  if (msg.t === "hello") { document.getElementById("status").textContent = "Seat " + msg.seat + ". Waiting for the other player..."; return; }
+  if (msg.t === "state") { state = msg.state; render(); return; }
+  if (msg.t !== "call") return;
+  const a = msg.a;
+  switch (msg.m) {
+    case "showPromptMessage": document.getElementById("prompt").textContent = a[1] || ""; break;
+    case "updateButtons": renderButtons(a[1], a[2], a[3], a[4]); break;
+    case "message": case "showErrorDialog": queueDialog({ kind: "message", title: a[1], text: a[0] }); break;
+    case "flashIncorrectAction": flash(); break;
+    default:
+      if (msg.rid !== undefined) queueDialog({ kind: msg.m, rid: msg.rid, a });
+  }
+}
+
+function flash() {
+  const p = document.getElementById("prompt");
+  p.style.color = "#f66"; setTimeout(() => p.style.color = "", 400);
+}
+
+function renderButtons(l1, l2, en1, en2) {
+  const b = document.getElementById("buttons");
+  b.replaceChildren();
+  if (l1) { const x = el("button", "", l1); x.disabled = !en1; x.onclick = () => act("ok"); b.append(x); }
+  if (l2) { const x = el("button", "", l2); x.disabled = !en2; x.onclick = () => act("cancel"); b.append(x); }
+}
+
+function cardText(c) {
+  if (c.hidden) return "Hidden card";
+  let t = c.name + (c.cost ? "  " + c.cost : "") + "\n" + (c.type || "");
+  if (c.text) t += "\n\n" + c.text;
+  if (c.power !== undefined) t += "\n\n" + c.power + "/" + c.toughness;
+  return t;
+}
+
+function renderCard(c) {
+  const d = el("div", "card" + (c.tapped ? " tapped" : ""));
+  if (c.hidden) { d.append(el("div", "name", "Hidden card")); return d; }
+  d.append(el("div", "name", c.name));
+  let meta = c.type || "";
+  if (c.power !== undefined) meta += "  " + c.power + "/" + c.toughness;
+  d.append(el("div", "meta", meta));
+  const tags = [];
+  if (c.tapped) tags.push("tapped");
+  if (c.sick && c.power !== undefined) tags.push("summoning sick");
+  if (c.damage) tags.push(c.damage + " damage");
+  if (c.attacking !== undefined) tags.push("attacking " + c.attacking);
+  if (c.blocking) tags.push("blocking");
+  if (c.counters) for (const [k, v] of Object.entries(c.counters)) tags.push(v + " " + k);
+  if (tags.length) d.append(el("div", "tags", tags.join(", ")));
+  d.onclick = () => act("card", c.id);
+  d.onmouseenter = e => showTip(cardText(c), e);
+  d.onmousemove = e => moveTip(e);
+  d.onmouseleave = hideTip;
+  return d;
+}
+
+function showTip(text, e) { const t = document.getElementById("tip"); t.textContent = text; t.style.display = "block"; moveTip(e); }
+function moveTip(e) { const t = document.getElementById("tip"); t.style.left = (e.clientX + 14) + "px"; t.style.top = (e.clientY + 14) + "px"; }
+function hideTip() { document.getElementById("tip").style.display = "none"; }
+
+function zone(label, cards) {
+  const z = el("div", "zone");
+  z.append(el("div", "zone-label", label + " (" + cards.length + ")"));
+  const row = el("div", "cards");
+  cards.forEach(c => row.append(renderCard(c)));
+  z.append(row);
+  return z;
+}
+
+function render() {
+  document.getElementById("lobby").style.display = "none";
+  document.getElementById("game").style.display = "grid";
+  if (!state.players) return;
+  const board = document.getElementById("board");
+  board.replaceChildren();
+  // Opponents first, then this seat's player at the bottom
+  const players = [...state.players].sort((x, y) => (x.id === state.me) - (y.id === state.me));
+  for (const p of players) {
+    const box = el("div", "panel player" + (p.id === state.activePlayer ? " active" : ""));
+    const h = el("h3");
+    const nm = el("span", "target", p.name);
+    nm.onclick = () => act("player", p.id);
+    h.append(nm, document.createTextNode("  —  " + p.life + " life,  library " + p.library + (typeof p.hand === "number" ? ",  hand " + p.hand : "")));
+    const mana = Object.entries(p.mana || {}).map(([k, v]) => v + k).join(" ");
+    if (mana) {
+      h.append(el("span", "", "   mana pool: " + mana));
+    }
+    box.append(h);
+    box.append(zone("Battlefield", p.battlefield));
+    if (Array.isArray(p.hand)) box.append(zone("Hand", p.hand));
+    if (p.graveyard.length) box.append(zone("Graveyard", p.graveyard));
+    if (p.exile.length) box.append(zone("Exile", p.exile));
+    board.append(box);
+  }
+  document.getElementById("status").textContent =
+    (state.gameOver ? "Game over. " : "") + "Turn " + state.turn + ", " + state.phase;
+  const st = document.getElementById("stack");
+  st.replaceChildren();
+  if (!state.stack.length) st.append(el("div", "zone-label", "(empty)"));
+  state.stack.forEach(s => { const d = el("div", "item", s.text); d.onclick = () => act("stack", s.id); st.append(d); });
+  const log = document.getElementById("log");
+  log.replaceChildren(...state.log.map(l => el("div", "", l)));
+}
+
+function label(o) {
+  if (o === null || o === undefined) return "(none)";
+  if (typeof o !== "object") return String(o);
+  return o.name || o.text || JSON.stringify(o);
+}
+
+function queueDialog(d) { dialogQueue.push(d); if (dialogQueue.length === 1) showDialog(); }
+function closeDialog() { dialogQueue.shift(); document.getElementById("dialog").style.display = "none"; if (dialogQueue.length) showDialog(); }
+
+function showDialog() {
+  const d = dialogQueue[0];
+  const box = document.getElementById("dialog");
+  box.replaceChildren();
+  box.style.display = "block";
+  const a = d.a || [];
+  const answer = v => { reply(d.rid, v); closeDialog(); };
+  const title = t => { if (t) box.append(el("div", "", t)); };
+  const button = (text, f) => { const b = el("button", "", text); b.onclick = f; box.append(b); };
+  const multi = (options, min, max) => {
+    const checks = options.map((o, i) => {
+      const lab = el("label", "opt");
+      const cb = el("input"); cb.type = max === 1 ? "radio" : "checkbox"; cb.name = "opt"; cb.value = i;
+      lab.append(cb, document.createTextNode(" " + label(o)));
+      box.append(lab);
+      return cb;
+    });
+    button("Confirm", () => {
+      const chosen = checks.filter(c => c.checked).map(c => +c.value);
+      if (chosen.length < min || chosen.length > max) { flash(); return; }
+      answer(chosen);
+    });
+  };
+  switch (d.kind) {
+    case "message": title(d.title); box.append(el("div", "", d.text)); button("OK", closeDialog); break;
+    case "confirm": title(a[1]); (a[3] && a[3].length ? a[3] : ["Yes", "No"]).forEach((o, i) => button(o, () => answer(i === 0))); break;
+    case "showConfirmDialog": title(a[1]); title(a[0]); button(a[2] || "Yes", () => answer(true)); button(a[3] || "No", () => answer(false)); break;
+    case "showOptionDialog": title(a[1]); title(a[0]); (a[3] || []).forEach((o, i) => button(o, () => answer(i))); break;
+    case "showInputDialog": {
+      title(a[1]); title(a[0]);
+      const inp = el("input"); inp.value = a[3] || ""; box.append(inp);
+      button("OK", () => answer(inp.value));
+      break;
+    }
+    case "getChoices": title(a[0]); multi(a[3], a[1], a[2]); break;
+    case "chooseEntitiesForEffect": title(a[0]); multi(a[1], a[2], a[3]); break;
+    case "chooseSingleEntityForEffect":
+      title(a[0]);
+      a[1].forEach((o, i) => button(label(o), () => answer(i)));
+      if (a[3]) button("(none)", () => answer(null));
+      break;
+    case "getAbilityToPlay":
+      title("Choose an ability");
+      a[1].forEach((o, i) => button(label(o), () => answer(i)));
+      button("Cancel", () => answer(null));
+      break;
+    case "order":
+      title(a[0] + " (shown in current order)");
+      a[4].forEach(o => box.append(el("div", "opt", label(o))));
+      button("Keep this order", () => answer(null));
+      break;
+    default:
+      title("Unsupported request: " + d.kind);
+      button("Skip", () => answer(null));
+  }
+}
+
+if (seat) connect();
+</script>
+</body>
+</html>
