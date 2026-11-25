@@ -289,6 +289,14 @@ final class TbldBot implements WebSocket.Listener {
             act("ok", -1, "auto-pay");
             return;
         }
+        if ("Decline".equals(label2)) {
+            act("cancel", -1, "decline yield suggestion");
+            return;
+        }
+        if (pl.contains("pay mana cost") && "Cancel".equals(label2) && b.get(4).getAsBoolean()) {
+            act("cancel", -1, "cancel unpayable spell");
+            return;
+        }
 
         if (pl.contains("select creatures to attack")) {
             if (aggressive) {

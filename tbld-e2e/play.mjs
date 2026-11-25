@@ -100,6 +100,10 @@ async function step(s) {
   const p = v.prompt.toLowerCase();
   if (b["Keep"]) return click(s, button("Keep"), "keep", turn);
   if (b["Auto"]) return click(s, button("Auto"), "auto-pay", turn);
+  // Forge suggests passing until the end of the turn; a player who wants to play declines
+  if (b["Decline"]) return click(s, button("Decline"), "decline yield suggestion", turn);
+  // A spell that can't be paid for
+  if (p.includes("pay mana cost") && b["Cancel"]) return click(s, button("Cancel"), "cancel unpayable spell", turn);
 
   if (p.includes("select creatures to attack")) {
     if (s.aggressive) {
@@ -129,7 +133,7 @@ async function step(s) {
     if (b["Cancel"]) return click(s, button("Cancel"), "cancel targeting", turn);
     return;
   }
-  if ((p.includes("discard") || p.includes("return")) && !b["OK"] && v.me.hand.length) {
+  if ((p.includes("discard") || p.includes("return")) && v.buttons.length && !b["OK"] && v.me.hand.length) {
     return click(s, `[data-me="1"] [data-zone="Hand"] .card >> nth=0`, "discard/bottom " + v.me.hand[0].name, turn);
   }
   // Priority in my own main phase with an empty stack: land, then creatures, then other spells
