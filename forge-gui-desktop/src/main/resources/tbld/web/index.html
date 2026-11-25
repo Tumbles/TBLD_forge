@@ -142,6 +142,8 @@ function renderCard(c) {
   if (chosenCardIds().has(c.id)) cls += " chosen";
   else if (selectableCardIds().has(c.id)) cls += " selectable";
   const d = el("div", cls);
+  d.dataset.id = c.id;
+  if (!c.hidden) { d.dataset.name = c.name; d.dataset.type = c.type || ""; }
   if (c.hidden) { d.append(el("div", "name", "Hidden card")); return d; }
   d.append(el("div", "name", c.name));
   let meta = c.type || "";
@@ -168,6 +170,7 @@ function hideTip() { document.getElementById("tip").style.display = "none"; }
 
 function zone(label, cards) {
   const z = el("div", "zone");
+  z.dataset.zone = label;
   z.append(el("div", "zone-label", label + " (" + cards.length + ")"));
   const row = el("div", "cards");
   cards.forEach(c => row.append(renderCard(c)));
@@ -185,9 +188,13 @@ function render() {
   const players = [...state.players].sort((x, y) => (x.id === state.me) - (y.id === state.me));
   for (const p of players) {
     const box = el("div", "panel player" + (p.id === state.activePlayer ? " active" : ""));
+    box.dataset.player = p.id;
+    box.dataset.me = p.id === state.me ? "1" : "0";
+    box.dataset.life = p.life;
     const h = el("h3");
     const nm = el("span", "target", p.name);
     nm.onclick = () => act("player", p.id);
+    nm.dataset.playerName = p.id;
     h.append(nm, document.createTextNode("  —  " + p.life + " life,  library " + p.library + (typeof p.hand === "number" ? ",  hand " + p.hand : "")));
     const mana = Object.entries(p.mana || {}).map(([k, v]) => v + k).join(" ");
     if (mana) {
@@ -255,11 +262,14 @@ function showDialog() {
   const box = document.getElementById("dialog");
   box.replaceChildren();
   box.style.display = "block";
+  delete box.dataset.min; delete box.dataset.max;
+  box.dataset.kind = d.kind;
   const a = d.a || [];
   const answer = v => { reply(d.rid, v); closeDialog(); };
   const title = t => { if (t) box.append(el("div", "", t)); };
   const button = (text, f) => { const b = el("button", "", text); b.onclick = f; box.append(b); };
   const multi = (options, min, max) => {
+    box.dataset.min = min; box.dataset.max = max;
     const checks = options.map((o, i) => {
       const lab = el("label", "opt");
       const cb = el("input"); cb.type = max === 1 ? "radio" : "checkbox"; cb.name = "opt"; cb.value = i;
