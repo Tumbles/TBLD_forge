@@ -288,8 +288,8 @@ public class TbldWebServerTest extends AITest {
                             returnPromptBeforeKeep = true;
                         }
                     }
-                }
-                    respondToPrompt(); else if ("updateButtons".equals(m)) {
+                    respondToPrompt();
+                } else if ("updateButtons".equals(m)) {
                     lastButtons = a;
                     respondToButtons(a);
                 }
