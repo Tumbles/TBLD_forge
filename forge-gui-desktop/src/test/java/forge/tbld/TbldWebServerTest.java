@@ -59,6 +59,7 @@ public class TbldWebServerTest extends AITest {
             AssertJUnit.assertTrue("seat 1 received no prompts", bot1.calls.get() > 0);
             AssertJUnit.assertTrue("seat 2 received no prompts", bot2.calls.get() > 0);
             AssertJUnit.assertTrue("seat 1 saw its own hand", bot1.sawOwnHand);
+            AssertJUnit.assertTrue("seat 1 played no land; lands on battlefield " + bot1.landsInPlay, bot1.landsInPlay >= 2);
             AssertJUnit.assertFalse("seat 1 saw seat 2's hand", bot1.sawOpponentHand);
             AssertJUnit.assertFalse("seat 2 saw seat 1's hand", bot2.sawOpponentHand);
 
@@ -95,6 +96,11 @@ public class TbldWebServerTest extends AITest {
         volatile boolean resetReceived;
         final AtomicInteger statesAfterReset = new AtomicInteger();
         volatile int firstTurnAfterReset = Integer.MAX_VALUE;
+        /** Seat 1 plays a Mountain in each of its main phases. */
+        volatile int landsInPlay;
+        volatile int landTurn = -1;
+        volatile boolean myMainPhase;
+        volatile int turn;
         final List<String> handLibrarySeen = new CopyOnWriteArrayList<>();
         final java.util.Deque<String> recent = new java.util.concurrent.ConcurrentLinkedDeque<>();
 
@@ -143,6 +149,16 @@ public class TbldWebServerTest extends AITest {
         }
 
         private synchronized void respondToButtons(final JsonArray a) {
+            if (seat == 1 && myMainPhase && landTurn != turn && a.get(3).getAsBoolean()) {
+                for (final JsonElement c : myHand) {
+                    final JsonObject card = c.getAsJsonObject();
+                    if (card.has("name") && "Mountain".equals(card.get("name").getAsString())) {
+                        landTurn = turn;
+                        act("card", card.get("id").getAsInt());
+                        return;
+                    }
+                }
+            }
             final String label1 = a.get(1).isJsonNull() ? "" : a.get(1).getAsString();
             final String label2 = a.get(2).isJsonNull() ? "" : a.get(2).getAsString();
             if ("Keep".equals(label1) && "Mulligan".equals(label2)) {
@@ -247,6 +263,10 @@ public class TbldWebServerTest extends AITest {
                     }
                 }
                 if (s.has("turn")) {
+                    turn = s.get("turn").getAsInt();
+                    myMainPhase = s.get("activePlayer").getAsInt() == s.get("me").getAsInt()
+                            && s.get("phase").getAsString().toLowerCase().contains("main")
+                            && s.getAsJsonArray("stack").isEmpty();
                     maxTurn.accumulateAndGet(s.get("turn").getAsInt(), Math::max);
                     gameOver = s.get("gameOver").getAsBoolean();
                     final int me = s.get("me").getAsInt();
@@ -254,6 +274,15 @@ public class TbldWebServerTest extends AITest {
                         final JsonObject p = pe.getAsJsonObject();
                         final boolean mine = p.get("id").getAsInt() == me;
                         final JsonElement hand = p.get("hand");
+                        if (mine && !resetReceived) {
+                            int lands = 0;
+                            for (final JsonElement c : p.getAsJsonArray("battlefield")) {
+                                if ("Mountain".equals(c.getAsJsonObject().get("name").getAsString())) {
+                                    lands++;
+                                }
+                            }
+                            landsInPlay = Math.max(landsInPlay, lands);
+                        }
                         if (mine && hand.isJsonArray()) {
                             myHand = hand.getAsJsonArray();
                             if (mulligansToTake > 0 && keepPressed) {

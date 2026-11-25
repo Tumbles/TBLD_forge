@@ -41,6 +41,8 @@ import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.function.Supplier;
 
 /**
@@ -67,6 +69,7 @@ public final class BrowserSeat implements IRemote {
     private volatile PlayerView player;
     /** Set when the match is abandoned; the seat then ignores the engine and answers nothing. */
     private volatile boolean retired;
+    private final ExecutorService actions;
 
     /** Questions waiting for the browser's answer, by request id. */
     private final Map<Integer, CompletableFuture<JsonElement>> pending = new ConcurrentHashMap<>();
@@ -87,6 +90,11 @@ public final class BrowserSeat implements IRemote {
         this.seatIndex = seatIndex;
         this.channel = channel;
         this.gui = new ProtocolGuiGame(this);
+        this.actions = Executors.newSingleThreadExecutor(r -> {
+            final Thread t = new Thread(r, "tbld-seat-" + seatIndex + "-actions");
+            t.setDaemon(true);
+            return t;
+        });
     }
 
     public int getSeatIndex() {
@@ -116,6 +124,7 @@ public final class BrowserSeat implements IRemote {
     /** Detaches this seat from its match: unanswered questions get no answer, and later engine calls are ignored. */
     public void retire() {
         retired = true;
+        actions.shutdown();
         for (final CompletableFuture<JsonElement> f : pending.values()) {
             f.complete(JsonNull.INSTANCE);
         }
@@ -148,8 +157,27 @@ public final class BrowserSeat implements IRemote {
 
     @Override
     public Object sendAndWait(final IdentifiableNetEvent event) {
-        if (retired || !(event instanceof GuiGameEvent g)) {
+        if (retired || !(event instanceof GuiGameEvent original)) {
             return null;
+        }
+        GuiGameEvent g = original;
+        if (g.getMethod() == ProtocolMethod.getAbilityToPlay) {
+            // As in Forge's desktop client: a single playable ability is used without asking,
+            // and only playable abilities are offered.
+            final Object[] a = g.getObjects();
+            final List<SpellAbilityView> playable = new ArrayList<>();
+            for (final Object o : asList(a[1])) {
+                if (o instanceof SpellAbilityView sav && sav.canPlay()) {
+                    playable.add(sav);
+                }
+            }
+            if (playable.isEmpty()) {
+                return null;
+            }
+            if (playable.size() == 1 && !playable.get(0).promptIfOnlyPossibleAbility()) {
+                return playable.get(0);
+            }
+            g = new GuiGameEvent(ProtocolMethod.getAbilityToPlay, a[0], playable, a[2]);
         }
         final Object auto = autoAnswer(g);
         if (auto != null || AUTO_ANSWERED.contains(g.getMethod())) {
@@ -344,7 +372,10 @@ public final class BrowserSeat implements IRemote {
 
     // ------------------------------------------------------------------ browser -> engine
 
-    /** Handles one message from the browser. */
+    /**
+     * Handles one message from the browser. Actions run on this seat's own thread, because an action
+     * can make the engine ask this player a question, and the answer arrives on the same connection.
+     */
     public void receive(final JsonObject msg) {
         final String t = msg.has("t") ? msg.get("t").getAsString() : "";
         if ("reply".equals(t)) {
@@ -354,9 +385,18 @@ public final class BrowserSeat implements IRemote {
             }
             return;
         }
-        if (!"act".equals(t)) {
-            return;
+        if ("act".equals(t) && !retired) {
+            actions.execute(() -> {
+                try {
+                    act(msg);
+                } catch (final RuntimeException e) {
+                    e.printStackTrace();
+                }
+            });
         }
+    }
+
+    private void act(final JsonObject msg) {
         final IGameController controller = retired ? null : getController();
         if (controller == null) {
             return;
