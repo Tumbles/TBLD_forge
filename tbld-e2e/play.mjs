@@ -135,6 +135,11 @@ async function step(s) {
   // Priority in my own main phase with an empty stack: land, then creatures, then other spells
   if (b["OK"] && v.me.active && /main phase/i.test(v.status) && v.stack.includes("(empty)")) {
     const playable = v.me.hand.filter(c => c.selectable);
+    const key = `log:${turn}:${v.status}`;
+    if (!s.attempted.has(key)) {
+      s.attempted.add(key);
+      s.actions.push(`t${turn} main phase; hand: ${v.me.hand.map(c => c.name + (c.selectable ? "*" : "")).join(", ")}`);
+    }
     const land = playable.find(isLand);
     if (land && s.landTurn !== turn) { s.landTurn = turn; return click(s, `[data-me="1"] .card[data-id="${land.id}"]`, "play " + land.name, turn); }
     for (const c of [...playable.filter(isCreature), ...playable.filter(c => !isLand(c) && !isCreature(c))]) {
@@ -142,7 +147,7 @@ async function step(s) {
       if (!s.attempted.has(key)) { s.attempted.add(key); return click(s, `[data-me="1"] .card[data-id="${c.id}"]`, "cast " + c.name, turn); }
     }
   }
-  if (b["OK"]) return click(s, button("OK"), "pass", turn);
+  if (b["OK"]) return click(s, button("OK"), v.me.active ? "pass (" + v.status + ")" : "pass", turn);
   // Anything else (e.g. Play/Draw after the coin toss): the first button
   if (v.buttons.length && !v.buttons[0].disabled) return click(s, "#buttons button >> nth=0", "press " + v.buttons[0].text, turn);
 }
