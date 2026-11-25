@@ -73,6 +73,8 @@ public final class TbldWebServer {
         }
         FModel.initialize(null, preferences -> {
             preferences.setPref(FPref.UI_LANGUAGE, "en-US");
+            preferences.setPref(FPref.UI_ENABLE_SOUNDS, false);
+            preferences.setPref(FPref.UI_ENABLE_MUSIC, false);
             return null;
         });
         modelInitialized = true;
