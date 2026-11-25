@@ -66,7 +66,7 @@ public class TbldWebServerTest extends AITest {
             // London mulligan: the cards go to the bottom only after the hand is kept
             AssertJUnit.assertTrue("seat 2 was not asked to put a card on the bottom", bot2.returnPrompts.get() > 0);
             AssertJUnit.assertFalse("seat 2 was asked to put a card on the bottom before keeping", bot2.returnPromptBeforeKeep);
-            AssertJUnit.assertTrue("seat 2 never had 6 cards in hand and 34 in library; turn:hand/library seen " + bot2.handLibrarySeen, bot2.sawMulliganResult);
+            AssertJUnit.assertTrue("seat 2 never had 6 cards in hand and 34 in library; turn:hand/library seen " + bot2.handLibrarySeen + "\n" + bot2.mulliganLog, bot2.sawMulliganResult);
 
             // Restart
             bot1.restart();
@@ -102,6 +102,8 @@ public class TbldWebServerTest extends AITest {
         volatile boolean myMainPhase;
         volatile int turn;
         final List<String> handLibrarySeen = new CopyOnWriteArrayList<>();
+        /** Every message up to the first turn, for diagnosing the mulligan. */
+        final List<String> mulliganLog = new CopyOnWriteArrayList<>();
         final java.util.Deque<String> recent = new java.util.concurrent.ConcurrentLinkedDeque<>();
 
         @Override
@@ -221,6 +223,9 @@ public class TbldWebServerTest extends AITest {
         }
 
         private void act(final String m, final int id) {
+            if (turn < 1) {
+                mulliganLog.add(">> " + m + " " + id);
+            }
             final JsonObject o = new JsonObject();
             o.addProperty("t", "act");
             o.addProperty("m", m);
@@ -249,6 +254,10 @@ public class TbldWebServerTest extends AITest {
 
         private void handle(final JsonObject msg) {
             lastMessage = System.currentTimeMillis();
+            if (turn < 1 && mulliganLog.size() < 200) {
+                final String text = msg.toString();
+                mulliganLog.add(text.length() > 250 ? text.substring(0, 250) : text);
+            }
             final String t = msg.get("t").getAsString();
             if ("reset".equals(t)) {
                 resetReceived = true;
