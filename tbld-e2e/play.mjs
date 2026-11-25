@@ -44,6 +44,8 @@ async function read(page) {
     const dialogOpen = dialog.style.display === "block";
     return {
       status: text("#status"), prompt: text("#prompt"), stack: text("#stack"),
+      // eslint-disable-next-line no-undef
+      selection: typeof selection === "undefined" ? "?" : JSON.stringify(selection),
       buttons: [...document.querySelectorAll("#buttons button")].map(b => ({ text: b.textContent, disabled: b.disabled })),
       dialog: dialogOpen ? {
         kind: dialog.dataset.kind, min: dialog.dataset.min === undefined ? null : +dialog.dataset.min,
@@ -142,7 +144,7 @@ async function step(s) {
     const key = `log:${turn}:${v.status}`;
     if (!s.attempted.has(key)) {
       s.attempted.add(key);
-      s.actions.push(`t${turn} main phase; hand: ${v.me.hand.map(c => c.name + (c.selectable ? "*" : "")).join(", ")}`);
+      s.actions.push(`t${turn} main phase; hand: ${v.me.hand.map(c => c.id + ":" + c.name + (c.selectable ? "*" : "")).join(", ")}; selection: ${v.selection}; prompt: ${v.prompt}`);
     }
     const land = playable.find(isLand);
     if (land && s.landTurn !== turn) { s.landTurn = turn; return click(s, `[data-me="1"] .card[data-id="${land.id}"]`, "play " + land.name, turn); }
