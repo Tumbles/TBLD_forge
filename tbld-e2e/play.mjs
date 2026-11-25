@@ -143,6 +143,8 @@ async function step(s) {
     }
   }
   if (b["OK"]) return click(s, button("OK"), "pass", turn);
+  // Anything else (e.g. Play/Draw after the coin toss): the first button
+  if (v.buttons.length && !v.buttons[0].disabled) return click(s, "#buttons button >> nth=0", "press " + v.buttons[0].text, turn);
 }
 
 const start = Date.now();
