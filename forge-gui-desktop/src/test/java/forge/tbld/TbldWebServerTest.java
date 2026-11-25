@@ -65,7 +65,7 @@ public class TbldWebServerTest extends AITest {
             // London mulligan: the cards go to the bottom only after the hand is kept
             AssertJUnit.assertTrue("seat 2 was not asked to put a card on the bottom", bot2.returnPrompts.get() > 0);
             AssertJUnit.assertFalse("seat 2 was asked to put a card on the bottom before keeping", bot2.returnPromptBeforeKeep);
-            AssertJUnit.assertTrue("seat 2 never had 6 cards in hand and 34 in library", bot2.sawMulliganResult);
+            AssertJUnit.assertTrue("seat 2 never had 6 cards in hand and 34 in library; turn:hand/library seen " + bot2.handLibrarySeen, bot2.sawMulliganResult);
 
             // Restart
             bot1.restart();
@@ -95,6 +95,7 @@ public class TbldWebServerTest extends AITest {
         volatile boolean resetReceived;
         final AtomicInteger statesAfterReset = new AtomicInteger();
         volatile int firstTurnAfterReset = Integer.MAX_VALUE;
+        final List<String> handLibrarySeen = new CopyOnWriteArrayList<>();
         final java.util.Deque<String> recent = new java.util.concurrent.ConcurrentLinkedDeque<>();
 
         @Override
@@ -255,8 +256,14 @@ public class TbldWebServerTest extends AITest {
                         final JsonElement hand = p.get("hand");
                         if (mine && hand.isJsonArray()) {
                             myHand = hand.getAsJsonArray();
-                            if (mulligansToTake > 0 && keepPressed && myHand.size() == 6 && p.get("library").getAsInt() == 34) {
-                                sawMulliganResult = true;
+                            if (mulligansToTake > 0 && keepPressed) {
+                                final String pair = s.get("turn").getAsInt() + ":" + myHand.size() + "/" + p.get("library").getAsInt();
+                                if (handLibrarySeen.size() < 40 && !handLibrarySeen.contains(pair)) {
+                                    handLibrarySeen.add(pair);
+                                }
+                                if (myHand.size() == 6 && p.get("library").getAsInt() == 34) {
+                                    sawMulliganResult = true;
+                                }
                             }
                             if (!myHand.isEmpty()) {
                                 sawOwnHand = true;
