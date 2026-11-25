@@ -130,8 +130,10 @@ public class TbldWebServerTest extends AITest {
                     } catch (final InterruptedException e) {
                         return;
                     }
-                    if (System.currentTimeMillis() - lastMessage > 2000 && lastButtons != null) {
-                        respondToButtons(lastButtons);
+                    final JsonArray buttons = lastButtons;
+                    if (System.currentTimeMillis() - lastMessage > 2000 && buttons != null) {
+                        respondToButtons(buttons);
+                        respondToPrompt();
                     }
                 }
             });
@@ -155,11 +157,18 @@ public class TbldWebServerTest extends AITest {
             }
             if (a.get(3).getAsBoolean()) {
                 act("ok", -1);
-            } else {
-                final String p = prompt.toLowerCase();
-                if ((p.contains("discard") || p.contains("return")) && !myHand.isEmpty()) {
-                    act("card", myHand.get(0).getAsJsonObject().get("id").getAsInt());
-                }
+            }
+        }
+
+        /** Picks a card for a prompt that needs one. Called when the prompt arrives, which is after its buttons. */
+        private synchronized void respondToPrompt() {
+            final JsonArray a = lastButtons;
+            if (a == null || a.get(3).getAsBoolean()) {
+                return;
+            }
+            final String p = prompt.toLowerCase();
+            if ((p.contains("discard") || p.contains("return")) && !myHand.isEmpty()) {
+                act("card", myHand.get(0).getAsJsonObject().get("id").getAsInt());
             }
         }
 
@@ -280,10 +289,7 @@ public class TbldWebServerTest extends AITest {
                         }
                     }
                 }
-                    final JsonArray buttons = lastButtons;
-                    if (buttons != null && !buttons.get(3).getAsBoolean()) {
-                        respondToButtons(buttons);
-                    } else if ("updateButtons".equals(m)) {
+                    respondToPrompt(); else if ("updateButtons".equals(m)) {
                     lastButtons = a;
                     respondToButtons(a);
                 }
