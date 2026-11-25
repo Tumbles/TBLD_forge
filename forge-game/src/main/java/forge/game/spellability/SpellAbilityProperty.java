@@ -315,7 +315,7 @@ public class SpellAbilityProperty {
                 return true;
             }
             if (sa.isSpell()) {
-                return host.isInstant() || host.hasKeyword(Keyword.FLASH) || StaticAbilityCastWithFlash.anyWithFlash(sa, host, sourceController);
+                return host.isInstant() || host.hasFlashSupertype() || host.hasKeyword(Keyword.FLASH) || StaticAbilityCastWithFlash.anyWithFlash(sa, host, sourceController);
             }
             if (sa.isActivatedAbility()) {
                 return !sa.isPwAbility() && !sa.getRestrictions().isSorcerySpeed();

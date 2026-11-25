@@ -1,0 +1,9 @@
+Name:Searing Touch
+ManaCost:R
+Types:Flash Sorcery
+K:Buyback:4 R
+A:SP$ DealDamage | ValidTgts$ Any | NumDmg$ 2 | RememberDamaged$ True | SubAbility$ DBEffect | SpellDescription$ CARDNAME deals 2 damage to any target. If a player was dealt damage this way, they can't gain life this turn.
+SVar:DBEffect:DB$ Effect | RememberObjects$ Remembered.Player | StaticAbilities$ STCantGain | IsCurse$ True | StackDescription$ None | SubAbility$ DBCleanup
+SVar:STCantGain:Mode$ CantGainLife | ValidPlayer$ Player.IsRemembered | Description$ A player dealt damage this way can't gain life this turn.
+SVar:DBCleanup:DB$ Cleanup | ClearRemembered$ True
+Oracle:Buyback {4}{R} (You may pay an additional {4}{R} as you cast this. If you do, put this into your hand as it resolves.)\nThis deals 2 damage to any target. If a player was dealt damage this way, they can't gain life this turn.

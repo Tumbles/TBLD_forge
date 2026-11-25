@@ -115,7 +115,8 @@ public final class CardType implements Comparable<CardType>, CardTypeView {
         Legendary("lblLegendary"),
         Snow("lblSnow"),
         Ongoing("lblOngoing"),
-        World("lblWorld");
+        World("lblWorld"),
+        Flash("lblFlashSupertype");
 
         public final String label;
 

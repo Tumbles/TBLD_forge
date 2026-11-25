@@ -5629,6 +5629,7 @@ public class Card extends GameEntity implements Comparable<Card>, IHasSVars, ITr
     public final boolean isKindred()     { return getType().isKindred(); }
     public final boolean isSorcery()    { return getType().isSorcery(); }
     public final boolean isInstant()    { return getType().isInstant(); }
+    public final boolean hasFlashSupertype() { return getType().hasSupertype(CardType.Supertype.Flash); }
     public final boolean isInstantOrSorcery() {return getType().isInstant() || getType().isSorcery();}
 
     public final boolean isCreature()   { return getType().isCreature(); }

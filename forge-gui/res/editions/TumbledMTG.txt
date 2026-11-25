@@ -1,0 +1,8 @@
+[metadata]
+Code=TBLD
+Date=2026-11-24
+Name=TumbledMTG
+Type=Custom_Set
+
+[cards]
+1 U Searing Touch
