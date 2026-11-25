@@ -59,7 +59,7 @@ public final class BrowserSeat implements IRemote {
     /** Calls that only update state and have no meaning to the browser on their own. */
     private static final java.util.Set<ProtocolMethod> STATE_ONLY = java.util.EnumSet.of(
             ProtocolMethod.setGameView, ProtocolMethod.applyDelta, ProtocolMethod.applyYieldUpdate,
-            ProtocolMethod.applyMacroState, ProtocolMethod.awaitNextInput);
+            ProtocolMethod.applyMacroState);
 
     private final int seatIndex;
     private final Supplier<Channel> channel;
@@ -215,7 +215,7 @@ public final class BrowserSeat implements IRemote {
             pendingMessages.put(rid, callJson);
         } else if (method == ProtocolMethod.showPromptMessage) {
             lastPrompt = callJson;
-        } else if (method == ProtocolMethod.updateButtons) {
+        } else if (method == ProtocolMethod.updateButtons || method == ProtocolMethod.awaitNextInput) {
             lastButtons = callJson;
         } else if (method == ProtocolMethod.setSelection) {
             lastSelection = callJson;

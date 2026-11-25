@@ -61,6 +61,8 @@ let ws = null;
 let state = null;
 let dialogQueue = [];
 let selection = null;
+let awaitTimer = null;
+function cancelAwait() { if (awaitTimer) { clearTimeout(awaitTimer); awaitTimer = null; } }
 
 function refId(o) { return o && typeof o === "object" ? (o.card ?? o.player ?? o.stack ?? o.entity) : undefined; }
 function chosenCardIds() { return new Set(((selection && selection.chosen) || []).filter(o => o && o.card !== undefined).map(o => o.card)); }
@@ -96,8 +98,17 @@ function handle(msg) {
   if (msg.t !== "call") return;
   const a = msg.a;
   switch (msg.m) {
-    case "showPromptMessage": document.getElementById("prompt").textContent = a[1] || ""; break;
-    case "updateButtons": renderButtons(a[1], a[2], a[3], a[4]); break;
+    case "showPromptMessage": cancelAwait(); document.getElementById("prompt").textContent = a[1] || ""; break;
+    case "updateButtons": cancelAwait(); renderButtons(a[1], a[2], a[3], a[4]); break;
+    case "awaitNextInput":
+      // The engine is done with this player's input. Unless a new one arrives at once, the other player is acting.
+      cancelAwait();
+      awaitTimer = setTimeout(() => {
+        awaitTimer = null;
+        document.getElementById("prompt").textContent = "Waiting for opponent...";
+        document.getElementById("buttons").replaceChildren();
+      }, 250);
+      break;
     case "message": case "showErrorDialog": queueDialog({ kind: "message", title: a[1], text: a[0] }); break;
     case "flashIncorrectAction": flash(); break;
     case "setSelection": selection = a[0]; if (state) render(); break;

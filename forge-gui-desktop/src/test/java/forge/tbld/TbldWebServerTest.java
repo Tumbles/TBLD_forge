@@ -54,7 +54,7 @@ public class TbldWebServerTest extends AITest {
             }
 
             AssertJUnit.assertTrue("errors: " + bot1.errors + bot2.errors, bot1.errors.isEmpty() && bot2.errors.isEmpty());
-            AssertJUnit.assertTrue("game did not progress; reached turn " + bot1.maxTurn.get(),
+            AssertJUnit.assertTrue("game did not progress; reached turn " + bot1.maxTurn.get() + "\n" + bot1 + "\n" + bot2,
                     bot1.maxTurn.get() >= TARGET_TURN || bot1.gameOver);
             AssertJUnit.assertTrue("seat 1 received no prompts", bot1.calls.get() > 0);
             AssertJUnit.assertTrue("seat 2 received no prompts", bot2.calls.get() > 0);
@@ -95,6 +95,14 @@ public class TbldWebServerTest extends AITest {
         volatile boolean resetReceived;
         final AtomicInteger statesAfterReset = new AtomicInteger();
         volatile int firstTurnAfterReset = Integer.MAX_VALUE;
+        final java.util.Deque<String> recent = new java.util.concurrent.ConcurrentLinkedDeque<>();
+
+        @Override
+        public String toString() {
+            return "seat " + seat + ": prompt=" + prompt + " buttons=" + lastButtons + " mulligans=" + mulligansTaken
+                    + " kept=" + keepPressed + " returnPrompts=" + returnPrompts + " hand=" + myHand.size()
+                    + "\n  recent calls: " + String.join("\n    ", recent);
+        }
         final WebSocket ws;
         final StringBuilder partial = new StringBuilder();
         final AtomicInteger maxTurn = new AtomicInteger();
@@ -257,6 +265,10 @@ public class TbldWebServerTest extends AITest {
             }
             calls.incrementAndGet();
             final String m = msg.get("m").getAsString();
+            recent.addLast(msg.toString().length() > 300 ? msg.toString().substring(0, 300) : msg.toString());
+            while (recent.size() > 12) {
+                recent.pollFirst();
+            }
             final JsonArray a = msg.getAsJsonArray("a");
             if (!msg.has("rid")) {
                 if ("showPromptMessage".equals(m)) {
