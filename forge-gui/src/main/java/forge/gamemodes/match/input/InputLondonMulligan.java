@@ -77,6 +77,11 @@ public class InputLondonMulligan extends InputSyncronizedBase {
     /** {@inheritDoc} */
     @Override
     protected final void onOk() {
+        // A press of OK sent before the latest change to the selection reached the player
+        if (selected.size() < toReturn) {
+            showMessage();
+            return;
+        }
         getController().getGame().getView().updateIsMulligan(false);
         stop();
     }

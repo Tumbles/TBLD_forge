@@ -205,6 +205,8 @@ public final class TbldWebServer {
     }
 
     private void startMatch(final List<BrowserSeat> seats) {
+        // The web client outlines playable cards using the selection's actionable list
+        FModel.getPreferences().setPref(FPref.UI_SHOW_ACTIONABLE_HIGHLIGHTS, true);
         final List<RegisteredPlayer> players = new ArrayList<>();
         final Map<RegisteredPlayer, IGuiGame> guis = new LinkedHashMap<>();
         for (final BrowserSeat s : seats) {
