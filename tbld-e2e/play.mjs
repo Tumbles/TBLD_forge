@@ -86,6 +86,9 @@ async function step(s) {
     if (isCreature(c)) s.seen.died = true; else if (/Instant|Sorcery/.test(c.type)) s.seen.spell = true;
   }
   if (gameOver) return;
+  // Act only on a page that has settled, as a person would: messages arrive in bursts, and the
+  // buttons from the previous prompt stay up briefly while the next one arrives
+  if (Date.now() - s.lastChange < 400) return;
 
   if (v.dialog) {
     const d = v.dialog;
