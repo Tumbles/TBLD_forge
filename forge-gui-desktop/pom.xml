@@ -299,6 +299,12 @@ try {
                 <directory>filters</directory>
                 <filtering>true</filtering>
             </resource>
+            <resource>
+                <directory>src/main/resources</directory>
+                <includes>
+                    <include>tbld/**</include>
+                </includes>
+            </resource>
         </resources>
     </build>
 
