@@ -154,6 +154,26 @@ check((await page.locator("#preview .fr-name").textContent()) === "Raging Goblin
 check((await page.locator("#preview .pv-info").textContent()).includes("Summoning sick"), "the preview lists the card's state");
 await page.mouse.move(700, 495);
 check(!(await visible("#preview")), "the preview hides when the pointer leaves the card");
+// a card cast from the hand goes away under the pointer: its preview goes with it
+const handCard = page.locator('#half-me .hand .card').first();
+const castId = Number(await handCard.getAttribute("data-id"));
+await handCard.hover();
+check(await visible("#preview"), "hovering a card in the hand shows the preview");
+const cast = makeState();
+cast.players[0].hand = cast.players[0].hand.filter(c => c.id !== castId);
+send({ t: "state", state: cast });
+await settle(300);
+check(!(await visible("#preview")), "the preview of a card that leaves the hand under the pointer goes away");
+// a popup opening over a hovered card hides its preview
+send({ t: "state", state: makeState() });
+await settle(300);
+await page.hover('#half-me .card[data-id="10"]');
+call("message", ["A popup over the hovered card", "Note"]);
+await settle(300);
+check(!(await visible("#preview")), "a popup opening over a hovered card hides its preview");
+await page.mouse.move(5, 5);
+await page.locator("#dialog .popup .btn.primary").click();
+await settle(300);
 
 // an effect is shown as the art of the card that made it, and hovering it shows what it does
 const withEffect = makeState();
