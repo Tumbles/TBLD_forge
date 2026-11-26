@@ -14,6 +14,8 @@ import forge.game.card.CardView;
 import forge.game.card.CardView.CardStateView;
 import forge.game.card.CounterType;
 import forge.game.combat.CombatView;
+import forge.game.phase.PhaseType;
+import forge.game.player.DelayedReveal;
 import forge.game.player.PlayerView;
 import forge.game.spellability.SpellAbilityView;
 import forge.game.spellability.StackItemView;
@@ -36,11 +38,15 @@ import forge.util.collect.FCollection;
 import io.netty.channel.Channel;
 import io.netty.handler.codec.http.websocketx.TextWebSocketFrame;
 
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.EnumSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutionException;
@@ -77,6 +83,21 @@ public final class BrowserSeat implements IRemote {
     private volatile boolean retired;
     /** Pass priority automatically when the player has nothing to play or activate. Set by the browser. */
     private volatile boolean autoPass;
+    /**
+     * The phases in which this player stops to get priority while the stack is empty: on their own
+     * turn, and on an opponent's turn. In the other phases they pass. Null until the browser sends
+     * them; until then the player stops in every phase.
+     */
+    private volatile Set<PhaseType> stopsOwnTurn;
+    private volatile Set<PhaseType> stopsOpponentTurn;
+    /** The phase stops could not be applied yet, because the game view had no players. */
+    private volatile boolean stopsPending;
+
+    /** The phases that a player can choose to stop in. */
+    static final List<PhaseType> STOP_PHASES = List.of(PhaseType.UPKEEP, PhaseType.DRAW, PhaseType.MAIN1,
+            PhaseType.COMBAT_BEGIN, PhaseType.COMBAT_DECLARE_ATTACKERS, PhaseType.COMBAT_DECLARE_BLOCKERS,
+            PhaseType.COMBAT_FIRST_STRIKE_DAMAGE, PhaseType.COMBAT_DAMAGE, PhaseType.COMBAT_END,
+            PhaseType.MAIN2, PhaseType.END_OF_TURN);
     private final ExecutorService actions;
 
     /** Questions waiting for the browser's answer, by request id. */
@@ -225,6 +246,10 @@ public final class BrowserSeat implements IRemote {
             }
         }
 
+        if (stopsPending) {
+            applyPrefsLater();
+        }
+
         final JsonObject state = new JsonObject();
         state.addProperty("t", "state");
         state.add("state", snapshot());
@@ -342,8 +367,11 @@ public final class BrowserSeat implements IRemote {
                 return picked.isEmpty() ? null : picked.get(0);
             }
             case order: {
+                // The browser answers with indices into the source list followed by the destination list
                 final List<Object> source = asList(a[4]);
-                final List<Object> ordered = none ? source : pick(source, v);
+                final List<Object> all = new ArrayList<>(source);
+                all.addAll(asList(a[5]));
+                final List<Object> ordered = none ? source : pick(all, v);
                 return new IGuiGame.OrderResult<>(ordered, false);
             }
             default:
@@ -394,8 +422,13 @@ public final class BrowserSeat implements IRemote {
         if ("pref".equals(t)) {
             if (msg.has("autoPass")) {
                 autoPass = msg.get("autoPass").getAsBoolean();
-                applyPrefsLater();
             }
+            if (msg.has("stops") && msg.get("stops").isJsonObject()) {
+                final JsonObject stops = msg.getAsJsonObject("stops");
+                stopsOwnTurn = phases(stops.get("own"));
+                stopsOpponentTurn = phases(stops.get("opponent"));
+            }
+            applyPrefsLater();
             return;
         }
         if ("reply".equals(t)) {
@@ -430,8 +463,49 @@ public final class BrowserSeat implements IRemote {
             if (controller != null) {
                 // Forge's "auto-pass if no actions": pass priority when nothing can be played or activated
                 controller.applyYieldUpdate(new YieldUpdate.SetYieldPref(FPref.YIELD_AUTO_PASS_NO_ACTIONS, String.valueOf(autoPass)));
+                applyStops(controller);
             }
         });
+    }
+
+    /**
+     * Tells the controller which phases to pass in, on every player's turn. Forge passes priority in
+     * a skipped phase only while the stack is empty, so the player can still respond to spells.
+     */
+    private void applyStops(final IGameController controller) {
+        final Set<PhaseType> own = stopsOwnTurn;
+        final Set<PhaseType> opponent = stopsOpponentTurn;
+        if (own == null || opponent == null) {
+            return;
+        }
+        final GameView gv = gui.getGameView();
+        final PlayerView me = player;
+        if (gv == null || me == null || gv.getPlayers() == null || gv.getPlayers().isEmpty()) {
+            stopsPending = true;
+            return;
+        }
+        stopsPending = false;
+        for (final PlayerView turnPlayer : gv.getPlayers()) {
+            final Set<PhaseType> stops = turnPlayer.getId() == me.getId() ? own : opponent;
+            for (final PhaseType phase : STOP_PHASES) {
+                controller.applyYieldUpdate(new YieldUpdate.SkipPhase(turnPlayer, phase, !stops.contains(phase)));
+            }
+        }
+    }
+
+    /** The phases named in a JSON array. Unknown names are ignored. */
+    private static Set<PhaseType> phases(final JsonElement names) {
+        final Set<PhaseType> result = EnumSet.noneOf(PhaseType.class);
+        if (names != null && names.isJsonArray()) {
+            for (final JsonElement e : names.getAsJsonArray()) {
+                try {
+                    result.add(PhaseType.valueOf(e.getAsString()));
+                } catch (final IllegalArgumentException | UnsupportedOperationException | IllegalStateException ex) {
+                    // not a phase
+                }
+            }
+        }
+        return result;
     }
 
     private void act(final JsonObject msg) {
@@ -533,6 +607,12 @@ public final class BrowserSeat implements IRemote {
         if (o instanceof PaperCard pc) {
             return new JsonPrimitive(pc.getName());
         }
+        if (o instanceof DelayedReveal dr) {
+            final JsonObject j = new JsonObject();
+            j.add("reveal", encode(dr.getCards()));
+            j.addProperty("message", dr.getMessagePrefix());
+            return j;
+        }
         if (o instanceof Map<?, ?> map) {
             final JsonArray arr = new JsonArray();
             for (final Map.Entry<?, ?> e : map.entrySet()) {
@@ -566,6 +646,7 @@ public final class BrowserSeat implements IRemote {
         return arr;
     }
 
+    /** A card named in a call or a stack item: its id, and its face if this player may see it. */
     private JsonObject cardRef(final CardView cv) {
         final JsonObject j = new JsonObject();
         j.addProperty("card", cv.getId());
@@ -573,10 +654,71 @@ public final class BrowserSeat implements IRemote {
         if (me == null || cv.canBeShownTo(me)) {
             final CardStateView s = cv.getCurrentState();
             j.addProperty("name", s == null ? "?" : s.getName());
+            addFace(j, cv);
         } else {
             j.addProperty("name", "(hidden card)");
+            j.addProperty("hidden", true);
         }
         return j;
+    }
+
+    /** What is printed on the card: name, cost, type, text, power and toughness, colors and a picture. */
+    private static void addFace(final JsonObject j, final CardView cv) {
+        final CardStateView s = cv.getCurrentState();
+        if (s == null) {
+            return;
+        }
+        j.addProperty("name", s.getName());
+        j.addProperty("cost", s.getManaCost() == null ? "" : s.getManaCost().toString());
+        j.addProperty("type", s.getType() == null ? "" : s.getType().toString());
+        j.addProperty("text", s.getOracleText());
+        if (s.isCreature()) {
+            j.addProperty("power", s.getPower());
+            j.addProperty("toughness", s.getToughness());
+        }
+        j.addProperty("colors", colors(s));
+        j.addProperty("set", s.getSetCode() == null ? "" : s.getSetCode());
+        j.addProperty("token", cv.isToken());
+        final String img = imageUrl(cv, s);
+        if (img != null) {
+            j.addProperty("img", img);
+        }
+    }
+
+    private static String colors(final CardStateView s) {
+        final StringBuilder b = new StringBuilder();
+        if (s.getColors() != null) {
+            if (s.getColors().hasWhite()) {
+                b.append('W');
+            }
+            if (s.getColors().hasBlue()) {
+                b.append('U');
+            }
+            if (s.getColors().hasBlack()) {
+                b.append('B');
+            }
+            if (s.getColors().hasRed()) {
+                b.append('R');
+            }
+            if (s.getColors().hasGreen()) {
+                b.append('G');
+            }
+        }
+        return b.toString();
+    }
+
+    /**
+     * Where the browser loads the card's picture from, or null to have the browser draw the card.
+     * Official cards come from Scryfall by name. TBLD cards, tokens and face-down cards have no
+     * picture yet.
+     */
+    static String imageUrl(final CardView cv, final CardStateView s) {
+        final String set = s.getSetCode();
+        if (cv.isFaceDown() || cv.isToken() || set == null || set.isEmpty() || "TBLD".equalsIgnoreCase(set)) {
+            return null;
+        }
+        return "https://api.scryfall.com/cards/named?format=image&version=normal&exact="
+                + URLEncoder.encode(s.getName(), StandardCharsets.UTF_8);
     }
 
     private JsonObject cardJson(final CardView cv, final CombatView combat, final Map<Integer, CardView> seen) {
@@ -588,21 +730,11 @@ public final class BrowserSeat implements IRemote {
             j.addProperty("hidden", true);
             return j;
         }
-        final CardStateView s = cv.getCurrentState();
-        if (s != null) {
-            j.addProperty("name", s.getName());
-            j.addProperty("cost", s.getManaCost() == null ? "" : s.getManaCost().toString());
-            j.addProperty("type", s.getType() == null ? "" : s.getType().toString());
-            j.addProperty("text", s.getOracleText());
-            if (s.isCreature()) {
-                j.addProperty("power", s.getPower());
-                j.addProperty("toughness", s.getToughness());
-            }
-        }
+        addFace(j, cv);
         j.addProperty("tapped", cv.isTapped());
         j.addProperty("sick", cv.isSick());
         j.addProperty("damage", cv.getDamage());
-        j.addProperty("token", cv.isToken());
+        j.addProperty("faceDown", cv.isFaceDown());
         if (cv.getCounters() != null && !cv.getCounters().isEmpty()) {
             final JsonObject counters = new JsonObject();
             for (final CounterType ct : cv.getCounters().elementSet()) {
@@ -688,6 +820,7 @@ public final class BrowserSeat implements IRemote {
 
         j.addProperty("turn", gv.getTurn());
         j.addProperty("phase", gv.getPhase() == null ? "" : gv.getPhase().nameForUi);
+        j.addProperty("phaseId", gv.getPhase() == null ? "" : gv.getPhase().name());
         j.addProperty("activePlayer", gv.getPlayerTurn() == null ? -1 : gv.getPlayerTurn().getId());
         j.addProperty("gameOver", gv.isGameOver());
 
@@ -734,8 +867,27 @@ public final class BrowserSeat implements IRemote {
                 final JsonObject s = new JsonObject();
                 s.addProperty("id", si.getId());
                 s.addProperty("text", si.getText());
+                s.addProperty("ability", si.isAbility());
+                s.addProperty("trigger", si.isTrigger());
+                if (si.getActivatingPlayer() != null) {
+                    s.addProperty("controller", si.getActivatingPlayer().getId());
+                }
                 if (si.getSourceCard() != null) {
                     s.add("source", cardRef(si.getSourceCard()));
+                }
+                final JsonArray targets = new JsonArray();
+                if (si.getTargetCards() != null) {
+                    for (final CardView t : si.getTargetCards()) {
+                        targets.add(cardRef(t).get("name"));
+                    }
+                }
+                if (si.getTargetPlayers() != null) {
+                    for (final PlayerView t : si.getTargetPlayers()) {
+                        targets.add(t.getName());
+                    }
+                }
+                if (!targets.isEmpty()) {
+                    s.add("targets", targets);
                 }
                 st.add(s);
             }

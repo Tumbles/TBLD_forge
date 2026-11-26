@@ -17,7 +17,7 @@ function makeSeat(seat) {
     seat, aggressive: seat === 1, page: null, errors: [], actions: [],
     landTurn: -1, attempted: new Set(), blockersClicked: new Set(), blocksConfirmedTurn: -1,
     lastSignature: "", lastChange: Date.now(),
-    seen: { lands: 0, creature: false, attack: false, block: false, plannedBlock: false, died: false, spell: false },
+    seen: { lands: 0, creature: false, attack: false, block: false, plannedBlock: false, died: false, spell: false, popups: [] },
   };
 }
 const seats = [makeSeat(1), makeSeat(2)];
@@ -43,15 +43,19 @@ async function read(page) {
     });
     const dialog = document.getElementById("dialog");
     const dialogOpen = dialog.style.display === "block";
+    const primary = dialog.querySelector(".popup .btn.primary");
     return {
       status: text("#status"), prompt: text("#prompt"), stack: text("#stack"),
       // eslint-disable-next-line no-undef
       selection: typeof selection === "undefined" ? "?" : JSON.stringify(selection),
       buttons: [...document.querySelectorAll("#buttons button")].map(b => ({ text: b.textContent, disabled: b.disabled })),
+      // A popup marks its options "opt" ("picked" once chosen), says how many must be picked in
+      // data-need, and marks the button that confirms "primary"
       dialog: dialogOpen ? {
-        kind: dialog.dataset.kind, min: dialog.dataset.min === undefined ? null : +dialog.dataset.min,
-        options: dialog.querySelectorAll("input[type=checkbox],input[type=radio]").length,
-        buttons: [...dialog.querySelectorAll("button")].map(b => b.textContent),
+        kind: dialog.dataset.kind, title: dialog.querySelector(".p-title")?.textContent || "", need: +(dialog.dataset.need || 0),
+        unpicked: dialog.querySelectorAll(".popup .opt:not(.picked)").length, picked: dialog.querySelectorAll(".popup .opt.picked").length,
+        primary: !!primary && !primary.disabled,
+        buttons: [...dialog.querySelectorAll(".p-actions button")].map(b => b.textContent),
       } : null,
       me: panelInfo(document.querySelector('.player[data-me="1"]')),
       opp: panelInfo(document.querySelector('.player[data-me="0"]')),
@@ -96,13 +100,11 @@ async function step(s) {
 
   if (v.dialog) {
     const d = v.dialog;
-    if (d.options > 0) {
-      for (let i = 0; i < Math.min(d.min || 0, d.options); i++) {
-        await s.page.locator("#dialog input").nth(i).check();
-      }
-      return click(s, '#dialog button:text-is("Confirm")', `answer ${d.kind} with ${d.min || 0} option(s)`, turn);
-    }
-    return click(s, "#dialog button >> nth=0", `answer ${d.kind}: ${d.buttons[0]}`, turn);
+    if (!s.seen.popups.includes(d.kind)) s.seen.popups.push(d.kind);
+    if (d.picked < d.need && d.unpicked > 0) return click(s, "#dialog .popup .opt:not(.picked) >> nth=0", `pick an option in ${d.kind} (${d.title})`, turn);
+    if (d.primary) return click(s, "#dialog .popup .btn.primary", `confirm ${d.kind} (${d.title})`, turn);
+    if (d.unpicked > 0) return click(s, "#dialog .popup .opt >> nth=0", `answer ${d.kind} with its first option`, turn);
+    return click(s, "#dialog .p-actions button >> nth=0", `answer ${d.kind}: ${d.buttons[0]}`, turn);
   }
 
   const b = Object.fromEntries(v.buttons.map(x => [x.text, !x.disabled]));

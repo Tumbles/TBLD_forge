@@ -36,7 +36,7 @@ jobs:
         with:
           node-version: '20'
 
-      - name: Browser test (two tabs play a full game)
+      - name: Browser tests (the client's board and popups; two tabs play a full game)
         run: |
           pkg="${{ steps.pkg.outputs.dir }}"
           jar=$(cd "$pkg" && ls forge-gui-desktop-*-jar-with-dependencies.jar | head -1)
@@ -44,6 +44,7 @@ jobs:
           cd tbld-e2e
           npm install --no-audit --no-fund
           npx playwright install --with-deps chromium
+          node ui.mjs
           for i in $(seq 1 180); do grep -q "TBLD server running" "$RUNNER_TEMP/server.log" && break; sleep 1; done
           if ! node play.mjs http://localhost:8090/; then
             echo "---- server log: seat 2 main phase prompts ----"

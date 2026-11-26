@@ -97,6 +97,15 @@ final class TbldBot implements WebSocket.Listener {
     volatile int idlePriorityPrompts;
     /** Priority prompts shown while this player had something to play or activate. */
     volatile int busyPriorityPrompts;
+    /** Each priority prompt's phase, as "own:PHASE" or "opponent:PHASE", with ":stack" if the stack was not empty. */
+    final List<String> priorityPhases = new CopyOnWriteArrayList<>();
+    /** The questions this player was asked in a dialog: method and arguments. */
+    final List<JsonObject> dialogs = new CopyOnWriteArrayList<>();
+    /** The first scry of two or more cards: the card put on the bottom and the one kept on top. */
+    volatile int scryBottom = -1;
+    volatile int scryTop = -1;
+    volatile boolean scryTopDrawn;
+    volatile boolean scryBottomDrawn;
 
     TbldBot(final HttpClient http, final int port, final int seat, final boolean aggressive) throws Exception {
         this(http, port, seat, aggressive, 0);
@@ -128,6 +137,21 @@ final class TbldBot implements WebSocket.Listener {
         o.addProperty("t", "pref");
         o.addProperty("autoPass", on);
         send(o);
+    }
+
+    /** Sets the phases this seat stops in, as the browser's phase bar does. */
+    void setStops(final List<String> own, final List<String> opponent) {
+        final JsonObject stops = new JsonObject();
+        final JsonArray o = new JsonArray();
+        own.forEach(o::add);
+        final JsonArray p = new JsonArray();
+        opponent.forEach(p::add);
+        stops.add("own", o);
+        stops.add("opponent", p);
+        final JsonObject msg = new JsonObject();
+        msg.addProperty("t", "pref");
+        msg.add("stops", stops);
+        send(msg);
     }
 
     void restart() {
@@ -211,6 +235,11 @@ final class TbldBot implements WebSocket.Listener {
                             } else {
                                 busyPriorityPrompts++;
                             }
+                            final JsonObject s = state;
+                            if (s != null && s.has("phaseId")) {
+                                priorityPhases.add((myTurn() ? "own:" : "opponent:") + s.get("phaseId").getAsString()
+                                        + (s.getAsJsonArray("stack").isEmpty() ? "" : ":stack"));
+                            }
                         }
                     }
                     case "awaitNextInput" -> {
@@ -243,6 +272,17 @@ final class TbldBot implements WebSocket.Listener {
             final boolean mine = p.get("id").getAsInt() == me;
             if (mine) {
                 myLife = p.get("life").getAsInt();
+                if (p.get("hand").isJsonArray()) {
+                    for (final JsonElement ce : p.getAsJsonArray("hand")) {
+                        final int id = ce.getAsJsonObject().get("id").getAsInt();
+                        if (id == scryTop) {
+                            scryTopDrawn = true;
+                        }
+                        if (id == scryBottom) {
+                            scryBottomDrawn = true;
+                        }
+                    }
+                }
                 if (keepPressed && p.get("hand").isJsonArray() && p.getAsJsonArray("hand").size() == 6
                         && p.get("library").getAsInt() == 34) {
                     sawMulliganResult = true;
@@ -554,8 +594,28 @@ final class TbldBot implements WebSocket.Listener {
     // ------------------------------------------------------------------ answering questions
 
     private void answer(final int rid, final String m, final JsonArray a) {
+        final JsonObject asked = new JsonObject();
+        asked.addProperty("m", m);
+        asked.add("a", a);
+        dialogs.add(asked);
         final JsonElement v;
         switch (m) {
+            case "order" -> {
+                // Scry: the first time, put the first card on the bottom; later, keep everything on top
+                final String title = a.get(0).isJsonNull() ? "" : a.get(0).getAsString();
+                final JsonArray source = a.get(4).getAsJsonArray();
+                if (title.contains("bottom") && source.size() >= 2) {
+                    final JsonArray chosen = new JsonArray();
+                    if (scryTop < 0) {
+                        scryBottom = source.get(0).getAsJsonObject().get("card").getAsInt();
+                        scryTop = source.get(1).getAsJsonObject().get("card").getAsInt();
+                        chosen.add(0);
+                    }
+                    v = chosen;
+                } else {
+                    v = JsonNull.INSTANCE;
+                }
+            }
             case "confirm", "showConfirmDialog" -> v = new JsonPrimitive(true);
             case "showOptionDialog" -> v = new JsonPrimitive(0);
             case "showInputDialog" -> v = new JsonPrimitive("");

@@ -4,37 +4,272 @@
 <meta charset="utf-8">
 <title>TBLD</title>
 <style>
-  body { font-family: system-ui, sans-serif; margin: 0; background: #1c1d22; color: #ddd; font-size: 14px; }
+  :root {
+    --bg: #121419; --panel: #1c1f27; --panel2: #242833; --line: #333847; --text: #e7e9ef; --muted: #959cad;
+    --accent: #3fd2c0; --accent-soft: rgba(63, 210, 192, .18); --gold: #f2c14e; --danger: #ff6b6b; --block: #6cb6ff;
+    --turn: #8aa8ff; --their: #ff9f6b;
+    --bf-h: clamp(76px, 12vh, 150px); --hand-h: clamp(96px, 15.5vh, 200px); --pile-h: 46px; --side-w: 340px;
+  }
+  * { box-sizing: border-box; }
+  body { font-family: system-ui, "Segoe UI", sans-serif; margin: 0; background: var(--bg); color: var(--text); font-size: 14px; overflow: hidden; }
+  button { font: inherit; color: inherit; }
   #lobby { padding: 2em; }
-  #lobby a { color: #8cf; font-size: 1.3em; margin-right: 1.5em; }
-  #game { display: none; grid-template-columns: 1fr 320px; gap: 8px; padding: 8px; height: 100vh; box-sizing: border-box; }
-  #board { overflow-y: auto; }
-  #side { display: flex; flex-direction: column; gap: 8px; overflow: hidden; }
-  .panel { background: #26282f; border-radius: 6px; padding: 8px; }
-  .player h3 { margin: 0 0 4px 0; font-size: 1.05em; }
-  .player.active h3::after { content: "  (active)"; color: #fc6; font-weight: normal; }
-  .player .target { cursor: pointer; text-decoration: underline dotted; }
-  .zone { margin: 4px 0; }
-  .zone-label { color: #999; font-size: 0.85em; }
-  .cards { display: flex; flex-wrap: wrap; gap: 4px; }
-  .card { background: #353842; border: 1px solid #555; border-radius: 4px; padding: 4px 6px; cursor: pointer; max-width: 220px; }
-  .card:hover { border-color: #8cf; }
-  .card.selectable { border-color: #6a6; }
-  .card.chosen { border-color: #fc6; box-shadow: 0 0 0 2px #fc6; }
-  .card.tapped { opacity: 0.55; font-style: italic; }
-  .card .name { font-weight: 600; }
-  .card .meta { color: #aaa; font-size: 0.85em; }
-  .card .tags { color: #fc6; font-size: 0.85em; }
-  #prompt { white-space: pre-wrap; min-height: 2.5em; }
-  #buttons button, #dialog button { margin: 4px 4px 0 0; padding: 6px 12px; font-size: 1em; }
-  #dialog { display: none; border: 1px solid #fc6; }
-  #dialog .opt { display: block; margin: 3px 0; }
-  #stack .item { cursor: pointer; margin: 2px 0; }
-  #restart { float: right; font-size: 0.85em; }
-  #autopass-label { display: block; margin-top: 6px; font-size: 0.9em; cursor: pointer; }
-  #chosen { display: none; }
-  #log { flex: 1; overflow-y: auto; font-size: 0.85em; color: #aaa; }
-  #tip { position: fixed; pointer-events: none; background: #111; border: 1px solid #666; padding: 6px; max-width: 280px; white-space: pre-wrap; display: none; z-index: 10; }
+  #lobby a { color: var(--accent); font-size: 1.3em; margin-right: 1.5em; }
+
+  #game { display: none; grid-template-columns: minmax(0, 1fr) var(--side-w); height: 100vh; }
+  #table { display: flex; flex-direction: column; gap: 4px; padding: 6px 8px; min-width: 0; min-height: 0;
+    background: radial-gradient(ellipse at 50% 50%, #1b2029 0%, #121419 75%); }
+
+  /* ---- each player's half ---- */
+  .half { position: relative; display: flex; flex-direction: column; gap: 4px; padding: 4px 8px; border-radius: 12px;
+    border: 1px solid transparent; flex: 1 1 auto; min-height: 0; transition: background .3s, border-color .3s; }
+  .half.active { background: linear-gradient(var(--grad-dir, 180deg), rgba(138, 168, 255, .10), rgba(138, 168, 255, .02));
+    border-color: rgba(138, 168, 255, .35); box-shadow: inset 0 0 24px rgba(138, 168, 255, .08); }
+  .half.opp { --grad-dir: 0deg; }
+  .half .turn-tag { position: absolute; right: 10px; font-size: 11px; letter-spacing: .08em; text-transform: uppercase;
+    color: var(--turn); opacity: 0; transition: opacity .3s; pointer-events: none; }
+  .half.opp .turn-tag { bottom: 6px; } .half.me .turn-tag { top: 6px; }
+  .half.active .turn-tag { opacity: 1; }
+  .bf { display: flex; flex-direction: column; justify-content: center; gap: 6px; flex: 1 1 auto; min-height: 0; }
+  .row { --ch: var(--bf-h); height: var(--bf-h); display: flex; align-items: center; gap: 8px; min-width: 0; }
+  .row.front { justify-content: center; }
+  .row .spacer { flex: 1 1 auto; min-width: 0; }
+
+  /* ---- player bar ---- */
+  .pbar { display: flex; align-items: center; gap: 14px; min-height: 48px; }
+  .who { display: flex; align-items: center; gap: 8px; padding: 3px 12px 3px 3px; border-radius: 26px; background: var(--panel);
+    border: 1px solid var(--line); cursor: pointer; }
+  .who.targetable { border-color: var(--accent); box-shadow: 0 0 0 2px var(--accent-soft), 0 0 14px rgba(63, 210, 192, .45); }
+  .who.chosen { border-color: var(--gold); box-shadow: 0 0 0 2px rgba(242, 193, 78, .3); }
+  .avatar { width: 34px; height: 34px; border-radius: 50%; display: grid; place-items: center; font-weight: 700; font-size: 13px;
+    background: linear-gradient(135deg, #3b4560, #232838); border: 1px solid #4a5370; }
+  .half.me .avatar { background: linear-gradient(135deg, #2d6f68, #1d3a3f); border-color: #3f8f86; }
+  .pname { font-weight: 600; }
+  .life { font-size: 22px; font-weight: 800; min-width: 34px; text-align: center; font-variant-numeric: tabular-nums; }
+  .life.low { color: var(--danger); }
+  .counts { display: flex; gap: 10px; color: var(--muted); font-size: 12px; }
+  .counts b { color: var(--text); font-weight: 600; }
+  .piles { display: flex; gap: 8px; }
+  .pile { --ch: var(--pile-h); position: relative; width: calc(var(--pile-h) * .716); height: var(--pile-h); border-radius: 4px;
+    border: 1px dashed #3c4252; cursor: pointer; }
+  .pile > .card { position: absolute; left: 0; top: 0; pointer-events: none; }
+  .pile .pile-label { position: absolute; left: 50%; bottom: -2px; transform: translate(-50%, 100%); font-size: 10px; color: var(--muted); white-space: nowrap; }
+  .pile .pile-count { position: absolute; right: -6px; top: -6px; background: #0d0f14; border: 1px solid var(--line); border-radius: 9px;
+    font-size: 11px; padding: 0 5px; z-index: 3; }
+  .pile.lib { cursor: default; }
+  .pool { display: flex; gap: 4px; }
+  .pool .ms { cursor: pointer; width: 26px; height: 26px; font-size: 13px; }
+  .pool .ms .n { position: absolute; right: -5px; bottom: -5px; font-size: 10px; background: #0d0f14; color: var(--text);
+    border-radius: 8px; padding: 0 4px; border: 1px solid var(--line); }
+  .handbacks { display: flex; margin-left: auto; --ch: 40px; }
+  .handbacks .card { margin-left: -16px; cursor: default; }
+  .handbacks .card:first-child { margin-left: 0; }
+
+  /* ---- hand ---- */
+  .hand { --ch: var(--hand-h); display: flex; justify-content: center; align-items: flex-end; gap: 6px;
+    height: calc(var(--hand-h) + 12px); padding-top: 12px; min-width: 0; }
+  .hand .card:hover { transform: translateY(-12px); z-index: 20; }
+
+  /* ---- phase bar and priority stops ---- */
+  #phasebar { display: flex; align-items: center; gap: 12px; padding: 2px 10px; border-radius: 10px; background: rgba(28, 31, 39, .85);
+    border: 1px solid var(--line); flex: none; }
+  #turninfo { min-width: 150px; font-size: 12px; line-height: 1.3; }
+  #turnwho { font-weight: 700; font-size: 13px; }
+  #turnwho.mine { color: var(--turn); } #turnwho.theirs { color: var(--their); }
+  #status { color: var(--muted); }
+  .phases { display: flex; gap: 3px; flex: 1; justify-content: center; }
+  .ph { display: flex; flex-direction: column; align-items: center; gap: 2px; padding: 2px 3px; border-radius: 6px; min-width: 54px; }
+  .ph-name { font-size: 11px; color: var(--muted); padding: 1px 6px; border-radius: 4px; white-space: nowrap; }
+  .ph.current .ph-name { color: #0d0f14; font-weight: 700; background: var(--turn); }
+  .ph.current.theirs .ph-name { background: var(--their); }
+  .stop { width: 30px; height: 9px; border-radius: 5px; border: 1px solid #4a5163; background: transparent; padding: 0; cursor: pointer; }
+  .stop:hover { border-color: var(--text); }
+  .stop.opp.on { background: var(--their); border-color: var(--their); }
+  .stop.own.on { background: var(--turn); border-color: var(--turn); }
+  .ph.current.mine .stop.own, .ph.current.theirs .stop.opp { outline: 2px solid rgba(255, 255, 255, .6); outline-offset: 1px; }
+  .legend { font-size: 10.5px; color: var(--muted); line-height: 1.45; white-space: nowrap; }
+  .legend i { display: inline-block; width: 16px; height: 7px; border-radius: 4px; margin-right: 5px; vertical-align: middle; }
+
+  /* ---- cards ---- */
+  .card { position: relative; flex: none; width: calc(var(--ch) * .716); height: var(--ch); border-radius: calc(var(--ch) * .05);
+    cursor: pointer; transition: transform .12s ease, margin .12s ease; }
+  .card .face { position: absolute; left: 0; top: 0; width: calc(var(--ch) * .716); height: var(--ch); border-radius: inherit;
+    overflow: hidden; container-type: size; box-shadow: 0 1px 4px rgba(0, 0, 0, .7); transition: transform .18s ease, box-shadow .12s, filter .2s; }
+  .card .face::after { content: ""; position: absolute; inset: 0; border-radius: inherit; pointer-events: none; }
+  .card.tapped { width: var(--ch); }
+  .card.tapped .face { left: calc(var(--ch) * .142); transform: rotate(90deg); }
+  .card .art { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; z-index: 1; }
+  .card.selectable .face { box-shadow: 0 0 0 2px var(--accent), 0 0 14px rgba(63, 210, 192, .6); }
+  .card.chosen .face { box-shadow: 0 0 0 3px var(--gold), 0 0 16px rgba(242, 193, 78, .7); }
+  .card.chosen { transform: translateY(-6px); }
+  .card.sick .face { filter: saturate(.5) brightness(.82); }
+  .card.attacking .face::after { box-shadow: inset 0 0 0 3px var(--danger); }
+  .card.blocking .face::after { box-shadow: inset 0 0 0 3px var(--block); }
+  .half.me .card.attacking { transform: translateY(-14px); }
+  .half.opp .card.attacking { transform: translateY(14px); }
+  .badges { position: absolute; inset: 0; pointer-events: none; z-index: 4; }
+  .card.tapped .badges { inset: 14.2% 0; }
+  .badge { position: absolute; font-size: 11px; font-weight: 700; line-height: 1; padding: 3px 5px; border-radius: 6px;
+    background: rgba(10, 12, 16, .88); border: 1px solid #444b5c; white-space: nowrap; }
+  .badge.pt { right: -3px; bottom: -3px; font-size: 12px; }
+  .badge.pt.hurt { color: var(--danger); border-color: var(--danger); }
+  .badge.dmg { right: -3px; bottom: 18px; background: #7a1f1f; border-color: #c44; }
+  .badge.sick { left: -3px; top: -3px; color: #b8c4ff; border-color: #5b6aa8; font-style: italic; }
+  .badge.cnt { left: -3px; bottom: -3px; background: #20402c; border-color: #3f9b62; }
+  .badge.stackcount { background: #0d0f14; border-color: #6b7386; }
+  .tags { position: absolute; left: 50%; transform: translateX(-50%); bottom: -9px; display: flex; gap: 3px; z-index: 5; pointer-events: none; }
+  .half.opp .tags { bottom: auto; top: -9px; }
+  .tag { font-size: 10px; padding: 1px 6px; border-radius: 8px; white-space: nowrap; font-weight: 600; text-transform: capitalize;
+    max-width: calc(var(--ch) * 1.05); overflow: hidden; text-overflow: ellipsis; }
+  .tag.attacking { background: var(--danger); color: #1a0808; }
+  .tag.blocking, .tag.blocked { background: var(--block); color: #07121e; }
+  .tag.tapped-tag { display: none; }
+
+  /* drawn card frame, used until a picture loads and for cards without one */
+  .frame { position: absolute; inset: 0; display: flex; flex-direction: column; padding: 4.5cqw; gap: 2.5cqw;
+    background: linear-gradient(160deg, var(--fc1), var(--fc2)); color: #f2f3f6; }
+  .frame .fr-top, .frame .fr-type { display: flex; align-items: center; gap: 2cqw; background: rgba(0, 0, 0, .38); border-radius: 2.5cqw; padding: 1.5cqw 3cqw; }
+  .frame .fr-name { flex: 1; font-weight: 700; font-size: max(8px, 7.5cqw); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .frame .fr-cost { display: flex; gap: 1cqw; }
+  .frame .fr-cost .ms { width: max(8px, 7cqw); height: max(8px, 7cqw); font-size: max(6px, 5cqw); }
+  .frame .fr-art { flex: 1 1 38%; border-radius: 2cqw; display: grid; place-items: center; background:
+    radial-gradient(circle at 30% 25%, rgba(255, 255, 255, .22), transparent 55%), rgba(0, 0, 0, .25);
+    font-size: 22cqw; font-weight: 800; color: rgba(255, 255, 255, .16); letter-spacing: -.04em; }
+  .frame .fr-type { font-size: max(7px, 5.6cqw); font-weight: 600; white-space: nowrap; overflow: hidden; }
+  .frame .fr-text { flex: 1 1 34%; font-size: 5.2cqw; line-height: 1.25; background: rgba(240, 236, 226, .92); color: #1c1c1c;
+    border-radius: 2cqw; padding: 2.5cqw 3cqw; overflow: hidden; white-space: pre-wrap; }
+  .frame .fr-pt { position: absolute; right: 3cqw; bottom: 3cqw; font-weight: 800; font-size: 7.5cqw; background: rgba(0, 0, 0, .7);
+    border-radius: 2.5cqw; padding: .5cqw 3cqw; }
+  .frame .fr-set { position: absolute; left: 4cqw; bottom: 2.5cqw; font-size: 4cqw; color: rgba(0, 0, 0, .55); font-weight: 700; }
+  .fc-W { --fc1: #d9d3bd; --fc2: #9f9781; } .fc-U { --fc1: #3c78c0; --fc2: #1d3d66; } .fc-B { --fc1: #4c4450; --fc2: #1e1a21; }
+  .fc-R { --fc1: #c9573e; --fc2: #6c2316; } .fc-G { --fc1: #3f8c56; --fc2: #1c4227; } .fc-M { --fc1: #cfa94a; --fc2: #7a5d1d; }
+  .fc-C { --fc1: #8e98a6; --fc2: #4c5461; } .fc-L { --fc1: #8b7756; --fc2: #4a3c27; }
+  .fc-W .fr-top, .fc-W .fr-type { color: #1d1b16; background: rgba(255, 255, 255, .45); }
+  .back-face { position: absolute; inset: 0; background:
+    repeating-linear-gradient(45deg, rgba(255, 255, 255, .05) 0 6px, transparent 6px 12px),
+    radial-gradient(circle at 50% 50%, #2f3d63 0%, #161c2e 70%); border: 2px solid #0b0e16; border-radius: inherit; }
+  .back-face::before { content: "TBLD"; position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%) rotate(-30deg);
+    font-weight: 900; font-size: 18cqw; color: rgba(255, 255, 255, .22); letter-spacing: .05em; }
+
+  /* mana symbols */
+  .ms { position: relative; display: inline-grid; place-items: center; width: 18px; height: 18px; border-radius: 50%; font-weight: 800;
+    font-size: 11px; color: #111; box-shadow: 0 1px 1px rgba(0, 0, 0, .6); flex: none; }
+  .ms-W { background: #f6f1d6; } .ms-U { background: #a9d8f3; } .ms-B { background: #c3b8b5; } .ms-R { background: #f3a68c; }
+  .ms-G { background: #9fd3ad; } .ms-C, .ms-N { background: #cfc8c4; }
+
+  /* ---- attachments and land stacks ---- */
+  .attach-group { position: relative; display: flex; flex: none; }
+  .attach-group > .card.attached { margin-right: calc(var(--ch) * -.55); z-index: 0; }
+  .attach-group > .card:last-child { z-index: 1; }
+  .landstack { position: relative; flex: none; height: var(--ch); width: calc(var(--slot) + (var(--n) - 1) * 13px); --slot: calc(var(--ch) * .716); }
+  .landstack.tapped { --slot: var(--ch); }
+  .landstack > .card { position: absolute; top: 0; left: calc(var(--i) * 13px); }
+  .landstack > .stackcount { position: absolute; right: -4px; top: -6px; z-index: 30; }
+
+  /* ---- side panel ---- */
+  #side { display: flex; flex-direction: column; gap: 8px; padding: 8px 8px 8px 0; min-height: 0; }
+  .panel { background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 10px; }
+  .zone-label { color: var(--muted); font-size: 11px; text-transform: uppercase; letter-spacing: .08em; margin-bottom: 6px; }
+  #decision { flex: none; transition: border-color .2s, box-shadow .2s; }
+  #decision .dhead { display: flex; align-items: center; gap: 8px; font-size: 11px; text-transform: uppercase; letter-spacing: .1em;
+    color: var(--muted); margin-bottom: 6px; }
+  #decision .dot { width: 8px; height: 8px; border-radius: 50%; background: #50586b; }
+  #decision.mine { border-color: var(--accent); box-shadow: 0 0 0 1px var(--accent), 0 0 22px rgba(63, 210, 192, .25);
+    background: linear-gradient(180deg, #1b2a2c, var(--panel) 70%); }
+  #decision.mine .dhead { color: var(--accent); }
+  #decision.mine .dot { background: var(--accent); animation: pulse 1.2s infinite; }
+  @keyframes pulse { 50% { box-shadow: 0 0 0 5px rgba(63, 210, 192, 0); } 0% { box-shadow: 0 0 0 0 rgba(63, 210, 192, .7); } }
+  #decision .dbody { display: flex; gap: 10px; align-items: flex-start; }
+  #focus { --ch: 120px; flex: none; }
+  #focus:empty { display: none; }
+  #decision .dbody > div:last-child { flex: 1; min-width: 0; }
+  #prompt { white-space: pre-wrap; font-size: 14px; line-height: 1.4; min-height: 1.4em; }
+  #dnote { color: var(--accent); font-size: 13px; margin-top: 6px; cursor: pointer; }
+  #dnote:empty { display: none; }
+  #decision.waiting #prompt { color: var(--muted); }
+  #buttons { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
+  #buttons:empty { display: none; }
+  .btn { padding: 8px 16px; border-radius: 8px; border: 1px solid #4a5163; background: var(--panel2); cursor: pointer; font-weight: 600; }
+  .btn:hover:not(:disabled) { border-color: var(--text); }
+  .btn.primary { background: var(--accent); color: #062420; border-color: var(--accent); }
+  .btn.primary:hover:not(:disabled) { filter: brightness(1.1); }
+  .btn:disabled { opacity: .4; cursor: default; }
+  #chosen { margin-top: 10px; --ch: 78px; }
+  #chosen:empty { display: none; }
+  #chosen .chosen-row { display: flex; flex-wrap: wrap; gap: 6px; margin: 4px 0 8px; }
+  #chosen .chip { padding: 4px 10px; border-radius: 12px; background: var(--panel2); border: 1px solid var(--gold); cursor: pointer; }
+  #stack-panel { flex: none; max-height: 42vh; overflow-y: auto; }
+  #stack { display: flex; flex-direction: column; gap: 8px; }
+  #stack .empty { color: #4f5566; font-size: 12px; }
+  .stack-item { display: flex; gap: 10px; align-items: flex-start; padding: 6px; border-radius: 8px; cursor: pointer; border: 1px solid transparent; }
+  .stack-item.spell { --ch: 104px; background: var(--panel2); }
+  .stack-item.ability { --ch: 52px; background: linear-gradient(135deg, rgba(150, 110, 255, .16), rgba(150, 110, 255, .04));
+    border: 1px dashed rgba(170, 140, 255, .6); }
+  .stack-item.selectable { border: 1px solid var(--accent); box-shadow: 0 0 12px rgba(63, 210, 192, .35); }
+  .stack-item.top { outline: 1px solid rgba(255, 255, 255, .12); }
+  .stack-item .si-info { flex: 1; min-width: 0; font-size: 12.5px; line-height: 1.35; }
+  .stack-item .si-kind { font-size: 10px; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); }
+  .stack-item.ability .si-kind { color: #b9a2ff; }
+  .stack-item .si-name { font-weight: 700; font-size: 13.5px; }
+  .stack-item .si-text { color: #c5c9d4; margin-top: 2px; }
+  .stack-item .si-targets { color: var(--gold); margin-top: 2px; }
+  #log { flex: 1 1 auto; overflow-y: auto; font-size: 12px; color: #a5acbb; line-height: 1.45; min-height: 60px; }
+  #log div { padding: 1px 0; border-bottom: 1px solid rgba(255, 255, 255, .03); }
+  #settings { flex: none; display: flex; align-items: center; gap: 10px; font-size: 12px; color: var(--muted); }
+  #settings label { cursor: pointer; flex: 1; }
+  #restart { font-size: 12px; padding: 4px 10px; }
+
+  /* ---- hover preview ---- */
+  #preview { position: fixed; z-index: 100; pointer-events: none; display: none; width: min(300px, 26vw); }
+  #preview .card { --ch: calc(min(300px, 26vw) / .716); cursor: default; }
+  #preview .card.tapped { width: calc(var(--ch) * .716); }
+  #preview .card.tapped .face { left: 0; transform: none; }
+  #preview .card .face { box-shadow: 0 10px 40px rgba(0, 0, 0, .8); }
+  #preview .pv-info { margin-top: 8px; background: rgba(14, 16, 21, .95); border: 1px solid var(--line); border-radius: 8px;
+    padding: 6px 10px; font-size: 12.5px; line-height: 1.45; }
+  #preview .pv-info:empty { display: none; }
+
+  /* ---- popups ---- */
+  #dialog, #viewer { display: none; position: fixed; inset: 0; z-index: 50; background: rgba(6, 8, 12, .62); }
+  #viewer { z-index: 45; }
+  #dialog.collapsed { background: none; pointer-events: none; }
+  #dialog.collapsed .popup { display: none; }
+  #dialog .reopen { display: none; }
+  #dialog.collapsed .reopen { display: block; pointer-events: auto; position: fixed; left: 50%; bottom: 18px; transform: translateX(-50%);
+    background: var(--accent); color: #062420; border-color: var(--accent); box-shadow: 0 6px 24px rgba(0, 0, 0, .6); }
+  .popup { position: absolute; inset: 0; margin: auto; width: fit-content; height: fit-content; max-width: min(1180px, 94vw); min-width: 360px;
+    max-height: 88vh; overflow: auto; background: #1a1d25; border: 1px solid var(--accent); border-radius: 14px;
+    box-shadow: 0 0 0 1px rgba(63, 210, 192, .3), 0 20px 70px rgba(0, 0, 0, .8); padding: 16px 18px; }
+  .popup .p-head { display: flex; align-items: flex-start; gap: 12px; margin-bottom: 12px; }
+  .popup .p-title { flex: 1; font-size: 16px; font-weight: 700; line-height: 1.35; white-space: pre-wrap; }
+  .popup .p-sub { color: var(--muted); font-size: 13px; margin-top: 4px; white-space: pre-wrap; font-weight: 400; }
+  .popup .p-hide { font-size: 12px; padding: 4px 10px; }
+  .popup .p-body { display: flex; gap: 16px; align-items: flex-start; }
+  .popup .p-ref { --ch: 230px; flex: none; }
+  .popup .choices { --ch: 210px; display: flex; flex-wrap: wrap; gap: 14px; padding: 8px 4px 14px; justify-content: center; }
+  .popup .choices .card.opt.picked { transform: translateY(-8px); }
+  .popup .pile-box .choices .card.opt.picked { transform: none; }
+  .popup .choices .card.opt.picked .face { box-shadow: 0 0 0 3px var(--gold), 0 0 18px rgba(242, 193, 78, .7); }
+  .popup .choices .card.opt:not(.picked):hover .face { box-shadow: 0 0 0 2px var(--accent); }
+  .popup .choices .card.revealed-only { cursor: default; opacity: .45; }
+  .popup .pick-num { position: absolute; left: 50%; top: -10px; transform: translateX(-50%); z-index: 6; background: var(--gold); color: #1a1406;
+    font-weight: 800; font-size: 12px; border-radius: 10px; padding: 1px 8px; }
+  .popup .list { display: flex; flex-direction: column; gap: 6px; min-width: 280px; }
+  .popup .list .opt { text-align: left; }
+  .popup .list .opt.picked { border-color: var(--gold); background: #3a3320; }
+  .popup .p-actions { display: flex; gap: 10px; justify-content: flex-end; align-items: center; margin-top: 14px; }
+  .popup .p-actions .need { margin-right: auto; color: var(--muted); font-size: 13px; }
+  .popup .piles2 { display: flex; flex-wrap: wrap; gap: 12px; }
+  .popup .pile-box { flex: 1 1 0; min-width: 250px; border: 1px solid var(--line); border-radius: 10px; padding: 8px 10px; background: rgba(255, 255, 255, .02); }
+  .popup .hint { color: var(--muted); font-size: 12px; margin-bottom: 8px; }
+  .popup .pile-box.dest { border-color: rgba(242, 193, 78, .5); }
+  .popup .pile-box .zone-label { margin: 0; }
+  .popup .pile-box .choices { justify-content: flex-start; min-height: calc(var(--ch) + 30px); }
+  .popup .order-btns { position: absolute; left: 50%; bottom: -26px; transform: translateX(-50%); display: flex; gap: 4px; z-index: 6; }
+  .popup .order-btns button { padding: 1px 8px; font-size: 12px; border-radius: 6px; border: 1px solid #4a5163; background: var(--panel2); cursor: pointer; }
+  .popup .ends { display: flex; justify-content: space-between; color: var(--muted); font-size: 12px; padding: 0 4px; }
+  .popup input[type=text], .popup input[type=number] { font: inherit; padding: 8px; border-radius: 8px; border: 1px solid var(--line);
+    background: #10131a; color: var(--text); min-width: 260px; }
 </style>
 </head>
 <body>
@@ -44,18 +279,48 @@
   <a href="?seat=1">Seat 1</a><a href="?seat=2">Seat 2</a>
 </div>
 <div id="game">
-  <div id="board"></div>
-  <div id="side">
-    <div class="panel"><button id="restart">Restart game</button><div id="status"></div>
-      <label id="autopass-label"><input type="checkbox" id="autopass"> Auto-pass when I have nothing to play</label></div>
-    <div class="panel"><div id="prompt"></div><div id="buttons"></div></div>
-    <div class="panel" id="chosen"></div>
-    <div class="panel" id="dialog"></div>
-    <div class="panel"><div class="zone-label">Stack</div><div id="stack"></div></div>
+  <main id="table">
+    <section class="half opp player" id="half-opp">
+      <div class="pbar"></div>
+      <div class="bf" data-zone="Battlefield">
+        <div class="row back" data-row="back"></div>
+        <div class="row front" data-row="creatures"></div>
+      </div>
+      <div class="turn-tag">Their turn</div>
+    </section>
+    <div id="phasebar">
+      <div id="turninfo"><div id="turnwho"></div><div id="status">Connecting...</div></div>
+      <div class="phases" id="phases"></div>
+      <div class="legend"><div><i style="background: var(--their)"></i>stop on their turn</div><div><i style="background: var(--turn)"></i>stop on your turn</div></div>
+    </div>
+    <section class="half me player" id="half-me">
+      <div class="bf" data-zone="Battlefield">
+        <div class="row front" data-row="creatures"></div>
+        <div class="row back" data-row="back"></div>
+      </div>
+      <div class="pbar"></div>
+      <div class="hand" data-zone="Hand"></div>
+      <div class="turn-tag">Your turn</div>
+    </section>
+  </main>
+  <aside id="side">
+    <div class="panel waiting" id="decision">
+      <div class="dhead"><span class="dot"></span><span id="dhead-text">Waiting</span></div>
+      <div class="dbody"><div id="focus"></div><div><div id="prompt"></div><div id="dnote"></div></div></div>
+      <div id="chosen"></div>
+      <div id="buttons"></div>
+    </div>
+    <div class="panel" id="stack-panel"><div class="zone-label">Stack</div><div id="stack"></div></div>
     <div class="panel" id="log"></div>
-  </div>
+    <div class="panel" id="settings">
+      <label id="autopass-label"><input type="checkbox" id="autopass"> Auto-pass when I have nothing to play</label>
+      <button class="btn" id="restart">Restart</button>
+    </div>
+  </aside>
 </div>
-<div id="tip"></div>
+<div id="viewer"></div>
+<div id="dialog"></div>
+<div id="preview"></div>
 <script>
 "use strict";
 const seat = new URLSearchParams(location.search).get("seat");
@@ -63,12 +328,12 @@ let ws = null;
 let state = null;
 let dialogQueue = [];
 let selection = null;
+let promptCard = null;
 let awaitTimer = null;
+let waiting = true;
 function cancelAwait() { if (awaitTimer) { clearTimeout(awaitTimer); awaitTimer = null; } }
 
-function refId(o) { return o && typeof o === "object" ? (o.card ?? o.player ?? o.stack ?? o.entity) : undefined; }
-function chosenCardIds() { return new Set(((selection && selection.chosen) || []).filter(o => o && o.card !== undefined).map(o => o.card)); }
-function selectableCardIds() { return new Set(selection ? [...(selection.cards || []), ...(selection.actionable || [])] : []); }
+// ------------------------------------------------------------------ helpers
 
 function el(tag, cls, text) {
   const e = document.createElement(tag);
@@ -79,6 +344,191 @@ function el(tag, cls, text) {
 function send(obj) { if (ws && ws.readyState === 1) ws.send(JSON.stringify(obj)); }
 function act(m, id) { send(id === undefined ? { t: "act", m } : { t: "act", m, id }); }
 function reply(rid, v) { send({ t: "reply", rid, v }); }
+/** Replaces the children of a node, unless they are already exactly these nodes. */
+function setChildren(parent, nodes) {
+  const cur = parent.childNodes;
+  if (cur.length === nodes.length && nodes.every((n, i) => cur[i] === n)) return;
+  parent.replaceChildren(...nodes);
+}
+
+function chosenRefs() { return (selection && selection.chosen) || []; }
+function chosenCardIds() { return new Set(chosenRefs().filter(o => o && o.card !== undefined).map(o => o.card)); }
+function selectableCardIds() { return new Set(selection ? [...(selection.cards || []), ...(selection.actionable || [])] : []); }
+function targetIds(kind) { return new Set(((selection && selection.targets) || []).filter(o => o && o[kind] !== undefined).map(o => o[kind])); }
+function playerName(id) { const p = state && state.players && state.players.find(x => x.id === id); return p ? p.name : ""; }
+
+/** Mana symbols for a cost like "{2}{R}{R}" or "2 R R". */
+function manaSymbols(cost) {
+  const box = el("span", "fr-cost");
+  if (!cost || cost === "no cost") return box;
+  let parts = [...cost.matchAll(/\{([^}]+)\}/g)].map(m => m[1]);
+  if (!parts.length) parts = cost.trim().split(/\s+/);
+  for (const p of parts) {
+    const k = p.toUpperCase().replace("/", "");
+    const cls = /^[WUBRG]$/.test(k) ? k : (k === "C" ? "C" : "N");
+    box.append(el("span", "ms ms-" + cls, k));
+  }
+  return box;
+}
+
+function frameClass(c) {
+  const t = c.type || "";
+  const colors = c.colors || "";
+  if (colors.length > 1) return "fc-M";
+  if (colors.length === 1) return "fc-" + colors;
+  if (/\bLand\b/.test(t)) return "fc-L";
+  return "fc-C";
+}
+
+/** The card drawn as a frame: name, cost, type, text and power/toughness. */
+function frame(c) {
+  const f = el("div", "frame " + frameClass(c));
+  const top = el("div", "fr-top");
+  top.append(el("span", "fr-name", c.name || ""), manaSymbols(c.cost));
+  const initials = (c.name || "").split(/[\s,-]+/).filter(w => w).slice(0, 2).map(w => w[0]).join("");
+  f.append(top, el("div", "fr-art", initials), el("div", "fr-type", c.type || ""));
+  if (c.text) f.append(el("div", "fr-text", c.text));
+  if (c.power !== undefined) f.append(el("div", "fr-pt", c.power + "/" + c.toughness));
+  if (c.set) f.append(el("div", "fr-set", c.set));
+  return f;
+}
+
+/** The card's face: the drawn frame, covered by its picture once that loads. */
+function face(c) {
+  const f = el("div", "face");
+  if (c.hidden) { f.append(el("div", "back-face")); return f; }
+  f.append(frame(c));
+  if (c.img) {
+    const im = new Image();
+    im.className = "art";
+    im.alt = c.name || "";
+    im.referrerPolicy = "no-referrer";
+    im.draggable = false;
+    im.onerror = () => im.remove();
+    im.src = c.img;
+    f.append(im);
+  }
+  return f;
+}
+
+/** Combat status: [class, short tag shown on the card, full text shown in the preview]. */
+function statusTags(c) {
+  const tags = [];
+  if (c.attacking !== undefined) tags.push(["attacking", "attacking", "attacking" + (c.attacking ? " " + c.attacking : "")]);
+  if (c.blockedBy) tags.push(["blocked", "blocked", "blocked by " + c.blockedBy.join(", ")]);
+  if (c.blocking !== undefined) tags.push(["blocking", "blocking " + c.blocking, "blocking " + c.blocking]);
+  return tags;
+}
+
+// Built card elements by context and id, reused while the card looks the same, so that pictures
+// don't reload and hovering isn't interrupted on every update
+const cardCache = new Map();
+
+/**
+ * One card. {@code ctx} names where it is shown ("bf", "hand", "pile", "chosen", "stack", "focus");
+ * cards are clickable unless {@code noClick}.
+ */
+function cardEl(c, ctx, extra = {}) {
+  const chosen = chosenCardIds().has(c.id);
+  const selectable = !chosen && selectableCardIds().has(c.id);
+  const key = JSON.stringify([c, chosen, selectable, extra.noClick || false]);
+  const cacheKey = ctx + ":" + c.id;
+  const cached = ctx ? cardCache.get(cacheKey) : null;
+  if (cached && cached.key === key) return cached.el;
+
+  const d = el("div", "card");
+  d.dataset.id = c.id;
+  d._card = c;
+  if (c.hidden) {
+    d.classList.add("back");
+  } else {
+    d.dataset.name = c.name || "";
+    d.dataset.type = c.type || "";
+  }
+  if (c.tapped) d.classList.add("tapped");
+  if (chosen) d.classList.add("chosen");
+  else if (selectable) d.classList.add("selectable");
+  const isCreature = c.power !== undefined;
+  if (ctx === "bf" && c.sick && isCreature) d.classList.add("sick");
+  if (c.attacking !== undefined) d.classList.add("attacking");
+  if (c.blocking !== undefined) d.classList.add("blocking");
+  d.append(face(c));
+
+  if (!c.hidden && (ctx === "bf" || ctx === "chosen")) {
+    const b = el("div", "badges");
+    if (isCreature) {
+      const pt = el("div", "badge pt" + (c.damage ? " hurt" : ""), c.power + "/" + (c.toughness - (c.damage || 0)));
+      if (c.damage) pt.title = c.damage + " damage";
+      b.append(pt);
+    }
+    if (c.damage) b.append(el("div", "badge dmg", c.damage + " dmg"));
+    if (ctx === "bf" && c.sick && isCreature) { const s = el("div", "badge sick", "zZ"); s.title = "Summoning sick"; b.append(s); }
+    if (c.counters) {
+      const txt = Object.entries(c.counters).map(([k, v]) => (v > 1 ? v + "× " : "") + k).join(", ");
+      b.append(el("div", "badge cnt", txt));
+    }
+    d.append(b);
+    const tags = el("div", "tags");
+    for (const [cls, text, full] of statusTags(c)) { const t = el("span", "tag " + cls, text); t.title = full; tags.append(t); }
+    if (c.tapped) tags.append(el("span", "tag tapped-tag", "tapped"));
+    d.append(tags);
+  }
+  if (!extra.noClick) d.onclick = e => { e.stopPropagation(); act("card", c.id); };
+  hoverable(d, c);
+  if (ctx) cardCache.set(cacheKey, { key, el: d });
+  return d;
+}
+
+// ------------------------------------------------------------------ hover preview
+
+function hoverable(node, c) {
+  if (c.hidden) return;
+  node.addEventListener("mouseenter", e => showPreview(c, e));
+  node.addEventListener("mousemove", movePreview);
+  node.addEventListener("mouseleave", hidePreview);
+}
+let previewFor = null;
+function showPreview(c, e) {
+  const pv = document.getElementById("preview");
+  previewFor = c;
+  const big = el("div", "card" + (c.tapped ? " tapped" : ""));
+  big.append(face(c));
+  const info = el("div", "pv-info");
+  const lines = [];
+  if (c.damage) lines.push(c.damage + " damage marked");
+  if (c.sick && c.power !== undefined && c.tapped !== undefined) lines.push("Summoning sick");
+  if (c.tapped) lines.push("Tapped");
+  for (const [, , full] of statusTags(c)) lines.push(full[0].toUpperCase() + full.slice(1));
+  if (c.counters) for (const [k, v] of Object.entries(c.counters)) lines.push(v + " " + k + " counter" + (v > 1 ? "s" : ""));
+  if (c.token) lines.push("Token");
+  info.textContent = lines.join("\n");
+  info.style.whiteSpace = "pre-wrap";
+  pv.replaceChildren(big, info);
+  pv.style.display = "block";
+  movePreview(e);
+}
+function movePreview(e) {
+  const pv = document.getElementById("preview");
+  if (pv.style.display !== "block") return;
+  const w = pv.offsetWidth, h = pv.offsetHeight;
+  const tableRight = document.getElementById("table").getBoundingClientRect().right;
+  // Beside a popup if the card is in one; otherwise on the side of the table away from the pointer,
+  // so the preview never covers what is being pointed at
+  const popup = e.target && e.target.closest && e.target.closest(".popup");
+  let x = e.clientX < tableRight / 2 ? tableRight - w - 16 : 16;
+  if (popup) {
+    const r = popup.getBoundingClientRect();
+    if (r.left - w - 12 >= 4) x = r.left - w - 12;
+    else if (r.right + 12 + w <= window.innerWidth - 4) x = r.right + 12;
+    else x = e.clientX < window.innerWidth / 2 ? window.innerWidth - w - 8 : 8;
+  }
+  const y = Math.max(8, Math.min(window.innerHeight - h - 8, e.clientY - h / 2));
+  pv.style.left = x + "px";
+  pv.style.top = y + "px";
+}
+function hidePreview() { previewFor = null; document.getElementById("preview").style.display = "none"; }
+
+// ------------------------------------------------------------------ connection
 
 function connect() {
   ws = new WebSocket((location.protocol === "https:" ? "wss://" : "ws://") + location.host + "/ws?seat=" + seat);
@@ -91,32 +541,107 @@ const autoPassKey = "tbld.autoPass.seat" + seat;
 const autoPassBox = document.getElementById("autopass");
 autoPassBox.checked = localStorage.getItem(autoPassKey) !== "false";
 autoPassBox.onchange = () => { localStorage.setItem(autoPassKey, String(autoPassBox.checked)); sendPrefs(); };
-function sendPrefs() { send({ t: "pref", autoPass: autoPassBox.checked }); }
+
+// ------------------------------------------------------------------ priority stops
+
+// The phases a player can stop in. Damage covers first-strike damage too.
+const PHASES = [
+  { id: "UPKEEP", label: "Upkeep" }, { id: "DRAW", label: "Draw" }, { id: "MAIN1", label: "Main 1" },
+  { id: "COMBAT_BEGIN", label: "Combat" }, { id: "COMBAT_DECLARE_ATTACKERS", label: "Attackers" },
+  { id: "COMBAT_DECLARE_BLOCKERS", label: "Blockers" }, { id: "COMBAT_DAMAGE", label: "Damage", also: ["COMBAT_FIRST_STRIKE_DAMAGE"] },
+  { id: "COMBAT_END", label: "End combat" }, { id: "MAIN2", label: "Main 2" }, { id: "END_OF_TURN", label: "End step" },
+];
+const DEFAULT_STOPS = { own: ["MAIN1", "COMBAT_DECLARE_BLOCKERS", "MAIN2"], opponent: ["COMBAT_DECLARE_ATTACKERS", "COMBAT_DECLARE_BLOCKERS", "END_OF_TURN"] };
+const stopsKey = "tbld.stops.seat" + seat;
+let stops = loadStops();
+function loadStops() {
+  try {
+    const s = JSON.parse(localStorage.getItem(stopsKey));
+    if (s && Array.isArray(s.own) && Array.isArray(s.opponent)) return { own: new Set(s.own), opponent: new Set(s.opponent) };
+  } catch (e) { /* use the defaults */ }
+  return { own: new Set(DEFAULT_STOPS.own), opponent: new Set(DEFAULT_STOPS.opponent) };
+}
+function expand(set) { return PHASES.filter(p => set.has(p.id)).flatMap(p => [p.id, ...(p.also || [])]); }
+function sendPrefs() { send({ t: "pref", autoPass: autoPassBox.checked, stops: { own: expand(stops.own), opponent: expand(stops.opponent) } }); }
+function toggleStop(which, id) {
+  const s = stops[which];
+  if (s.has(id)) s.delete(id); else s.add(id);
+  localStorage.setItem(stopsKey, JSON.stringify({ own: [...stops.own], opponent: [...stops.opponent] }));
+  renderPhaseBar();
+  sendPrefs();
+}
+function buildPhaseBar() {
+  const box = document.getElementById("phases");
+  for (const p of PHASES) {
+    const ph = el("div", "ph");
+    ph.dataset.phase = p.id;
+    const top = el("button", "stop opp");
+    top.dataset.stop = "opponent"; top.dataset.phase = p.id;
+    top.title = "Stop in " + p.label + " on the opponent's turn";
+    top.onclick = () => toggleStop("opponent", p.id);
+    const bottom = el("button", "stop own");
+    bottom.dataset.stop = "own"; bottom.dataset.phase = p.id;
+    bottom.title = "Stop in " + p.label + " on your turn";
+    bottom.onclick = () => toggleStop("own", p.id);
+    ph.append(top, el("div", "ph-name", p.label), bottom);
+    box.append(ph);
+  }
+}
+function renderPhaseBar() {
+  const phaseId = state && state.phaseId;
+  const mineTurn = state && state.activePlayer === state.me;
+  for (const ph of document.querySelectorAll("#phases .ph")) {
+    const p = PHASES.find(x => x.id === ph.dataset.phase);
+    const current = phaseId === p.id || (p.also || []).includes(phaseId) || (phaseId === "CLEANUP" && p.id === "END_OF_TURN");
+    ph.classList.toggle("current", !!current);
+    ph.classList.toggle("mine", !!current && mineTurn);
+    ph.classList.toggle("theirs", !!current && !mineTurn);
+    ph.querySelector(".stop.opp").classList.toggle("on", stops.opponent.has(p.id));
+    ph.querySelector(".stop.own").classList.toggle("on", stops.own.has(p.id));
+  }
+  const who = document.getElementById("turnwho");
+  if (state && state.players) {
+    who.textContent = mineTurn ? "Your turn" : playerName(state.activePlayer) + "'s turn";
+    who.className = mineTurn ? "mine" : "theirs";
+  }
+}
+
+// ------------------------------------------------------------------ messages
 
 function handle(msg) {
   if (msg.t === "hello") { document.getElementById("status").textContent = "Seat " + msg.seat + ". Waiting for the other player..."; sendPrefs(); return; }
   if (msg.t === "state") { state = msg.state; render(); return; }
   if (msg.t === "reset") {
-    dialogQueue = []; selection = null;
-    document.getElementById("dialog").style.display = "none";
+    dialogQueue = []; selection = null; promptCard = null;
+    closeDialogBox();
     document.getElementById("prompt").textContent = "";
     document.getElementById("buttons").replaceChildren();
     document.getElementById("status").textContent = "Starting a new game...";
+    cardCache.clear();
+    renderDecision();
     sendPrefs();
     return;
   }
   if (msg.t !== "call") return;
   const a = msg.a;
   switch (msg.m) {
-    case "showPromptMessage": cancelAwait(); document.getElementById("prompt").textContent = a[1] || ""; break;
-    case "updateButtons": cancelAwait(); renderButtons(a[1], a[2], a[3], a[4]); break;
+    case "showPromptMessage":
+      cancelAwait(); waiting = false;
+      document.getElementById("prompt").textContent = a[1] || "";
+      promptCard = a[2] && a[2].card !== undefined && !a[2].hidden ? a[2] : null;
+      renderDecision();
+      break;
+    case "updateButtons": cancelAwait(); waiting = false; renderButtons(a[1], a[2], a[3], a[4]); break;
     case "awaitNextInput":
       // The engine is done with this player's input. Unless a new one arrives at once, the other player is acting.
       cancelAwait();
       awaitTimer = setTimeout(() => {
         awaitTimer = null;
+        waiting = true;
+        promptCard = null;
         document.getElementById("prompt").textContent = "Waiting for opponent...";
         document.getElementById("buttons").replaceChildren();
+        renderDecision();
       }, 250);
       break;
     case "message": case "showErrorDialog": queueDialog({ kind: "message", title: a[1], text: a[0] }); break;
@@ -128,138 +653,287 @@ function handle(msg) {
 }
 
 function flash() {
-  const p = document.getElementById("prompt");
-  p.style.color = "#f66"; setTimeout(() => p.style.color = "", 400);
+  const p = document.getElementById("decision");
+  p.animate([{ boxShadow: "0 0 0 2px #ff6b6b" }, { boxShadow: "0 0 0 2px transparent" }], { duration: 500 });
+  const pr = document.getElementById("prompt");
+  pr.style.color = "#ff8a8a"; setTimeout(() => pr.style.color = "", 400);
 }
 
 function renderButtons(l1, l2, en1, en2) {
   const b = document.getElementById("buttons");
   b.replaceChildren();
-  if (l1) { const x = el("button", "", l1); x.disabled = !en1; x.onclick = () => act("ok"); b.append(x); }
-  if (l2) { const x = el("button", "", l2); x.disabled = !en2; x.onclick = () => act("cancel"); b.append(x); }
+  if (l1) { const x = el("button", "btn primary", l1); x.disabled = !en1; x.onclick = () => act("ok"); b.append(x); }
+  if (l2) { const x = el("button", "btn", l2); x.disabled = !en2; x.onclick = () => act("cancel"); b.append(x); }
+  renderDecision();
 }
 
-function cardText(c) {
-  if (c.hidden) return "Hidden card";
-  let t = c.name + (c.cost ? "  " + c.cost : "") + "\n" + (c.type || "");
-  if (c.text) t += "\n\n" + c.text;
-  if (c.power !== undefined) t += "\n\n" + c.power + "/" + c.toughness;
-  return t;
-}
-
-function renderCard(c) {
-  let cls = "card" + (c.tapped ? " tapped" : "");
-  if (chosenCardIds().has(c.id)) cls += " chosen";
-  else if (selectableCardIds().has(c.id)) cls += " selectable";
-  const d = el("div", cls);
-  d.dataset.id = c.id;
-  if (!c.hidden) { d.dataset.name = c.name; d.dataset.type = c.type || ""; }
-  if (c.hidden) { d.append(el("div", "name", "Hidden card")); return d; }
-  d.append(el("div", "name", c.name));
-  let meta = c.type || "";
-  if (c.power !== undefined) meta += "  " + c.power + "/" + c.toughness;
-  d.append(el("div", "meta", meta));
-  const tags = [];
-  if (c.tapped) tags.push("tapped");
-  if (c.sick && c.power !== undefined) tags.push("summoning sick");
-  if (c.damage) tags.push(c.damage + " damage");
-  if (c.attacking !== undefined) tags.push("attacking " + c.attacking);
-  if (c.blockedBy) tags.push("blocked by " + c.blockedBy.join(", "));
-  if (c.blocking !== undefined) tags.push("blocking " + c.blocking);
-  if (c.counters) for (const [k, v] of Object.entries(c.counters)) tags.push(v + " " + k);
-  if (tags.length) d.append(el("div", "tags", tags.join(", ")));
-  d.onclick = () => act("card", c.id);
-  d.onmouseenter = e => showTip(cardText(c), e);
-  d.onmousemove = e => moveTip(e);
-  d.onmouseleave = hideTip;
-  return d;
-}
-
-function showTip(text, e) { const t = document.getElementById("tip"); t.textContent = text; t.style.display = "block"; moveTip(e); }
-function moveTip(e) { const t = document.getElementById("tip"); t.style.left = (e.clientX + 14) + "px"; t.style.top = (e.clientY + 14) + "px"; }
-function hideTip() { document.getElementById("tip").style.display = "none"; }
-
-function zone(label, cards) {
-  const z = el("div", "zone");
-  z.dataset.zone = label;
-  z.append(el("div", "zone-label", label + " (" + cards.length + ")"));
-  const row = el("div", "cards");
-  cards.forEach(c => row.append(renderCard(c)));
-  z.append(row);
-  return z;
-}
+// ------------------------------------------------------------------ board
 
 function render() {
   document.getElementById("lobby").style.display = "none";
   document.getElementById("game").style.display = "grid";
-  if (!state.players) return;
-  const board = document.getElementById("board");
-  board.replaceChildren();
-  // Opponents first, then this seat's player at the bottom
-  const players = [...state.players].sort((x, y) => (x.id === state.me) - (y.id === state.me));
-  for (const p of players) {
-    const box = el("div", "panel player" + (p.id === state.activePlayer ? " active" : ""));
-    box.dataset.player = p.id;
-    box.dataset.me = p.id === state.me ? "1" : "0";
-    box.dataset.life = p.life;
-    const h = el("h3");
-    const nm = el("span", "target", p.name);
-    nm.onclick = () => act("player", p.id);
-    nm.dataset.playerName = p.id;
-    h.append(nm, document.createTextNode("  —  " + p.life + " life,  library " + p.library + (typeof p.hand === "number" ? ",  hand " + p.hand : "")));
-    const mana = Object.entries(p.mana || {}).map(([k, v]) => v + k).join(" ");
-    if (mana) {
-      h.append(el("span", "", "   mana pool: " + mana));
+  if (!state.players || !state.players.length) return;
+  const me = state.players.find(p => p.id === state.me) || state.players[0];
+  const opp = state.players.find(p => p !== me);
+
+  // Auras and equipment are shown with the permanent they are attached to
+  const onBattlefield = new Set(state.players.flatMap(p => p.battlefield.map(c => c.id)));
+  const attachments = new Map();
+  for (const p of state.players) for (const c of p.battlefield) {
+    if (c.attachedTo !== undefined && onBattlefield.has(c.attachedTo) && c.attachedTo !== c.id) {
+      if (!attachments.has(c.attachedTo)) attachments.set(c.attachedTo, []);
+      attachments.get(c.attachedTo).push(c);
     }
-    box.append(h);
-    box.append(zone("Battlefield", p.battlefield));
-    if (Array.isArray(p.hand)) {
-      // Cards chosen for the current prompt leave the hand and are shown under the prompt
-      const chosen = chosenCardIds();
-      box.append(zone("Hand", p.hand.filter(c => !chosen.has(c.id))));
-    }
-    if (p.graveyard.length) box.append(zone("Graveyard", p.graveyard));
-    if (p.exile.length) box.append(zone("Exile", p.exile));
-    board.append(box);
   }
-  document.getElementById("status").textContent =
-    (state.gameOver ? "Game over. " : "") + "Turn " + state.turn + ", " + state.phase;
-  const st = document.getElementById("stack");
-  st.replaceChildren();
-  if (!state.stack.length) st.append(el("div", "zone-label", "(empty)"));
-  state.stack.forEach(s => { const d = el("div", "item", s.text); d.onclick = () => act("stack", s.id); st.append(d); });
+  if (opp) renderHalf(document.getElementById("half-opp"), opp, false, attachments);
+  renderHalf(document.getElementById("half-me"), me, true, attachments);
+  document.getElementById("status").textContent = (state.gameOver ? "Game over. " : "") + "Turn " + state.turn + ", " + state.phase;
+  renderPhaseBar();
+  renderStack();
+  renderDecision();
+  renderLog();
+  requestAnimationFrame(fitAll);
+}
+
+const isLand = c => /\bLand\b/.test(c.type || "");
+const isCreature = c => /\bCreature\b/.test(c.type || "");
+
+function renderHalf(sec, p, mine, attachments) {
+  sec.dataset.player = p.id;
+  sec.dataset.me = mine ? "1" : "0";
+  sec.dataset.life = p.life;
+  sec.classList.toggle("active", p.id === state.activePlayer);
+  renderPbar(sec.querySelector(".pbar"), p, mine);
+
+  const attached = new Set([...attachments.values()].flat().map(c => c.id));
+  const cards = p.battlefield.filter(c => !attached.has(c.id));
+  const creatures = cards.filter(c => isCreature(c) || c.hidden);
+  const lands = cards.filter(c => !isCreature(c) && isLand(c));
+  const others = cards.filter(c => !isCreature(c) && !isLand(c) && !c.hidden);
+  const withAttachments = c => {
+    const atts = attachments.get(c.id);
+    if (!atts) return cardEl(c, "bf");
+    const g = el("div", "attach-group");
+    for (const a of atts) { const x = cardEl(a, "bf"); x.classList.add("attached"); g.append(x); }
+    g.append(cardEl(c, "bf"));
+    return g;
+  };
+  setChildren(sec.querySelector('[data-row="creatures"]'), creatures.map(withAttachments));
+  // Lands at the left of the back row, stacked by name; other permanents at the right
+  const back = sec.querySelector('[data-row="back"]');
+  const backNodes = landStacks(lands, attachments).map(g => g.length === 1 ? withAttachments(g[0]) : landStack(g));
+  backNodes.push(spacerFor(sec));
+  backNodes.push(...others.map(withAttachments));
+  setChildren(back, backNodes);
+
+  if (mine && Array.isArray(p.hand)) {
+    // Cards chosen for the current prompt leave the hand and are shown in the decision panel
+    const chosen = chosenCardIds();
+    setChildren(sec.querySelector(".hand"), p.hand.filter(c => !chosen.has(c.id)).map(c => cardEl(c, "hand")));
+  }
+}
+
+const spacers = new Map();
+function spacerFor(sec) { if (!spacers.has(sec)) spacers.set(sec, el("div", "spacer")); return spacers.get(sec); }
+
+/** Lands in groups of identical ones: same name, same state, nothing attached. */
+function landStacks(lands, attachments) {
+  const chosen = chosenCardIds(), selectable = selectableCardIds();
+  const groups = new Map();
+  for (const c of lands) {
+    const key = attachments.has(c.id) ? "single:" + c.id
+      : JSON.stringify([c.name, c.tapped, chosen.has(c.id), selectable.has(c.id), c.counters || null, c.damage || 0, c.attacking, c.blocking, c.token]);
+    if (!groups.has(key)) groups.set(key, []);
+    groups.get(key).push(c);
+  }
+  return [...groups.values()];
+}
+
+const landStackCache = new Map();
+function landStack(group) {
+  const ids = group.map(c => c.id).join(",");
+  let st = landStackCache.get(ids);
+  if (!st) { st = el("div", "landstack"); landStackCache.set(ids, st); }
+  st.classList.toggle("tapped", !!group[0].tapped);
+  st.style.setProperty("--n", group.length);
+  const nodes = group.map((c, i) => { const x = cardEl(c, "bf"); x.style.setProperty("--i", i); return x; });
+  let count = st.querySelector(":scope > .stackcount");
+  if (!count) count = el("div", "badge stackcount");
+  count.textContent = "×" + group.length;
+  setChildren(st, [...nodes, count]);
+  return st;
+}
+
+function renderPbar(bar, p, mine) {
+  const targets = targetIds("player");
+  const chosenPlayers = new Set(chosenRefs().filter(o => o && o.player !== undefined).map(o => o.player));
+  const nodes = [];
+  const who = el("div", "who" + (targets.has(p.id) ? " targetable" : "") + (chosenPlayers.has(p.id) ? " chosen" : ""));
+  who.dataset.playerName = p.id;
+  who.title = "Select " + p.name;
+  who.onclick = () => act("player", p.id);
+  const initials = p.name.replace(/[^A-Za-z0-9 ]/g, "").split(" ").map(w => w[0] || "").join("").slice(0, 2).toUpperCase();
+  who.append(el("div", "avatar", initials), el("div", "pname", p.name), el("div", "life" + (p.life <= 5 ? " low" : ""), String(p.life)));
+  nodes.push(who);
+
+  const counts = el("div", "counts");
+  const handCount = Array.isArray(p.hand) ? p.hand.length : p.hand;
+  counts.append(countEl("Hand", handCount), countEl("Library", p.library));
+  nodes.push(counts);
+
+  const piles = el("div", "piles");
+  piles.append(pileEl(p, "Graveyard", p.graveyard), pileEl(p, "Exile", p.exile));
+  nodes.push(piles);
+
+  const pool = el("div", "pool");
+  const bytes = { W: 1, U: 2, B: 4, R: 8, G: 16, C: 32 };
+  for (const [k, v] of Object.entries(p.mana || {})) {
+    const m = el("span", "ms ms-" + k, k);
+    m.append(el("span", "n", String(v)));
+    m.title = v + " " + k + " mana in pool" + (mine ? ". Click to spend one." : "");
+    if (mine) m.onclick = () => act("mana", bytes[k]);
+    pool.append(m);
+  }
+  nodes.push(pool);
+
+  if (!mine) {
+    const backs = el("div", "handbacks");
+    for (let i = 0; i < Math.min(handCount, 12); i++) backs.append(cardEl({ id: "back" + i, hidden: true }, "back", { noClick: true }));
+    nodes.push(backs);
+  }
+  bar.replaceChildren(...nodes);
+}
+function countEl(label, n) { const s = el("span"); s.append(label + " ", el("b", "", String(n))); return s; }
+
+function pileEl(p, zone, cards) {
+  const pile = el("div", "pile");
+  pile.dataset.zone = zone;
+  for (const c of cards) pile.append(cardEl(c, "pile", { noClick: true }));
+  pile.append(el("div", "pile-label", zone));
+  if (cards.length) pile.append(el("div", "pile-count", String(cards.length)));
+  pile.title = zone + " (" + cards.length + ")";
+  pile.onclick = () => openViewer(p.name + "'s " + zone.toLowerCase(), cards);
+  const top = cards[cards.length - 1];
+  if (top) hoverable(pile, top);
+  return pile;
+}
+
+/** Shows the cards of a zone, without asking the engine anything. Playable cards can be clicked. */
+function openViewer(title, cards) {
+  const v = document.getElementById("viewer");
+  const pop = el("div", "popup");
+  const head = el("div", "p-head");
+  head.append(el("div", "p-title", title + " (" + cards.length + ")"));
+  const close = el("button", "btn", "Close");
+  close.onclick = () => { v.style.display = "none"; hidePreview(); };
+  head.append(close);
+  const grid = el("div", "choices");
+  for (const c of [...cards].reverse()) {
+    const x = cardEl(c, null, { noClick: !selectableCardIds().has(c.id) });
+    if (selectableCardIds().has(c.id)) x.addEventListener("click", () => { v.style.display = "none"; hidePreview(); });
+    grid.append(x);
+  }
+  if (!cards.length) grid.append(el("div", "zone-label", "Empty"));
+  pop.append(head, grid);
+  v.replaceChildren(pop);
+  v.onclick = e => { if (e.target === v) { v.style.display = "none"; hidePreview(); } };
+  v.style.display = "block";
+}
+
+/** Overlaps the items of a row when they don't fit side by side. */
+function fit(row) {
+  const items = [...row.children].filter(x => !x.classList.contains("spacer"));
+  for (const x of items) x.style.marginLeft = "";
+  if (items.length < 2) return;
+  const gap = parseFloat(getComputedStyle(row).columnGap) || 0;
+  const total = items.reduce((s, x) => s + x.offsetWidth, 0) + gap * (items.length - 1);
+  const avail = row.clientWidth;
+  if (total <= avail) return;
+  const minVisible = 26;
+  const overlap = Math.min((total - avail) / (items.length - 1), Math.min(...items.map(x => x.offsetWidth)) - minVisible);
+  items.forEach((x, i) => { if (i > 0) x.style.marginLeft = (-overlap) + "px"; });
+}
+function fitAll() { document.querySelectorAll(".row, .hand").forEach(fit); }
+window.addEventListener("resize", () => requestAnimationFrame(fitAll));
+
+// ------------------------------------------------------------------ side panel
+
+function renderDecision() {
+  const box = document.getElementById("decision");
+  const hasButtons = document.querySelectorAll("#buttons button").length > 0;
+  const mine = hasButtons || dialogQueue.length > 0 || (!waiting && !!document.getElementById("prompt").textContent);
+  box.classList.toggle("mine", mine);
+  box.classList.toggle("waiting", !mine);
+  document.getElementById("dhead-text").textContent = mine ? "Your decision" : (state && state.gameOver ? "Game over" : "Waiting for opponent");
+  if (state && state.gameOver && !hasButtons && !dialogQueue.length) {
+    const won = [...(state.log || [])].reverse().find(l => / has won /.test(l));
+    document.getElementById("prompt").textContent = (won || "The game is over.") + " Restart to play again.";
+  }
+  const note = document.getElementById("dnote");
+  note.textContent = dialogQueue.length ? "Answer the question in the popup" + (dialogQueue.length > 1 ? " (" + dialogQueue.length + " waiting)" : "") + "." : "";
+  note.onclick = () => document.getElementById("dialog").classList.remove("collapsed");
+  const focus = document.getElementById("focus");
+  setChildren(focus, promptCard ? [cardEl({ ...promptCard, id: promptCard.card }, "focus", { noClick: true })] : []);
   renderChosen();
+}
+
+function allCards() {
+  const byId = {};
+  if (!state || !state.players) return byId;
+  for (const p of state.players) for (const z of [p.battlefield, p.graveyard, p.exile, Array.isArray(p.hand) ? p.hand : []]) for (const c of z) byId[c.id] = c;
+  return byId;
+}
+
+function renderChosen() {
+  const box = document.getElementById("chosen");
+  const chosen = chosenRefs();
+  if (!chosen.length) { box.replaceChildren(); return; }
+  const cards = allCards();
+  const row = el("div", "chosen-row");
+  for (const o of chosen) {
+    if (o && o.card !== undefined && cards[o.card]) {
+      row.append(cardEl(cards[o.card], "chosen"));
+    } else {
+      const d = el("div", "chip", label(o));
+      if (o && o.player !== undefined) d.onclick = () => act("player", o.player);
+      row.append(d);
+    }
+  }
+  const clear = el("button", "btn", "Undo all");
+  clear.onclick = () => { for (const o of chosen) { if (o.card !== undefined) act("card", o.card); else if (o.player !== undefined) act("player", o.player); } };
+  box.replaceChildren(el("div", "zone-label", "Chosen (click one to undo)"), row, clear);
+}
+
+function renderStack() {
+  const st = document.getElementById("stack");
+  if (!state.stack.length) { st.replaceChildren(el("div", "empty", "(empty)")); return; }
+  const targets = targetIds("stack");
+  st.replaceChildren(...state.stack.map((s, i) => stackItem(s, i === 0, targets.has(s.id))));
+}
+
+function stackItem(s, top, targetable) {
+  const d = el("div", "stack-item " + (s.ability ? "ability" : "spell") + (top ? " top" : "") + (targetable ? " selectable" : ""));
+  d.dataset.stack = s.id;
+  d.onclick = () => act("stack", s.id);
+  const src = s.source ? { ...s.source, id: s.source.card } : null;
+  if (src) d.append(cardEl(src, "stack" + (s.ability ? "a" : "s") + s.id, { noClick: true }));
+  const info = el("div", "si-info");
+  const who = s.controller !== undefined ? playerName(s.controller) : "";
+  info.append(el("div", "si-kind", (s.ability ? (s.trigger ? "Triggered ability" : "Activated ability") : "Spell") + (who ? " · " + who : "")));
+  if (src && !src.hidden) info.append(el("div", "si-name", src.name));
+  if (s.ability || !src) info.append(el("div", "si-text", s.text));
+  if (s.targets) info.append(el("div", "si-targets", "Targets: " + s.targets.join(", ")));
+  d.append(info);
+  if (src) hoverable(d, src);
+  return d;
+}
+
+function renderLog() {
   // Oldest entry at the top; stay scrolled to the newest unless the player has scrolled up
   const log = document.getElementById("log");
   const atBottom = log.scrollTop + log.clientHeight >= log.scrollHeight - 4;
   log.replaceChildren(...state.log.map(l => el("div", "", l)));
   if (atBottom) log.scrollTop = log.scrollHeight;
-}
-
-function renderChosen() {
-  const box = document.getElementById("chosen");
-  const chosen = (selection && selection.chosen) || [];
-  box.replaceChildren();
-  if (!chosen.length) { box.style.display = "none"; return; }
-  box.style.display = "block";
-  box.append(el("div", "zone-label", "Chosen (click one to undo)"));
-  const row = el("div", "cards");
-  const cardsById = {};
-  for (const p of state.players) for (const z of [p.battlefield, p.graveyard, p.exile, Array.isArray(p.hand) ? p.hand : []]) for (const c of z) cardsById[c.id] = c;
-  for (const o of chosen) {
-    if (o && o.card !== undefined && cardsById[o.card]) {
-      const d = renderCard(cardsById[o.card]);
-      row.append(d);
-    } else {
-      const d = el("div", "card", label(o));
-      if (o && o.player !== undefined) d.onclick = () => act("player", o.player);
-      row.append(d);
-    }
-  }
-  box.append(row);
-  const clear = el("button", "", "Undo all");
-  clear.onclick = () => { for (const o of chosen) { if (o.card !== undefined) act("card", o.card); else if (o.player !== undefined) act("player", o.player); } };
-  box.append(clear);
 }
 
 function label(o) {
@@ -268,72 +942,281 @@ function label(o) {
   return o.name || o.text || JSON.stringify(o);
 }
 
-function queueDialog(d) { dialogQueue.push(d); if (dialogQueue.length === 1) showDialog(); }
-function closeDialog() { dialogQueue.shift(); document.getElementById("dialog").style.display = "none"; if (dialogQueue.length) showDialog(); }
+// ------------------------------------------------------------------ popups
 
+function queueDialog(d) { dialogQueue.push(d); if (dialogQueue.length === 1) showDialog(); renderDecision(); }
+function closeDialogBox() { const box = document.getElementById("dialog"); box.style.display = "none"; box.classList.remove("collapsed"); box.replaceChildren(); hidePreview(); }
+function closeDialog() { dialogQueue.shift(); closeDialogBox(); if (dialogQueue.length) showDialog(); renderDecision(); }
+
+const isCardRef = o => o && typeof o === "object" && o.card !== undefined;
+const asCard = o => ({ ...o, id: o.card });
+
+/**
+ * Shows the question at the head of the queue. Every popup marks its options with "opt" (and
+ * "picked" once chosen), sets data-need to how many options must be picked, and marks the button
+ * that confirms with "primary".
+ */
 function showDialog() {
   const d = dialogQueue[0];
   const box = document.getElementById("dialog");
-  box.replaceChildren();
-  box.style.display = "block";
-  delete box.dataset.min; delete box.dataset.max;
+  box.classList.remove("collapsed");
   box.dataset.kind = d.kind;
+  delete box.dataset.min; delete box.dataset.max;
+  box.dataset.need = "0";
   const a = d.a || [];
+  const pop = el("div", "popup");
+  const head = el("div", "p-head");
+  const titleBox = el("div", "p-title");
+  head.append(titleBox);
+  const hide = el("button", "btn p-hide", "Hide");
+  hide.title = "Look at the board; the question stays open";
+  hide.onclick = () => box.classList.add("collapsed");
+  head.append(hide);
+  const body = el("div", "p-body");
+  const actions = el("div", "p-actions");
+  pop.append(head, body, actions);
+  const reopen = el("button", "btn reopen", "Back to the question");
+  reopen.onclick = () => box.classList.remove("collapsed");
+  box.replaceChildren(pop, reopen);
+  box.style.display = "block";
+
   const answer = v => { reply(d.rid, v); closeDialog(); };
-  const title = t => { if (t) box.append(el("div", "", t)); };
-  const button = (text, f) => { const b = el("button", "", text); b.onclick = f; box.append(b); };
-  const multi = (options, min, max) => {
-    box.dataset.min = min; box.dataset.max = max;
-    const checks = options.map((o, i) => {
-      const lab = el("label", "opt");
-      const cb = el("input"); cb.type = max === 1 ? "radio" : "checkbox"; cb.name = "opt"; cb.value = i;
-      lab.append(cb, document.createTextNode(" " + label(o)));
-      box.append(lab);
-      return cb;
-    });
-    button("Confirm", () => {
-      const chosen = checks.filter(c => c.checked).map(c => +c.value);
-      if (chosen.length < min || chosen.length > max) { flash(); return; }
-      answer(chosen);
-    });
-  };
+  const setTitle = (t, sub) => { titleBox.textContent = t || ""; if (sub) titleBox.append(el("div", "p-sub", sub)); };
+  const addButton = (text, f, primary) => { const b = el("button", "btn" + (primary ? " primary" : ""), text); b.onclick = f; actions.append(b); return b; };
+  const ref = c => { if (isCardRef(c) && !c.hidden) { const r = el("div", "p-ref"); r.append(cardEl(asCard(c), null, { noClick: true })); body.append(r); } };
+
   switch (d.kind) {
-    case "message": title(d.title); box.append(el("div", "", d.text)); button("OK", closeDialog); break;
-    case "confirm": title(a[1]); (a[3] && a[3].length ? a[3] : ["Yes", "No"]).forEach((o, i) => button(o, () => answer(i === 0))); break;
-    case "showConfirmDialog": title(a[1]); title(a[0]); button(a[2] || "Yes", () => answer(true)); button(a[3] || "No", () => answer(false)); break;
-    case "showOptionDialog": title(a[1]); title(a[0]); (a[3] || []).forEach((o, i) => button(o, () => answer(i))); break;
-    case "showInputDialog": {
-      title(a[1]); title(a[0]);
-      const inp = el("input"); inp.value = a[3] || ""; box.append(inp);
-      button("OK", () => answer(inp.value));
+    case "message": setTitle(d.title || "Message", d.text); addButton("OK", closeDialog, true); break;
+    case "confirm": {
+      setTitle(a[1]);
+      ref(a[0]);
+      const opts = a[3] && a[3].length ? a[3] : ["Yes", "No"];
+      opts.forEach((o, i) => addButton(o, () => answer(i === 0), i === 0));
       break;
     }
-    case "getChoices": title(a[0]); multi(a[3], a[1], a[2]); break;
-    case "chooseEntitiesForEffect": title(a[0]); multi(a[1], a[2], a[3]); break;
-    case "chooseSingleEntityForEffect":
-      title(a[0]);
-      a[1].forEach((o, i) => button(label(o), () => answer(i)));
-      if (a[3]) button("(none)", () => answer(null));
+    case "showConfirmDialog": setTitle(a[1] || a[0], a[1] ? a[0] : ""); addButton(a[2] || "Yes", () => answer(true), true); addButton(a[3] || "No", () => answer(false)); break;
+    case "showOptionDialog": {
+      setTitle(a[1] || a[0], a[1] ? a[0] : "");
+      box.dataset.need = "1";
+      (a[3] || []).forEach((o, i) => { const b = addButton(o, () => answer(i), false); b.classList.add("opt"); b.dataset.index = i; });
       break;
-    case "getAbilityToPlay":
-      title("Choose an ability");
-      a[1].forEach((o, i) => button(label(o), () => answer(i)));
-      button("Cancel", () => answer(null));
+    }
+    case "showInputDialog": {
+      setTitle(a[1] || a[0], a[1] ? a[0] : "");
+      if (a[4] && a[4].length) {
+        box.dataset.need = "1";
+        const list = el("div", "list");
+        a[4].forEach((o, i) => { const b = el("button", "btn opt", String(o)); b.dataset.index = i; b.onclick = () => answer(String(o)); list.append(b); });
+        body.append(list);
+        addButton("Cancel", () => answer(null));
+      } else {
+        const inp = el("input");
+        inp.type = a[5] ? "number" : "text";
+        inp.value = a[3] || "";
+        body.append(inp);
+        addButton("OK", () => answer(inp.value), true);
+        addButton("Cancel", () => answer(null));
+        setTimeout(() => inp.focus(), 0);
+      }
       break;
-    case "order":
-      title(a[0] + " (shown in current order)");
-      a[4].forEach(o => box.append(el("div", "opt", label(o))));
-      button("Keep this order", () => answer(null));
+    }
+    case "getChoices": {
+      const min = a[1], max = a[2], options = a[3] || [];
+      if (max < 0 || (min < 0 && max <= 0)) {
+        // Nothing to choose: Forge only shows these items
+        setTitle(a[0]);
+        const grid = el("div", options.every(isCardRef) ? "choices" : "list");
+        for (const o of options) grid.append(isCardRef(o) ? cardEl(asCard(o), null, { noClick: true }) : el("div", "btn", label(o)));
+        body.append(grid);
+        addButton("OK", () => answer([]), true);
+        break;
+      }
+      const preset = (a[4] || []).map(s => options.findIndex(o => JSON.stringify(o) === JSON.stringify(s))).filter(i => i >= 0);
+      picker(a[0], options, Math.max(min, 0), max, preset, [], v => answer(v), min <= 0 ? () => answer([]) : null);
       break;
+    }
+    case "chooseEntitiesForEffect": {
+      const reveal = a[4] && a[4].reveal ? a[4].reveal : [];
+      picker(a[0], a[1] || [], Math.max(a[2], 0), a[3], [], reveal, v => answer(v), a[2] <= 0 ? () => answer([]) : null);
+      break;
+    }
+    case "chooseSingleEntityForEffect": {
+      const reveal = a[2] && a[2].reveal ? a[2].reveal : [];
+      picker(a[0], a[1] || [], 1, 1, [], reveal, v => answer(v[0]), a[3] ? () => answer(null) : null);
+      break;
+    }
+    case "getAbilityToPlay": {
+      setTitle("Choose an ability" + (a[0] && a[0].name ? " of " + a[0].name : ""));
+      ref(a[0]);
+      box.dataset.need = "1";
+      const list = el("div", "list");
+      (a[1] || []).forEach((o, i) => { const b = el("button", "btn opt", label(o)); b.dataset.index = i; b.onclick = () => answer(i); list.append(b); });
+      body.append(list);
+      addButton("Cancel", () => answer(null));
+      break;
+    }
+    case "order": orderDialog(a, answer); break;
     default:
-      title("Unsupported request: " + d.kind);
-      button("Skip", () => answer(null));
+      setTitle("Unsupported request: " + d.kind);
+      addButton("Skip", () => answer(null), true);
+  }
+
+  /**
+   * Choose between {@code min} and {@code max} of {@code options}. Cards are shown as cards; cards
+   * that are only revealed (not choosable) are shown dimmed among them.
+   */
+  function picker(title, options, min, max, preset, reveal, done, none) {
+    box.dataset.min = min; box.dataset.max = max;
+    box.dataset.need = String(min);
+    const picked = [...preset];
+    const cards = options.length && options.every(o => isCardRef(o) || (o && o.player !== undefined));
+    const grid = el("div", cards ? "choices" : "list");
+    const nodes = [];
+    const update = () => {
+      nodes.forEach((n, i) => {
+        n.classList.toggle("picked", picked.includes(i));
+        n.querySelector(".pick-num")?.remove();
+        if (picked.includes(i) && max > 1 && cards) n.append(el("div", "pick-num", String(picked.indexOf(i) + 1)));
+      });
+      confirm.disabled = picked.length < min || picked.length > max;
+      need.textContent = max === 1 ? (min === 1 ? "Choose one" : "Choose up to one")
+        : (min === max ? "Choose " + min : "Choose " + (min > 0 ? min + " to " : "up to ") + max) + " (" + picked.length + " chosen)";
+    };
+    const toggle = i => {
+      const at = picked.indexOf(i);
+      if (at >= 0) picked.splice(at, 1);
+      else if (max === 1) picked.splice(0, picked.length, i);
+      else if (picked.length < max) picked.push(i);
+      update();
+    };
+    // Revealed cards that are not options are shown first, in the order they were revealed
+    const optionIds = new Set(options.filter(isCardRef).map(o => o.card));
+    for (const r of reveal) {
+      if (isCardRef(r) && !optionIds.has(r.card)) {
+        const x = cardEl(asCard(r), null, { noClick: true });
+        x.classList.add("revealed-only");
+        x.title = "Revealed; can't be chosen";
+        grid.append(x);
+      }
+    }
+    options.forEach((o, i) => {
+      let n;
+      if (isCardRef(o)) {
+        n = cardEl(asCard(o), null, { noClick: true });
+        n.classList.add("opt");
+        n.ondblclick = () => { if (!picked.includes(i)) toggle(i); if (!confirm.disabled) done(picked.slice()); };
+      } else {
+        n = el("button", "btn opt", label(o));
+      }
+      n.dataset.index = i;
+      n.addEventListener("click", () => toggle(i));
+      nodes.push(n);
+      grid.append(n);
+    });
+    setTitle(title);
+    body.append(grid);
+    const need = el("div", "need");
+    actions.append(need);
+    if (none) addButton(min === 0 ? "Choose none" : "Cancel", none);
+    const confirm = addButton("Confirm", () => done(picked.slice()), true);
+    update();
+  }
+
+  /**
+   * Forge's dual list: move cards from the source pile to the destination pile, then order the
+   * destination. With no limits on what remains, any number may be moved; with both limits 0 and
+   * nothing in the destination, the cards are only put in order.
+   */
+  function orderDialog(a, answer) {
+    const title = a[0], caption = a[1] || "Chosen", remMin = a[2], remMax = a[3];
+    const source = a[4] || [], dest0 = a[5] || [];
+    const all = [...source, ...dest0];
+    let left = source.map((_, i) => i);
+    let right = dest0.map((_, i) => source.length + i);
+    const pureOrder = remMin === 0 && remMax === 0 && !dest0.length;
+    if (pureOrder) { right = left; left = []; }
+    const total = all.length;
+    // How many may stay in the source pile
+    const lo = remMin >= 0 ? remMin : 0, hi = remMax >= 0 ? remMax : total;
+    box.dataset.need = String(Math.max(0, source.length - hi));
+    const isCards = all.every(isCardRef);
+    setTitle(title, a[6] && a[6].name ? "For " + a[6].name : "");
+    ref(a[6]);
+    const wrap = el("div", "piles2");
+    const column = el("div");
+    column.style.flex = "1";
+    if (!pureOrder) column.append(el("div", "hint", "Click a card to move it to the other pile."));
+    column.append(wrap);
+    body.append(column);
+    const need = el("div", "need");
+    actions.append(need);
+    const confirm = addButton(pureOrder ? "Done" : "Confirm", () => answer(right.slice()), true);
+    const node = (i, inDest) => {
+      const o = all[i];
+      const n = isCards ? cardEl(asCard(o), null, { noClick: true }) : el("button", "btn", label(o));
+      n.dataset.index = i;
+      if (!pureOrder) {
+        n.classList.add("opt");
+        if (inDest) n.classList.add("picked");
+        n.addEventListener("click", () => {
+          if (inDest) { right = right.filter(x => x !== i); left.push(i); } else { left = left.filter(x => x !== i); right.push(i); }
+          draw();
+        });
+      }
+      if (inDest && right.length > 1) {
+        const pos = right.indexOf(i);
+        const btns = el("div", "order-btns");
+        const move = (delta, e) => {
+          e.stopPropagation();
+          const j = pos + delta;
+          if (j < 0 || j >= right.length) return;
+          [right[pos], right[j]] = [right[j], right[pos]];
+          draw();
+        };
+        const l = el("button", "", "◀"); l.title = "Earlier"; l.onclick = e => move(-1, e);
+        const r = el("button", "", "▶"); r.title = "Later"; r.onclick = e => move(1, e);
+        btns.append(l, r);
+        n.append(btns);
+      }
+      return n;
+    };
+    const draw = () => {
+      hidePreview();
+      const boxes = [];
+      if (!pureOrder) {
+        const src = el("div", "pile-box");
+        src.append(el("div", "zone-label", "Not chosen (" + left.length + ")"));
+        const g = el("div", "choices");
+        left.forEach(i => g.append(node(i, false)));
+        src.append(g);
+        boxes.push(src);
+      }
+      const dst = el("div", "pile-box dest");
+      dst.append(el("div", "zone-label", caption + " (" + right.length + ")"));
+      if (right.length > 1) {
+        const ends = el("div", "ends");
+        ends.append(el("span", "", "◀ first"), el("span", "", "last ▶"));
+        dst.append(ends);
+      }
+      const g2 = el("div", "choices");
+      right.forEach(i => g2.append(node(i, true)));
+      dst.append(g2);
+      boxes.push(dst);
+      wrap.replaceChildren(...boxes);
+      const ok = left.length >= lo && left.length <= hi;
+      confirm.disabled = !ok;
+      need.textContent = pureOrder ? "Put them in order" : (lo === hi ? "Choose " + (source.length - lo)
+        : (remMin < 0 && remMax < 0 ? "Choose any number" : "Leave " + lo + " to " + hi + " unchosen"));
+    };
+    draw();
   }
 }
 
 document.getElementById("restart").onclick = () => {
   if (window.confirm("Abandon this game and start a new one?")) send({ t: "restart" });
 };
+buildPhaseBar();
+renderPhaseBar();
 if (seat) connect();
 </script>
 </body>

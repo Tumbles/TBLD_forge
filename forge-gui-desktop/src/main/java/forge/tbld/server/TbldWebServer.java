@@ -46,6 +46,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicReferenceArray;
+import java.util.function.Supplier;
 
 /**
  * A web server for playing Forge in a browser. It serves the web client at {@code /} and accepts
@@ -68,9 +69,16 @@ public final class TbldWebServer {
     private Channel serverChannel;
     private volatile boolean matchStarted;
     private volatile HostedMatch hostedMatch;
+    /** The deck every seat plays. */
+    private final Supplier<Deck> deck;
 
     public TbldWebServer(final int seatCount) {
+        this(seatCount, TbldWebServer::testDeck);
+    }
+
+    public TbldWebServer(final int seatCount, final Supplier<Deck> deck) {
         this.seatCount = seatCount;
+        this.deck = deck;
         this.channels = new AtomicReferenceArray<>(seatCount);
         this.seats = newSeats();
     }
@@ -207,10 +215,14 @@ public final class TbldWebServer {
     private void startMatch(final List<BrowserSeat> seats) {
         // The web client outlines playable cards using the selection's actionable list
         FModel.getPreferences().setPref(FPref.UI_SHOW_ACTIONABLE_HIGHLIGHTS, true);
+        // Cards are picked on the board only from the battlefield and the player's own hand. Cards in
+        // other zones (a library, an opponent's hand) are offered in a dialog, which the web client
+        // shows as a popup of cards.
+        FModel.getPreferences().setPref(FPref.UI_SELECT_FROM_CARD_DISPLAYS, false);
         final List<RegisteredPlayer> players = new ArrayList<>();
         final Map<RegisteredPlayer, IGuiGame> guis = new LinkedHashMap<>();
         for (final BrowserSeat s : seats) {
-            final RegisteredPlayer rp = new RegisteredPlayer(testDeck())
+            final RegisteredPlayer rp = new RegisteredPlayer(deck.get())
                     .setPlayer(new LobbyPlayerHuman("Player " + s.getSeatIndex()));
             players.add(rp);
             guis.put(rp, s.getGui());
