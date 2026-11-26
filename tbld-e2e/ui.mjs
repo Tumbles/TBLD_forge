@@ -116,14 +116,12 @@ send({ t: "state", state: makeState() });
 await settle(300);
 const tappedBox = await page.locator('#half-me .card[data-id="4"] .face').boundingBox();
 check(tappedBox && tappedBox.width > tappedBox.height, "a tapped card is turned sideways");
-// the front tapped land (5) lies along the bottom of the untapped ones (1 to 3) and sticks out to the right: an L
+// the front tapped land (5) and the top untapped one (3) share their left and bottom edges: an L
 const frontTapped = await page.locator('#half-me .card[data-id="5"] .face').boundingBox();
-const untappedBox = await page.locator('#half-me .card[data-id="1"] .face').boundingBox();
 const topUntapped = await page.locator('#half-me .card[data-id="3"] .face').boundingBox();
-check(frontTapped && untappedBox && Math.abs((frontTapped.y + frontTapped.height) - (untappedBox.y + untappedBox.height)) < 1.5
-  && frontTapped.x > untappedBox.x - 1 && frontTapped.y > untappedBox.y + 10
-  && frontTapped.x + frontTapped.width >= topUntapped.x + topUntapped.width + 15,
-  "tapped lands lie along the bottom of their stack and stick out to the right, so with the untapped ones they form an L");
+check(frontTapped && topUntapped && Math.abs((frontTapped.y + frontTapped.height) - (topUntapped.y + topUntapped.height)) < 1.5
+  && Math.abs(frontTapped.x - topUntapped.x) < 1.5 && frontTapped.y > topUntapped.y + 10,
+  "tapped lands lie along the bottom of their stack from the top untapped land, forming an L with it");
 const ogre = await page.locator('#half-me .card[data-id="12"] .face').boundingBox();
 check(ogre && ogre.width > ogre.height, "a tapped attacker is sideways too");
 check(await count('#half-me .card[data-id="10"].sick .badge.sick') === 1, "a summoning-sick creature is marked");
