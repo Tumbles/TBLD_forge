@@ -258,7 +258,9 @@ public class PhaseHandler implements IHasForgeLog {
     private boolean isSkippingPhase(final PhaseType phase) {
         switch (phase) {
             case DRAW:
-                return turn == 1 && (game.getPlayers().size() == 2 || game.getRules().hasSharedTeamTurns());
+                // TBLD: the Player One emblem skips the first draw step instead (TbldEmblems)
+                return turn == 1 && !game.getRules().hasTbldStartingEmblems()
+                        && (game.getPlayers().size() == 2 || game.getRules().hasSharedTeamTurns());
 
             case COMBAT_BEGIN:
             case COMBAT_DECLARE_ATTACKERS:

@@ -18,6 +18,8 @@ public class GameRules {
     private boolean allowCheatShuffle = false;
     private final Set<GameType> appliedVariants = EnumSet.noneOf(GameType.class);
     private int simTimeout = 120;
+    /** TBLD: each player starts with the emblem for their place in turn order ({@code forge.game.tbld.TbldEmblems}). */
+    private boolean tbldStartingEmblems;
 
     // it's a preference, not rule... but I could hardly find a better place for it
     private boolean useGrayText;
@@ -153,5 +155,12 @@ public class GameRules {
 
     public void setSimTimeout(final int duration) {
         this.simTimeout = duration;
+    }
+
+    public boolean hasTbldStartingEmblems() {
+        return tbldStartingEmblems;
+    }
+    public void setTbldStartingEmblems(final boolean on) {
+        this.tbldStartingEmblems = on;
     }
 }

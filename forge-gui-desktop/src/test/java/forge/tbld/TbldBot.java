@@ -12,8 +12,10 @@ import java.net.http.HttpClient;
 import java.net.http.WebSocket;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.CompletionStage;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -106,6 +108,13 @@ final class TbldBot implements WebSocket.Listener {
     volatile int scryTop = -1;
     volatile boolean scryTopDrawn;
     volatile boolean scryBottomDrawn;
+    /** The player whose turn turn 1 was, or -1 before turn 1. */
+    volatile int turnOnePlayer = -1;
+    /** Each card seen in a command zone, by name: the id of the player it belonged to, and the card itself. */
+    final Map<String, Integer> commandOwners = new ConcurrentHashMap<>();
+    final Map<String, JsonObject> commandCards = new ConcurrentHashMap<>();
+    /** A command zone held a card before this player kept a hand. */
+    volatile boolean sawCommandBeforeKeep;
 
     TbldBot(final HttpClient http, final int port, final int seat, final boolean aggressive) throws Exception {
         this(http, port, seat, aggressive, 0);
@@ -266,10 +275,25 @@ final class TbldBot implements WebSocket.Listener {
         }
         maxTurn = Math.max(maxTurn, s.get("turn").getAsInt());
         gameOver = s.get("gameOver").getAsBoolean();
+        if (turnOnePlayer < 0 && s.get("turn").getAsInt() == 1 && s.has("activePlayer")) {
+            turnOnePlayer = s.get("activePlayer").getAsInt();
+        }
         final int me = s.get("me").getAsInt();
         for (final JsonElement pe : s.getAsJsonArray("players")) {
             final JsonObject p = pe.getAsJsonObject();
             final boolean mine = p.get("id").getAsInt() == me;
+            if (p.has("command")) {
+                for (final JsonElement ce : p.getAsJsonArray("command")) {
+                    final JsonObject c = ce.getAsJsonObject();
+                    if (c.has("name")) {
+                        commandOwners.putIfAbsent(c.get("name").getAsString(), p.get("id").getAsInt());
+                        commandCards.put(c.get("name").getAsString(), c);
+                        if (!keepPressed) {
+                            sawCommandBeforeKeep = true;
+                        }
+                    }
+                }
+            }
             if (mine) {
                 myLife = p.get("life").getAsInt();
                 if (p.get("hand").isJsonArray()) {
@@ -661,7 +685,9 @@ final class TbldBot implements WebSocket.Listener {
     }
 
     String summary() {
-        final List<String> last = actions.subList(Math.max(0, actions.size() - 25), actions.size());
+        // A copy: the bot may still be adding actions, which would break a view of the live list
+        final List<String> all = List.copyOf(actions);
+        final List<String> last = all.subList(Math.max(0, all.size() - 25), all.size());
         return "seat " + seat + ": turn " + maxTurn + ", life " + myLife + ", lands " + maxLands
                 + ", priority prompts idle/busy " + idlePriorityPrompts + "/" + busyPriorityPrompts
                 + ", prompt=" + prompt.replace('\n', ' ') + ", buttons=" + buttons

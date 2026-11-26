@@ -76,7 +76,7 @@ import forge.game.zone.ZoneType;
  */
 public abstract class SpellAbility extends CardTraitBase implements ISpellAbility, IIdentifiable, Comparable<SpellAbility> {
     public static final String[] OPTIONAL_PARAMS = {
-        "AlternateCost", "Announce", "Boast", "CantCopy", "CostDesc", "DividedAsYouChoose",
+        "AlternateCost", "Announce", "Boast", "CantBeCountered", "CantCopy", "CostDesc", "DividedAsYouChoose",
         "Exhaust", "IsCurse", "ManaRestriction", "MaxTotalTargetCMC", "MaxTotalTargetPower",
         "Monstrosity", "Planeswalker", "PowerUp", "PrecostDesc",
         "TargetType", "TargetingPlayer", "TargetingPlayerControls",
@@ -2670,8 +2670,9 @@ public abstract class SpellAbility extends CardTraitBase implements ISpellAbilit
         return true;
     }
 
+    /** Abilities can be countered unless their script says otherwise ("CantBeCountered$ True", TBLD emblems). */
     public boolean isCounterableBy(SpellAbility sa) {
-        return true;
+        return !hasParam("CantBeCountered");
     }
 
     public Card getAlternateHost(Card source) {

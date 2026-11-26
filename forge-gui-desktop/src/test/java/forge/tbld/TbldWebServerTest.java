@@ -11,6 +11,7 @@ import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.util.Set;
 
 /**
  * Serves the web client, plays a few turns with two scripted players (seat 2 takes one
@@ -60,6 +61,24 @@ public class TbldWebServerTest extends AITest {
                 }
             }
             AssertJUnit.assertTrue("no Mountain on the battlefield" + report, mountains > 0);
+
+            // Starting emblems: whoever took turn 1 has Player One, the other player Player Two, shown with their
+            // pictures from before the mulligan
+            AssertJUnit.assertTrue("no turn 1 seen" + report, bot1.turnOnePlayer >= 0);
+            AssertJUnit.assertEquals("Player One emblem owner" + report, Integer.valueOf(bot1.turnOnePlayer), bot1.commandOwners.get("Player One"));
+            AssertJUnit.assertNotNull("no Player Two emblem" + report, bot1.commandOwners.get("Player Two"));
+            AssertJUnit.assertFalse("one player has both emblems" + report,
+                    bot1.commandOwners.get("Player Two").equals(bot1.commandOwners.get("Player One")));
+            // (the command zones also hold effects, such as Searing Touch's)
+            AssertJUnit.assertTrue("seat 2 did not see both emblems" + report, bot2.commandOwners.keySet().containsAll(Set.of("Player One", "Player Two")));
+            for (final String name : bot1.commandOwners.keySet()) {
+                AssertJUnit.assertFalse("an effect's name shows a card id: " + name, name.matches(".*\\(\\d+\\).*"));
+            }
+            final JsonObject one = bot1.commandCards.get("Player One");
+            AssertJUnit.assertEquals("/pics/TBLD%20Player%20One.png", one.has("img") ? one.get("img").getAsString() : "");
+            AssertJUnit.assertEquals("Emblem — Book of Lore", one.get("type").getAsString());
+            AssertJUnit.assertTrue(one.get("text").getAsString().startsWith("You skip your first draw step."));
+            AssertJUnit.assertTrue("no emblem shown during the mulligan" + report, bot2.sawCommandBeforeKeep);
             AssertJUnit.assertFalse("a player saw the other's hand", bot1.sawOpponentHand || bot2.sawOpponentHand);
 
             // London mulligan: the cards go to the bottom only after the hand is kept

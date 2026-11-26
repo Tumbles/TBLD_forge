@@ -2208,6 +2208,11 @@ public class ComputerUtilMana {
         final CardCollectionView list = CardCollection.combine(ai.getCardsIn(ZoneType.Battlefield), ai.getCardsIn(ZoneType.Hand),
                 ai.getCardsIn(ZoneType.Command));
         final List<Card> manaSources = CardLists.filter(list, c -> {
+            // TBLD: a person's emblem (the one-use Player Two emblem) is never spent by the Auto button.
+            // isAI() stays false while a person's payment runs under a temporary AI controller.
+            if (!ai.isAI() && c.isEmblem()) {
+                return false;
+            }
             if (ai.isAI() && ComputerUtil.sacrificePunished(ai, c) && c.isInZone(ZoneType.Battlefield)) {
                 return false; // a Treasure that gives the AI poison counters when it is sacrificed (Bloodroot Apothecary)
             }

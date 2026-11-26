@@ -47,6 +47,7 @@ import forge.game.staticability.StaticAbility;
 import forge.game.staticability.StaticAbilityCountersRemain;
 import forge.game.staticability.StaticAbilityContinuous;
 import forge.game.staticability.StaticAbilityLayer;
+import forge.game.tbld.TbldEmblems;
 import forge.game.staticability.StaticAbilityMode;
 import forge.game.trigger.TriggerType;
 import forge.game.zone.PlayerZone;
@@ -2370,6 +2371,11 @@ public class GameAction {
 
             runPreOpeningHandActions(first);
 
+            // TBLD: emblems by turn order, given before the opening hands so players see them while deciding on a mulligan
+            if (game.getRules().hasTbldStartingEmblems()) {
+                TbldEmblems.giveStartingEmblems(game, first);
+            }
+
             game.setAge(GameStage.Mulligan);
             for (final Player p1 : game.getPlayers()) {
                 // Choose starting hand for each player with multiple hands
@@ -2405,7 +2411,12 @@ public class GameAction {
                 }
             }
 
+            final Player firstBeforeOpeningHand = first;
             first = runOpeningHandActions(first);
+            if (first != firstBeforeOpeningHand && game.getRules().hasTbldStartingEmblems()) {
+                // an opening-hand card made another player the starting player
+                TbldEmblems.giveStartingEmblems(game, first);
+            }
             checkStateEffects(true); // why?
 
             // Run Trigger beginning of the game

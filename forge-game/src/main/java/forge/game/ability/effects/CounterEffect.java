@@ -77,7 +77,7 @@ public class CounterEffect extends SpellAbilityEffect {
                 sa.getHostCard().addRemembered(tgtSACard);
             }
 
-            if (tgtSA.isSpell() && !tgtSA.isCounterableBy(sa)) {
+            if (!tgtSA.isCounterableBy(sa)) {
                 continue;
             }
 

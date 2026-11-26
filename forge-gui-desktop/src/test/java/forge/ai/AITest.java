@@ -42,6 +42,10 @@ public class AITest {
         FModel.initialize(null, preferences -> {
             preferences.setPref(FPref.LOAD_CARD_SCRIPTS_LAZILY, false);
             preferences.setPref(FPref.UI_LANGUAGE, "en-US");
+            // Tests never play sounds or music on the machine that runs them
+            preferences.setPref(FPref.UI_ENABLE_SOUNDS, false);
+            preferences.setPref(FPref.UI_ENABLE_MUSIC, false);
+            preferences.setPref(FPref.UI_ALT_SOUND_SYSTEM, false);
             return null;
         });
         initialized = true;

@@ -57,6 +57,9 @@
   .pile .pile-count { position: absolute; right: -6px; top: -6px; background: #0d0f14; border: 1px solid var(--line); border-radius: 9px;
     font-size: 11px; padding: 0 5px; z-index: 3; }
   .pile.lib { cursor: default; }
+  .command { --ch: var(--pile-h); position: relative; display: flex; gap: 6px; }
+  .emblem-slot { flex: none; display: flex; }
+  .command .command-label { position: absolute; left: 50%; bottom: -2px; transform: translate(-50%, 100%); font-size: 10px; color: var(--muted); white-space: nowrap; }
   .pool { display: flex; gap: 4px; }
   .pool .ms { cursor: pointer; width: 26px; height: 26px; font-size: 13px; }
   .pool .ms .n { position: absolute; right: -5px; bottom: -5px; font-size: 10px; background: #0d0f14; color: var(--text);
@@ -772,11 +775,14 @@ function renderHalf(sec, p, mine, attachments) {
     return g;
   };
   setChildren(sec.querySelector('[data-row="creatures"]'), creatures.map(withAttachments));
-  // The back row, centered: lands stacked by name, then the other permanents after a gap
+  // The back row, centered: lands stacked by name, then the other permanents after a gap, then the
+  // player's emblem (in the command zone by the rules, shown here as Brett asked so it isn't forgotten)
+  const emblems = (p.command || []).filter(isEmblem);
   const back = sec.querySelector('[data-row="back"]');
   const backNodes = landStacks(lands, attachments).map(g => g.length === 1 ? withAttachments(g[0]) : landStack(g));
-  if (backNodes.length && others.length) backNodes.push(spacerFor(sec));
+  if (backNodes.length && (others.length || emblems.length)) backNodes.push(spacerFor(sec));
   backNodes.push(...others.map(withAttachments));
+  backNodes.push(...emblems.map(c => emblemSlot(c, mine)));
   setChildren(back, backNodes);
 
   if (mine && Array.isArray(p.hand)) {
@@ -784,6 +790,16 @@ function renderHalf(sec, p, mine, attachments) {
     const chosen = chosenCardIds();
     setChildren(sec.querySelector(".hand"), p.hand.filter(c => !chosen.has(c.id)).map(c => cardEl(c, "hand")));
   }
+}
+
+const isEmblem = c => /^Emblem/.test(c.type || "");
+/** An emblem on the battlefield. Its slot keeps data-zone="Command"; only its owner can click it. */
+const emblemSlots = new Map();
+function emblemSlot(c, mine) {
+  let slot = emblemSlots.get(c.id);
+  if (!slot) { slot = el("div", "emblem-slot"); slot.dataset.zone = "Command"; emblemSlots.set(c.id, slot); }
+  setChildren(slot, [cardEl(c, "bf", mine ? {} : { noClick: true })]);
+  return slot;
 }
 
 const spacers = new Map();
@@ -837,6 +853,16 @@ function renderPbar(bar, p, mine) {
   const piles = el("div", "piles");
   piles.append(pileEl(p, "Graveyard", p.graveyard), pileEl(p, "Exile", p.exile));
   nodes.push(piles);
+
+  // Lasting effects in the command zone (emblems are shown on the battlefield)
+  const effects = (p.command || []).filter(c => !isEmblem(c));
+  if (effects.length) {
+    const cz = el("div", "command");
+    cz.dataset.zone = "Effects";
+    for (const c of effects) cz.append(cardEl(c, "command", { noClick: true }));
+    cz.append(el("div", "command-label", "Effects"));
+    nodes.push(cz);
+  }
 
   const pool = el("div", "pool");
   const bytes = { W: 1, U: 2, B: 4, R: 8, G: 16, C: 32 };
@@ -934,7 +960,7 @@ function renderDecision() {
 function allCards() {
   const byId = {};
   if (!state || !state.players) return byId;
-  for (const p of state.players) for (const z of [p.battlefield, p.graveyard, p.exile, Array.isArray(p.hand) ? p.hand : []]) for (const c of z) byId[c.id] = c;
+  for (const p of state.players) for (const z of [p.battlefield, p.graveyard, p.exile, p.command || [], Array.isArray(p.hand) ? p.hand : []]) for (const c of z) byId[c.id] = c;
   return byId;
 }
 

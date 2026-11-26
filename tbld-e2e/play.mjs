@@ -17,7 +17,8 @@ function makeSeat(seat) {
     seat, aggressive: seat === 1, page: null, errors: [], actions: [],
     landTurn: -1, attempted: new Set(), blockersClicked: new Set(), blocksConfirmedTurn: -1,
     lastSignature: "", lastChange: Date.now(),
-    seen: { lands: 0, creature: false, attack: false, block: false, plannedBlock: false, died: false, spell: false, popups: [] },
+    seen: { lands: 0, creature: false, attack: false, block: false, plannedBlock: false, died: false, spell: false, popups: [],
+      emblem: "", emblemUsed: false, colorlessMana: false },
   };
 }
 const seats = [makeSeat(1), makeSeat(2)];
@@ -40,6 +41,7 @@ async function read(page) {
     const panelInfo = panel => panel && ({
       id: panel.dataset.player, life: +panel.dataset.life, active: panel.classList.contains("active"),
       hand: cards(panel, "Hand"), battlefield: cards(panel, "Battlefield"), graveyard: cards(panel, "Graveyard"),
+      command: cards(panel, "Command"), pool: [...(panel?.querySelectorAll(".pool .ms") || [])].map(m => m.textContent),
     });
     const dialog = document.getElementById("dialog");
     const dialogOpen = dialog.style.display === "block";
@@ -93,6 +95,13 @@ async function step(s) {
   for (const c of [...v.me.graveyard, ...v.opp.graveyard]) {
     if (isCreature(c)) s.seen.died = true; else if (/Instant|Sorcery/.test(c.type)) s.seen.spell = true;
   }
+  // The starting emblem: which one this seat got, and whether it was used (it leaves the command zone)
+  const emblem = v.me.command.find(c => /^Player /.test(c.name));
+  if (emblem && !s.seen.emblem) s.seen.emblem = emblem.name;
+  if (s.seen.emblem && !emblem) s.seen.emblemUsed = true;
+  if (v.me.pool.some(m => m.startsWith("C"))) s.seen.colorlessMana = true;
+  // Using an emblem asks no "Exile Player One?" question
+  if (/Exile Player .*\?/.test(v.prompt + " " + (v.dialog ? v.dialog.title : ""))) s.seen.exileConfirm = true;
   if (gameOver) return;
   // Act only on a page that has settled, as a person would: messages arrive in bursts, and the
   // buttons from the previous prompt stay up briefly while the next one arrives
@@ -154,6 +163,11 @@ async function step(s) {
     if (b["Cancel"]) return click(s, button("Cancel"), "cancel targeting", turn);
     return;
   }
+  // A card chosen from the hand, such as the one Player One's emblem exiles: choose one, then OK
+  if (p.includes("from your hand") && v.buttons.length) {
+    if (b["OK"]) return click(s, button("OK"), "confirm the card chosen from hand", turn);
+    if (v.me.hand.length) return click(s, `[data-me="1"] [data-zone="Hand"] .card >> nth=0`, "choose " + v.me.hand[0].name + " from hand", turn);
+  }
   if ((p.includes("discard") || p.includes("return")) && v.buttons.length && !b["OK"] && v.me.hand.length) {
     // Chosen cards are not shown in the hand, so any hand card is unchosen
     return click(s, `[data-me="1"] [data-zone="Hand"] .card >> nth=0`, "discard/bottom " + v.me.hand[0].name, turn);
@@ -168,6 +182,13 @@ async function step(s) {
     }
     const land = playable.find(isLand);
     if (land && s.landTurn !== turn) { s.landTurn = turn; return click(s, `[data-me="1"] .card[data-id="${land.id}"]`, "play " + land.name, turn); }
+    // The starting emblem, once: Player Two's mana at the first chance, any other when it is highlighted as usable
+    // (Player One's needs three untapped lands)
+    const emblem = v.me.command.find(c => /^Player /.test(c.name) && (c.selectable || c.name === "Player Two"));
+    if (emblem && !s.attempted.has("emblem:" + turn)) {
+      s.attempted.add("emblem:" + turn);
+      return click(s, `[data-me="1"] [data-zone="Command"] .card[data-id="${emblem.id}"]`, "use emblem " + emblem.name, turn);
+    }
     for (const c of [...playable.filter(isCreature), ...playable.filter(c => !isLand(c) && !isCreature(c))]) {
       const key = `cast:${turn}:${c.id}`;
       if (!s.attempted.has(key)) { s.attempted.add(key); return click(s, `[data-me="1"] .card[data-id="${c.id}"]`, "cast " + c.name, turn); }
@@ -210,6 +231,10 @@ if (!failure) {
     [d.seen.plannedBlock, "seat 2 never saw its chosen blocker marked as blocking before confirming"],
     [a.seen.died || d.seen.died, "no creature died"],
     [a.seen.spell || d.seen.spell, "no instant or sorcery resolved"],
+    [[a.seen.emblem, d.seen.emblem].sort().join() === "Player One,Player Two", "the seats did not get Player One and Player Two"],
+    [a.seen.emblemUsed && d.seen.emblemUsed, "a player could not use their emblem"],
+    [[a, d].some(s => s.seen.emblem === "Player Two" && s.seen.colorlessMana), "Player Two's emblem added no {C}"],
+    [!a.seen.exileConfirm && !d.seen.exileConfirm, "using an emblem asked to confirm exiling it"],
   ];
   const failed = checks.filter(([ok]) => !ok).map(([, m]) => m);
   if (failed.length) failure = failed.join("; ");

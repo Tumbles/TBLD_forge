@@ -13,6 +13,7 @@ import forge.interfaces.IGameController;
 import forge.localinstance.properties.ForgePreferences.FPref;
 import forge.model.FModel;
 import forge.player.LobbyPlayerHuman;
+import forge.sound.SoundSystem;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.buffer.Unpooled;
 import io.netty.channel.Channel;
@@ -119,7 +120,20 @@ public final class TbldWebServer {
             preferences.setPref(FPref.UI_ENABLE_MUSIC, false);
             return null;
         });
+        silence();
         modelInitialized = true;
+    }
+
+    /**
+     * The server never plays sounds or music on the machine it runs on. Forge's sound system would
+     * otherwise play game sounds there, and its alternative sound system ignores the sound setting.
+     */
+    static void silence() {
+        FModel.getPreferences().setPref(FPref.UI_ENABLE_SOUNDS, false);
+        FModel.getPreferences().setPref(FPref.UI_ENABLE_MUSIC, false);
+        FModel.getPreferences().setPref(FPref.UI_ALT_SOUND_SYSTEM, false);
+        SoundSystem.instance.setIgnorePlayRequests(true);
+        SoundSystem.instance.pause();
     }
 
     private static boolean modelInitialized;
@@ -221,6 +235,8 @@ public final class TbldWebServer {
         // other zones (a library, an opponent's hand) are offered in a dialog, which the web client
         // shows as a popup of cards.
         FModel.getPreferences().setPref(FPref.UI_SELECT_FROM_CARD_DISPLAYS, false);
+        // Also here because the tests load the model without initModel
+        silence();
         final List<RegisteredPlayer> players = new ArrayList<>();
         final Map<RegisteredPlayer, IGuiGame> guis = new LinkedHashMap<>();
         for (final BrowserSeat s : seats) {
@@ -231,7 +247,10 @@ public final class TbldWebServer {
         }
         final HostedMatch match = new HostedMatch();
         hostedMatch = match;
-        match.startMatch(new GameRules(GameType.Constructed), null, players, guis, null);
+        final GameRules rules = new GameRules(GameType.Constructed);
+        // TBLD: each player starts with the emblem for their place in turn order
+        rules.setTbldStartingEmblems(true);
+        match.startMatch(rules, null, players, guis, null);
     }
 
     /** A fixed mono-red deck for testing. Its Mountains are TBLD Mountain version 69. */

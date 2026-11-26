@@ -18,7 +18,9 @@ public class ReplaceBeginTurn extends ReplacementEffect {
             return false;
         }
         if (hasParam("ExtraTurn")) {
-            if (!(boolean) runParams.get(AbilityKey.ExtraTurn)) {
+            // ExtraTurn$ False matches only a turn that isn't an extra turn (TBLD Player Three emblem)
+            final boolean extraWanted = !"False".equalsIgnoreCase(getParam("ExtraTurn"));
+            if ((boolean) runParams.get(AbilityKey.ExtraTurn) != extraWanted) {
                 return false;
             }
         }

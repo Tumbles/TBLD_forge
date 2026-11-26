@@ -6,6 +6,7 @@ import com.google.gson.JsonNull;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 import forge.card.MagicColor;
+import forge.card.mana.ManaAtom;
 import forge.deck.CardPool;
 import forge.game.GameEntityView;
 import forge.game.GameLogEntry;
@@ -19,6 +20,7 @@ import forge.game.player.DelayedReveal;
 import forge.game.player.PlayerView;
 import forge.game.spellability.SpellAbilityView;
 import forge.game.spellability.StackItemView;
+import forge.game.tbld.TbldEmblems;
 import forge.game.zone.ZoneType;
 import forge.gamemodes.match.Selection;
 import forge.gamemodes.match.YieldUpdate;
@@ -653,7 +655,7 @@ public final class BrowserSeat implements IRemote {
         final PlayerView me = player;
         if (me == null || cv.canBeShownTo(me)) {
             final CardStateView s = cv.getCurrentState();
-            j.addProperty("name", s == null ? "?" : s.getName());
+            j.addProperty("name", s == null ? "?" : shownName(s.getName()));
             addFace(j, cv);
         } else {
             j.addProperty("name", "(hidden card)");
@@ -662,16 +664,30 @@ public final class BrowserSeat implements IRemote {
         return j;
     }
 
+    /**
+     * A card's name as players see it. Forge names an effect after the card that made it, card id
+     * included ("Searing Touch (76)'s Effect"); the id is left out.
+     */
+    static String shownName(final String name) {
+        return name == null ? null : name.replaceAll(" \\(\\d+\\)(?='s )", "");
+    }
+
     /** What is printed on the card: name, cost, type, text, power and toughness, colors and a picture. */
     private static void addFace(final JsonObject j, final CardView cv) {
         final CardStateView s = cv.getCurrentState();
         if (s == null) {
             return;
         }
-        j.addProperty("name", s.getName());
+        j.addProperty("name", shownName(s.getName()));
         j.addProperty("cost", s.getManaCost() == null ? "" : s.getManaCost().toString());
-        j.addProperty("type", s.getType() == null ? "" : s.getType().toString());
-        j.addProperty("text", s.getOracleText());
+        String type = s.getType() == null ? "" : s.getType().toString();
+        if (cv.isEmblem() && type.isBlank()) {
+            type = TbldEmblems.typeLine(s.getName());
+        }
+        j.addProperty("type", type);
+        // Effects and emblems made during the game have no printed text; their abilities describe them
+        final String oracle = s.getOracleText();
+        j.addProperty("text", oracle == null || oracle.isBlank() ? s.getAbilityText() : oracle);
         if (s.isCreature()) {
             j.addProperty("power", s.getPower());
             j.addProperty("toughness", s.getToughness());
@@ -861,6 +877,8 @@ public final class BrowserSeat implements IRemote {
                 p.add("battlefield", zone(pv.getCards(ZoneType.Battlefield), combat, cards));
                 p.add("graveyard", zone(pv.getCards(ZoneType.Graveyard), combat, cards));
                 p.add("exile", zone(pv.getCards(ZoneType.Exile), combat, cards));
+                // Emblems (TBLD starting emblems) and lasting effects
+                p.add("command", zone(pv.getCards(ZoneType.Command), combat, cards));
                 final JsonObject mana = new JsonObject();
                 final String[] names = { "W", "U", "B", "R", "G" };
                 for (int i = 0; i < 5; i++) {
@@ -869,7 +887,8 @@ public final class BrowserSeat implements IRemote {
                         mana.addProperty(names[i], amount);
                     }
                 }
-                final int colorless = pv.getMana(MagicColor.COLORLESS);
+                // The pool keys colorless mana by ManaAtom.COLORLESS, not MagicColor.COLORLESS (which is 0)
+                final int colorless = pv.getMana((byte) ManaAtom.COLORLESS);
                 if (colorless > 0) {
                     mana.addProperty("C", colorless);
                 }

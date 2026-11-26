@@ -24,6 +24,11 @@ let server = null;
 const received = [];
 await page.route("http://tbld.test/**", route => route.fulfill({ contentType: "text/html", body: html }));
 await page.route("https://api.scryfall.com/**", route => route.fulfill({ contentType: "image/png", body: png }));
+// TBLD pictures come from the repository's picture folder, as the server serves them
+await page.route("http://tbld.test/pics/**", route => {
+  const file = path.join(here, "../forge-gui/res/tbld/pics", decodeURIComponent(new URL(route.request().url()).pathname.slice("/pics/".length)));
+  return fs.existsSync(file) ? route.fulfill({ contentType: "image/png", body: fs.readFileSync(file) }) : route.fulfill({ status: 404, body: "" });
+});
 await page.routeWebSocket("ws://tbld.test/ws?seat=1", ws => {
   server = ws;
   ws.onMessage(m => received.push(JSON.parse(m)));
@@ -56,6 +61,7 @@ const creature = (id, name, p, t, extra = {}) => card(id, name, "Creature - Gian
 const ref = c => ({ card: c.id, ...c });
 const searing = card(22, "Searing Touch", "Flash Sorcery", { cost: "{R}", colors: "R", set: "TBLD", text: "Searing Touch deals 3 damage to any target.", img: undefined });
 const shockCard = card(50, "Shock", "Instant", { cost: "{R}", colors: "R", text: "Shock deals 2 damage to any target." });
+const emblem = (id, name, sub, text) => card(id, name, "Emblem — " + sub, { set: "TBLD", text, img: "/pics/" + encodeURIComponent("TBLD " + name + ".png") });
 
 function makeState(over = {}) {
   return {
@@ -66,8 +72,10 @@ function makeState(over = {}) {
         battlefield: [mountain(1), mountain(2), mountain(3), mountain(4, { tapped: true }), mountain(5, { tapped: true }),
           creature(10, "Raging Goblin", 1, 1, { sick: true }), card(11, "Bone Saw", "Artifact - Equipment", { cost: "{0}" }),
           creature(12, "Gray Ogre", 2, 2, { tapped: true, attacking: "Player 2", blockedBy: ["Hill Giant"] })],
-        graveyard: [card(30, "Lava Axe", "Sorcery", { cost: "{4}{R}", colors: "R" })] },
+        graveyard: [card(30, "Lava Axe", "Sorcery", { cost: "{4}{R}", colors: "R" })],
+        command: [emblem(60, "Player One", "Book of Lore", "You skip your first draw step.")] },
       { id: 2, name: "Player 2", life: 18, library: 31, hand: 5, mana: {}, exile: [], graveyard: [],
+        command: [emblem(61, "Player Two", "Shard of Mana", "Exile this: Add {C}.")],
         battlefield: [mountain(40), creature(41, "Hill Giant", 3, 3, { blocking: "Gray Ogre", damage: 2 })] },
     ],
     stack: [
@@ -172,6 +180,31 @@ await page.click('#half-me .pile[data-zone="Graveyard"]');
 check(await visible("#viewer") && (await count('#viewer .card[data-name="Lava Axe"]')) === 1, "clicking the graveyard shows its cards");
 await page.click('#viewer button:text-is("Close")');
 check(!(await visible("#viewer")), "the zone viewer closes");
+
+// emblems: each player's starting emblem is shown at the end of the battlefield's back row, with its
+// picture; this player's can be used
+check(await count('#half-me [data-row="back"] [data-zone="Command"] .card[data-name="Player One"]') === 1, "this player's emblem is in the back row");
+check(await count('#half-opp [data-row="back"] [data-zone="Command"] .card[data-name="Player Two"]') === 1, "the opponent's emblem is in their back row");
+check(await page.locator('#half-me [data-row="back"] > *').last().evaluate(e => e.dataset.zone === "Command"), "the emblem comes after the other permanents");
+const emblemH = (await page.locator('#half-me [data-zone="Command"] .card').boundingBox()).height;
+const saw = (await page.locator('#half-me .card[data-id="11"]').boundingBox()).height;
+check(Math.abs(emblemH - saw) <= 1, "the emblem is as large as a permanent");
+check(await count('#half-me .pbar [data-zone="Command"]') === 0, "the emblem is not also in the player bar");
+const emblemImg = await page.locator('#half-me [data-zone="Command"] .card img.art').evaluate(i => i.complete && i.naturalWidth > 100).catch(() => false);
+check(emblemImg, "an emblem shows its picture");
+await page.hover('#half-me [data-zone="Command"] .card[data-id="60"]');
+check(await visible("#preview") && (await count("#preview img.art")) === 1, "hovering an emblem shows it large");
+await page.mouse.move(700, 495);
+selectionMsg({ cards: [], min: 0, max: 0, targets: [], chosen: [], actionable: [60] });
+await settle();
+check(await count('#half-me [data-zone="Command"] .card[data-id="60"].selectable') === 1, "a usable emblem is highlighted");
+await page.click('#half-me [data-zone="Command"] .card[data-id="60"]');
+check(!!(await waitFor(() => received.find(m => m.t === "act" && m.m === "card" && m.id === 60), "an emblem click")), "clicking this player's emblem uses it");
+await page.click('#half-opp [data-zone="Command"] .card[data-id="61"]');
+await settle();
+check(!received.find(m => m.t === "act" && m.m === "card" && m.id === 61), "clicking the opponent's emblem does nothing");
+selectionMsg({ cards: [], min: 0, max: 0, targets: [], chosen: [], actionable: [] });
+await page.screenshot({ path: path.join(here, "out/ui-emblems.png") });
 
 // targeting a player
 selectionMsg({ cards: [], min: 0, max: 0, targets: [{ player: 2, name: "Player 2" }], chosen: [], actionable: [20] });

@@ -227,8 +227,11 @@ public class HumanCostDecision extends CostDecisionMakerBase {
         }
 
         if (onlyPayable != null) {
+            // TBLD: an emblem's "Exile this" is not confirmed; choosing the emblem's ability is the decision
+            final boolean emblemExilesItself = cost.payCostFromSource() && onlyPayable.isEmblem() && cost.from.get(0) == ZoneType.Command;
             if (onlyPayable.canExiledBy(ability, isEffect()) && onlyPayable.getZone() == player.getZone(cost.from.get(0))
-                    && controller.confirmPayment(cost, Localizer.getInstance().getMessage("lblExileConfirm", onlyPayable.getTranslatedName()), ability)) {
+                    && (emblemExilesItself
+                        || controller.confirmPayment(cost, Localizer.getInstance().getMessage("lblExileConfirm", onlyPayable.getTranslatedName()), ability))) {
                 return PaymentDecision.card(onlyPayable);
             }
             return null;
