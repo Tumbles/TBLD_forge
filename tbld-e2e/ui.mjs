@@ -128,6 +128,37 @@ const abilityH = (await page.locator("#stack .stack-item.ability .card").boundin
 check(spellH > abilityH * 1.5, "spells are shown larger than abilities");
 check((await page.locator("#stack .stack-item.spell .si-targets").textContent()).includes("Gray Ogre"), "a stack item lists its targets");
 
+// the stack has a set size and scrolls; the toggle between stack and log swaps which one is small
+const box = sel => page.locator(sel).evaluate(e => ({ h: e.clientHeight, sh: e.scrollHeight, top: e.getBoundingClientRect().top }));
+const spellItemH = (await page.locator("#stack .stack-item.spell").boundingBox()).height;
+const smallStack = await box("#stack");
+check(Math.abs(smallStack.h - (1.5 * spellItemH + 8)) <= 4, `the stack shows one and a half spells (${smallStack.h}px for ${spellItemH}px spells)`);
+check(smallStack.sh > smallStack.h, "a stack taller than its area scrolls");
+const bigStack = makeState();
+bigStack.stack = [...bigStack.stack, ...bigStack.stack.map(s => ({ ...s, id: s.id + 10 })), ...bigStack.stack.map(s => ({ ...s, id: s.id + 20 }))];
+send({ t: "state", state: bigStack });
+await settle();
+check((await box("#stack")).h === smallStack.h, "the stack area keeps its size as the stack grows");
+const longLog = makeState({ log: Array.from({ length: 30 }, (_, i) => "Log line " + (i + 1)) });
+send({ t: "state", state: longLog });
+await settle();
+const logSmallStack = await box("#log");
+await page.screenshot({ path: path.join(here, "out/ui-stack-small.png") });
+await page.click("#split-toggle");
+await settle();
+await page.screenshot({ path: path.join(here, "out/ui-log-small.png") });
+const lineH = await page.locator("#log div").first().evaluate(e => e.getBoundingClientRect().height);
+const smallLog = await box("#log");
+check(Math.abs((smallLog.h - 20) / lineH - 5) < 0.5, `the toggle shrinks the log to five lines (${smallLog.h}px, lines of ${lineH}px)`);
+check((await box("#stack")).h > smallStack.h + 100 && logSmallStack.h > smallLog.h + 100, "and gives the rest to the stack");
+check(await page.locator("#log").evaluate(e => e.scrollTop + e.clientHeight >= e.scrollHeight - 4), "the small log still shows the newest lines");
+check(await page.evaluate(() => localStorage.getItem("tbld.sidebarSplit")) === "log-small", "the choice is remembered");
+await page.click("#split-toggle");
+await settle();
+check((await box("#stack")).h === smallStack.h && (await box("#log")).h === logSmallStack.h, "the toggle switches back");
+send({ t: "state", state: makeState() });
+await settle();
+
 // zone viewer
 await page.click('#half-me .pile[data-zone="Graveyard"]');
 check(await visible("#viewer") && (await count('#viewer .card[data-name="Lava Axe"]')) === 1, "clicking the graveyard shows its cards");

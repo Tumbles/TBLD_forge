@@ -198,7 +198,21 @@
   #chosen:empty { display: none; }
   #chosen .chosen-row { display: flex; flex-wrap: wrap; gap: 6px; margin: 4px 0 8px; }
   #chosen .chip { padding: 4px 10px; border-radius: 12px; background: var(--panel2); border: 1px solid var(--gold); cursor: pointer; }
-  #stack-panel { flex: none; max-height: 42vh; overflow-y: auto; }
+  /* The stack and the log share the space below the decision panel. The toggle between them gives
+     the stack room for one and a half spells (the log takes the rest), or the log room for five
+     lines (the stack takes the rest). Either way the stack keeps its size and scrolls. */
+  #stack-panel { display: flex; flex-direction: column; min-height: 0; }
+  #stack-panel .zone-label { flex: none; }
+  #stack { overflow-y: auto; min-height: 0; flex: 1 1 auto; padding-right: 2px; }
+  #side.stack-small #stack-panel { flex: none; }
+  #side.stack-small #stack { flex: none; height: var(--stack-small-h); }
+  #side.stack-small #log { flex: 1 1 auto; }
+  #side.log-small #stack-panel { flex: 1 1 auto; }
+  #side.log-small #log { flex: none; height: calc(5 * (1.45em + 3px) + 22px); }
+  :root { --stack-small-h: calc(1.5 * 118px + 8px); }
+  #split-toggle { flex: none; align-self: center; margin: -7px 0; padding: 0 10px; height: 16px; line-height: 16px; border: none;
+    background: none; color: #4f5668; font-size: 14px; cursor: pointer; border-radius: 6px; }
+  #split-toggle:hover { color: var(--text); background: var(--panel2); }
   #stack { display: flex; flex-direction: column; gap: 8px; }
   #stack .empty { color: #4f5566; font-size: 12px; }
   .stack-item { display: flex; gap: 10px; align-items: flex-start; padding: 6px; border-radius: 8px; cursor: pointer; border: 1px solid transparent; }
@@ -213,7 +227,7 @@
   .stack-item .si-name { font-weight: 700; font-size: 13.5px; }
   .stack-item .si-text { color: #c5c9d4; margin-top: 2px; }
   .stack-item .si-targets { color: var(--gold); margin-top: 2px; }
-  #log { flex: 1 1 auto; overflow-y: auto; font-size: 12px; color: #a5acbb; line-height: 1.45; min-height: 60px; }
+  #log { flex: 1 1 auto; overflow-y: auto; font-size: 12px; color: #a5acbb; line-height: 1.45; min-height: 0; }
   #log div { padding: 1px 0; border-bottom: 1px solid rgba(255, 255, 255, .03); }
   #settings { flex: none; display: flex; align-items: center; gap: 10px; font-size: 12px; color: var(--muted); }
   #settings label { cursor: pointer; flex: 1; }
@@ -311,6 +325,7 @@
       <div id="buttons"></div>
     </div>
     <div class="panel" id="stack-panel"><div class="zone-label">Stack</div><div id="stack"></div></div>
+    <button id="split-toggle">⇅</button>
     <div class="panel" id="log"></div>
     <div class="panel" id="settings">
       <label id="autopass-label"><input type="checkbox" id="autopass"> Auto-pass when I have nothing to play</label>
@@ -1211,6 +1226,23 @@ function showDialog() {
     draw();
   }
 }
+
+// The split between the stack and the log, remembered in this browser
+const splitKey = "tbld.sidebarSplit";
+function applySplit(mode) {
+  const side = document.getElementById("side");
+  side.classList.toggle("stack-small", mode !== "log-small");
+  side.classList.toggle("log-small", mode === "log-small");
+  document.getElementById("split-toggle").title = mode === "log-small" ? "Give the log more room" : "Give the stack more room";
+  const log = document.getElementById("log");
+  log.scrollTop = log.scrollHeight;
+}
+document.getElementById("split-toggle").onclick = () => {
+  const mode = document.getElementById("side").classList.contains("log-small") ? "stack-small" : "log-small";
+  localStorage.setItem(splitKey, mode);
+  applySplit(mode);
+};
+applySplit(localStorage.getItem(splitKey));
 
 document.getElementById("restart").onclick = () => {
   if (window.confirm("Abandon this game and start a new one?")) send({ t: "restart" });
