@@ -253,6 +253,35 @@ await page.click('.stop.own[data-phase="MAIN2"]');
 pref = await waitFor(() => !lastPref().stops.own.includes("MAIN2") && lastPref(), "turning off a stop");
 check(pref && !pref.stops.own.includes("MAIN2"), "turning off a stop sends it");
 
+// ------------------------------------------------------------------ settings: auto-pass, yield all, hold priority
+
+check(pref && pref.autoPass === "manaOnly" && pref.holdPriority === false, "auto-pass defaults to 'if only mana abilities' and hold priority to off");
+await page.selectOption("#autopass", "noActions");
+pref = await waitFor(() => lastPref().autoPass === "noActions" && lastPref(), "auto-pass change");
+check(!!pref, "choosing an auto-pass setting sends it");
+await page.click("#hold-label");
+pref = await waitFor(() => lastPref().holdPriority === true && lastPref(), "hold priority change");
+check(!!pref && pref.autoPass === "noActions", "turning hold priority on sends it with the other settings");
+const apBox = await page.locator("#autopass-label").boundingBox();
+const yBox = await page.locator("#yield-label").boundingBox();
+check(apBox && yBox && Math.abs(apBox.y - yBox.y) < 12 && yBox.x > apBox.x, "Yield all sits beside Auto-pass");
+check(await page.locator("#settings").evaluate(e => e.scrollWidth <= e.clientWidth + 1), "the settings fit the side panel");
+send({ t: "state", state: makeState({ yieldAll: true }) });
+await settle();
+check(await page.locator("#yieldall").isChecked(), "Yield all shows that the game is yielding (End Turn turns it on)");
+let n = received.length;
+await page.click("#yield-label");
+check(!!(await waitFor(() => received.slice(n).find(m => m.t === "act" && m.m === "yieldAll" && m.id === 0), "yield all off")), "switching Yield all off tells the game");
+send({ t: "state", state: makeState({ yieldAll: false }) });
+await settle();
+check(!(await page.locator("#yieldall").isChecked()), "Yield all shows when the game stops yielding");
+n = received.length;
+await page.click("#yield-label");
+check(!!(await waitFor(() => received.slice(n).find(m => m.t === "act" && m.m === "yieldAll" && m.id === 1), "yield all on")), "switching Yield all on tells the game");
+await page.locator("#settings").screenshot({ path: path.join(here, "out/ui-settings.png") });
+send({ t: "state", state: makeState() });
+await settle();
+
 // ------------------------------------------------------------------ the decision panel
 
 send({ t: "state", state: makeState() });
@@ -368,6 +397,16 @@ await settle();
 await page.click('#dialog .opt:text-is("2")');
 await page.click("#dialog .primary");
 check(JSON.stringify((await replyFor(8))?.v) === "[2]", "the next question follows");
+
+// buyback: one choice from a list that includes not paying it, and only a Confirm button
+call("getChoices", ["Choose optional costs: Searing Touch", 1, 1, ["Buyback – {4}{R}", "No buyback"], null, null], 10);
+await settle();
+check(await count("#dialog .opt") === 2 && (await count('#dialog button:text-is("Choose none")')) === 0,
+  "the buyback question lists 'No buyback' as an option, with no Choose none button");
+await page.screenshot({ path: path.join(here, "out/ui-popup-buyback.png") });
+await page.click('#dialog .opt:text-is("No buyback")');
+await page.click("#dialog .primary");
+check(JSON.stringify((await replyFor(10))?.v) === "[1]", "choosing No buyback answers it");
 
 // typing in a text field: the space bar types a space and confirms nothing
 call("showInputDialog", ["Name a card", "Choose", null, "", null, false], 9);

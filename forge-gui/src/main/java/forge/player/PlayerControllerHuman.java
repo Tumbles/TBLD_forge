@@ -5,6 +5,7 @@ import forge.LobbyPlayer;
 import forge.StaticData;
 import forge.ai.AIOption;
 import forge.ai.AvailableActions;
+import forge.ai.ComputerUtilMana;
 import forge.game.GameState;
 import forge.ai.PlayerControllerAi;
 import forge.game.undo.UndoManager;
@@ -1730,6 +1731,16 @@ public class PlayerControllerHuman extends PlayerController implements IGameCont
     public List<SpellAbility> chooseSpellAbilityToPlay() {
         final MagicStack stack = getGame().getStack();
 
+        // TBLD: without "hold priority", casting a spell or activating an ability passes priority
+        if (passAfterPlay) {
+            passAfterPlay = false;
+            final SpellAbilityStackInstance top = stack.peek();
+            if (!isMacroActive() && top != null && top.getActivatingPlayer() == player) {
+                getGui().awaitNextInput();
+                return null;
+            }
+        }
+
         // Skip when already yielding — yield proceeds regardless of available-actions.
         // shouldAutoYield, not isYieldActive: it clears yields that have run their course, so an expiring one no longer skips the scan
         // Compute the actionable set when APINA / suggestions / highlights need it.
@@ -1740,11 +1751,11 @@ public class PlayerControllerHuman extends PlayerController implements IGameCont
                 // Highlights need the full set; APINA derives its boolean from the same scan.
                 Set<CardView> actionable = AvailableActions.collectActionable(getPlayer(), timeoutMs);
                 cachedActionableCards = actionable;
-                getPlayer().getView().setHasAvailableActions(!actionable.isEmpty());
+                getPlayer().getView().setHasAvailableActions(!actionable.isEmpty() || manaAbilityCountsAsAction());
             } else {
                 // APINA only — early-exit boolean scan is cheaper than a full walk.
                 cachedActionableCards = null;
-                getPlayer().getView().setHasAvailableActions(AvailableActions.compute(getPlayer(), timeoutMs));
+                getPlayer().getView().setHasAvailableActions(manaAbilityCountsAsAction() || AvailableActions.compute(getPlayer(), timeoutMs));
             }
         } else {
             cachedActionableCards = null;
@@ -1805,12 +1816,21 @@ public class PlayerControllerHuman extends PlayerController implements IGameCont
         return defaultInput.getChosenSa();
     }
 
+    /** Set when this player put a spell or ability on the stack without holding priority; see {@link #chooseSpellAbilityToPlay}. */
+    private boolean passAfterPlay;
+
     @Override
     public boolean playChosenSpellAbility(final SpellAbility chosenSa) {
         // what targeting marks as chosen stays marked until the cost is paid or the cast is cancelled
         keepTargetsMarked = true;
+        final int stackSize = getGame().getStack().size();
         try {
-            return PlaySpellAbility.playSpellAbility(this, player, chosenSa);
+            final boolean played = PlaySpellAbility.playSpellAbility(this, player, chosenSa);
+            if (played && getGame().getStack().size() > stackSize
+                    && !yieldController.getBoolPref(FPref.YIELD_HOLD_PRIORITY)) {
+                passAfterPlay = true;
+            }
+            return played;
         } finally {
             keepTargetsMarked = false;
             if (!keptMarks.isEmpty()) {
@@ -3881,8 +3901,70 @@ public class PlayerControllerHuman extends PlayerController implements IGameCont
      */
     @Override
     public List<OptionalCostValue> chooseOptionalCosts(SpellAbility choosen, List<OptionalCostValue> optionalCost) {
-        return getGui().many(localizer.getMessage("lblChooseOptionalCosts"), localizer.getMessage("lblOptionalCosts"), 0, optionalCost.size(),
-                optionalCost, choosen.getHostCard().getView());
+        // TBLD: only the optional costs the player can pay are offered, and with none there is no question
+        final List<OptionalCostValue> affordable = new ArrayList<>();
+        for (final OptionalCostValue v : optionalCost) {
+            if (canPayWithOptionalCosts(choosen, List.of(v))) {
+                affordable.add(v);
+            }
+        }
+        if (affordable.isEmpty()) {
+            return affordable;
+        }
+        if (affordable.size() > 3) {
+            return getGui().many(localizer.getMessage("lblChooseOptionalCosts"), localizer.getMessage("lblOptionalCosts"), 0, affordable.size(),
+                    affordable, choosen.getHostCard().getView());
+        }
+        // One choice from a list: each affordable combination of the optional costs, then paying none of them
+        final List<List<OptionalCostValue>> combinations = new ArrayList<>();
+        for (int size = 1; size <= affordable.size(); size++) {
+            for (int mask = 1; mask < 1 << affordable.size(); mask++) {
+                if (Integer.bitCount(mask) != size) {
+                    continue;
+                }
+                final List<OptionalCostValue> combination = new ArrayList<>();
+                for (int i = 0; i < affordable.size(); i++) {
+                    if ((mask & 1 << i) != 0) {
+                        combination.add(affordable.get(i));
+                    }
+                }
+                if (size == 1 || canPayWithOptionalCosts(choosen, combination)) {
+                    combinations.add(combination);
+                }
+            }
+        }
+        final List<String> labels = new ArrayList<>();
+        for (final List<OptionalCostValue> combination : combinations) {
+            labels.add(combination.stream().map(OptionalCostValue::toString).collect(Collectors.joining(" and ")));
+        }
+        labels.add(noOptionalCostLabel(affordable));
+        final String chosen = getGui().one(localizer.getMessage("lblChooseOptionalCosts") + ": " + choosen.getHostCard().getName(), labels);
+        final int index = chosen == null ? -1 : labels.indexOf(chosen);
+        return index >= 0 && index < combinations.size() ? combinations.get(index) : new ArrayList<>();
+    }
+
+    /** "No buyback" when every optional cost on offer is of one kind, otherwise "No optional costs". */
+    private static String noOptionalCostLabel(final List<OptionalCostValue> costs) {
+        final String name = costs.get(0).getType().getName();
+        final boolean oneKind = costs.stream().allMatch(v -> v.getType().getName().equals(name));
+        if (oneKind && !name.isEmpty() && !name.startsWith("(") && costs.get(0).getType() != OptionalCost.Generic) {
+            return "No " + name.toLowerCase();
+        }
+        return "No optional costs";
+    }
+
+    /**
+     * Whether the player could cast {@code sa} with these optional costs added, counting floating mana
+     * and the mana sources they could tap. Checked as Forge's AI would pay, so nothing is asked.
+     */
+    private boolean canPayWithOptionalCosts(final SpellAbility sa, final List<OptionalCostValue> costs) {
+        final SpellAbility withCosts = GameActionUtil.addOptionalCosts(sa, costs);
+        withCosts.setActivatingPlayer(player);
+        final boolean[] result = new boolean[1];
+        player.runWithController(() -> result[0] = withCosts.getPayCosts().canPay(withCosts, player, false)
+                        && (!withCosts.getPayCosts().hasManaCost() || ComputerUtilMana.canPayManaCost(withCosts, player, 0, false)),
+                new PlayerControllerAi(getGame(), player, player.getOriginalLobbyPlayer()));
+        return result[0];
     }
 
     @Override
@@ -4057,7 +4139,8 @@ public class PlayerControllerHuman extends PlayerController implements IGameCont
         }
         if (update instanceof YieldUpdate.SeedFromClient
                 || (update instanceof YieldUpdate.SetYieldPref u
-                        && u.pref() == FPref.YIELD_AUTO_PASS_NO_ACTIONS && Boolean.parseBoolean(u.value()))) {
+                        && (u.pref() == FPref.YIELD_AUTO_PASS_NO_ACTIONS && Boolean.parseBoolean(u.value())
+                            || u.pref() == FPref.YIELD_AUTO_PASS_COUNTS_MANA_ABILITIES))) {
             refreshAvailableActionsForPrompt();
         }
         tryAutoPassNow();
@@ -4087,7 +4170,25 @@ public class PlayerControllerHuman extends PlayerController implements IGameCont
         if (yieldController.isYieldActive() || !needsAvailableActions()) return;
         if (!(inputProxy.getInput() instanceof InputPassPriority)) return;
         long timeoutMs = computeAvailableActionsBudgetMs(getPlayer());
-        getPlayer().getView().setHasAvailableActions(AvailableActions.compute(getPlayer(), timeoutMs));
+        getPlayer().getView().setHasAvailableActions(manaAbilityCountsAsAction() || AvailableActions.compute(getPlayer(), timeoutMs));
+    }
+
+    /**
+     * TBLD: with {@link FPref#YIELD_AUTO_PASS_COUNTS_MANA_ABILITIES} on, a mana ability the player can
+     * activate (an untapped land, say) is something to do, so "auto-pass if no actions" does not pass.
+     */
+    private boolean manaAbilityCountsAsAction() {
+        if (!yieldController.getBoolPref(FPref.YIELD_AUTO_PASS_COUNTS_MANA_ABILITIES)) {
+            return false;
+        }
+        for (final ZoneType zone : ACTIONABLE_PAYMENT_ZONES) {
+            for (final Card c : player.getCardsIn(zone).threadSafeIterable()) {
+                if (cardHasPlayableManaAbility(c)) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
     /** True if yield consumer needs the synced wire field. */

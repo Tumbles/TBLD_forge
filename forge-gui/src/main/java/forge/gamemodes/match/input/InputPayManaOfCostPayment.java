@@ -35,6 +35,26 @@ public class InputPayManaOfCostPayment extends InputPayMana {
         // Set Mana cost being paid for SA to be able to reference it later
         player.pushPaidForSA(saPaidFor);
         saPaidFor.setManaCostBeingPaid(manaCost);
+
+        // TBLD: when the floating mana covers the whole cost, it is spent without asking
+        if (!manaCost.isPaid() && !payer.getManaPool().isEmpty()) {
+            List<Mana> test = new ArrayList<>();
+            boolean covered = payer.getManaPool().payManaCostFromPool(new ManaCostBeingPaid(manaCost), spellAbility, true, test);
+            payer.getManaPool().refundMana(test);
+            if (covered) {
+                payer.getManaPool().payManaCostFromPool(manaCost, spellAbility, false, spellAbility.getPayingMana());
+            }
+        }
+    }
+
+    /** A cost already paid from the pool ends the input without showing its prompt and buttons. */
+    @Override
+    public void showMessage() {
+        if (!isFinished() && manaCost.isPaid()) {
+            onStateChanged();
+            return;
+        }
+        super.showMessage();
     }
 
     private static final long serialVersionUID = 3467312982164195091L;

@@ -1706,6 +1706,12 @@ public class Player extends GameEntity implements Comparable<Player> {
         // LKI from before the move remembers the zone the land is played from
         final Card playedLKI = CardCopyService.getLKICopy(land);
 
+        // TBLD: the first land a player plays in their first turn enters tapped
+        if (game.getRules().hasTbldFirstLandEntersTapped() && getTurn() == 1 && getLandsPlayedThisTurn() == 0
+                && game.getPhaseHandler().isPlayerTurn(this)) {
+            land.setTapped(true);
+        }
+
         game.copyLastState();
         final Card c = game.getAction().moveTo(getZone(ZoneType.Battlefield), land, cause);
         game.updateLastStateForCard(c);

@@ -58,6 +58,8 @@ public class YieldController {
             FPref.YIELD_INTERRUPT_ON_MASS_REMOVAL,
             FPref.YIELD_AUTO_PASS_NO_ACTIONS,
             FPref.YIELD_AUTO_PASS_RESPECTS_INTERRUPTS,
+            FPref.YIELD_AUTO_PASS_COUNTS_MANA_ABILITIES,
+            FPref.YIELD_HOLD_PRIORITY,
             FPref.YIELD_SKIP_PHASE_DELAY,
             FPref.YIELD_SKIP_RESOLVE_DELAY,
             FPref.YIELD_SUPPRESS_ON_OWN_TURN,

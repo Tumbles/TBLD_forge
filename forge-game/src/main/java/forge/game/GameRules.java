@@ -20,6 +20,8 @@ public class GameRules {
     private int simTimeout = 120;
     /** TBLD: each player starts with the emblem for their place in turn order ({@code forge.game.tbld.TbldEmblems}). */
     private boolean tbldStartingEmblems;
+    /** TBLD: the first land a player plays in their first turn enters the battlefield tapped ({@code Player.playLand}). */
+    private boolean tbldFirstLandEntersTapped;
 
     // it's a preference, not rule... but I could hardly find a better place for it
     private boolean useGrayText;
@@ -162,5 +164,12 @@ public class GameRules {
     }
     public void setTbldStartingEmblems(final boolean on) {
         this.tbldStartingEmblems = on;
+    }
+
+    public boolean hasTbldFirstLandEntersTapped() {
+        return tbldFirstLandEntersTapped;
+    }
+    public void setTbldFirstLandEntersTapped(final boolean on) {
+        this.tbldFirstLandEntersTapped = on;
     }
 }

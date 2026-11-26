@@ -233,8 +233,21 @@
   .stack-item .si-targets { color: var(--gold); margin-top: 2px; }
   #log { flex: 1 1 auto; overflow-y: auto; font-size: 12px; color: #a5acbb; line-height: 1.45; min-height: 0; }
   #log div { padding: 1px 0; border-bottom: 1px solid rgba(255, 255, 255, .03); }
-  #settings { flex: none; display: flex; align-items: center; gap: 10px; font-size: 12px; color: var(--muted); }
-  #settings label { cursor: pointer; flex: 1; }
+  #settings { flex: none; display: flex; flex-direction: column; gap: 8px; font-size: 12px; color: var(--muted); }
+  #settings .set-row { display: flex; align-items: center; justify-content: space-between; gap: 10px; min-width: 0; }
+  #settings label { cursor: pointer; display: flex; align-items: center; gap: 6px; white-space: nowrap; min-width: 0; }
+  #autopass-label { flex: 1; }
+  #settings select { flex: 1; min-width: 0; font: inherit; color: var(--text); background: var(--panel2); border: 1px solid var(--line);
+    border-radius: 6px; padding: 3px 4px; cursor: pointer; }
+  #settings .btn { padding: 4px 12px; font-size: 12px; }
+  /* On/off switches */
+  .switch input { appearance: none; -webkit-appearance: none; margin: 0; width: 28px; height: 16px; border-radius: 8px; flex: none;
+    background: #3a4050; position: relative; cursor: pointer; transition: background .15s; }
+  .switch input::after { content: ""; position: absolute; top: 2px; left: 2px; width: 12px; height: 12px; border-radius: 50%;
+    background: #c9ced9; transition: left .15s; }
+  .switch input:checked { background: var(--accent); }
+  .switch input:checked::after { left: 14px; background: #fff; }
+  .switch:has(input:checked) { color: var(--text); }
   #restart { font-size: 12px; padding: 4px 10px; }
 
   /* ---- hover preview ---- */
@@ -332,8 +345,21 @@
     <button id="split-toggle">⇅</button>
     <div class="panel" id="log"></div>
     <div class="panel" id="settings">
-      <label id="autopass-label"><input type="checkbox" id="autopass"> Auto-pass when I have nothing to play</label>
-      <button class="btn" id="restart">Restart</button>
+      <div class="set-row">
+        <label id="autopass-label" title="Pass priority automatically. Off: no auto-pass. If only mana abilities: pass when you could only tap for mana. If no actions: pass only when you couldn't even tap for mana.">Auto-pass
+          <select id="autopass">
+            <option value="off">Off</option>
+            <option value="manaOnly">If only mana abilities</option>
+            <option value="noActions">If no actions</option>
+          </select></label>
+        <label class="switch" id="yield-label" title="Pass all priority for the rest of this turn. End Turn turns this on; switch it off to respond again.">
+          <input type="checkbox" id="yieldall"> Yield all</label>
+      </div>
+      <div class="set-row">
+        <label class="switch" id="hold-label" title="Keep priority after you cast a spell or activate an ability. Off: priority passes to your opponent.">
+          <input type="checkbox" id="holdpriority"> Hold priority</label>
+        <button class="btn" id="restart">Restart</button>
+      </div>
     </div>
   </aside>
 </div>
@@ -555,11 +581,21 @@ function connect() {
   ws.onclose = () => { document.getElementById("status").textContent = "Disconnected. Reconnecting..."; setTimeout(connect, 2000); };
 }
 
-// Auto-pass is remembered per seat in this browser, and on by default
-const autoPassKey = "tbld.autoPass.seat" + seat;
+// Auto-pass and hold priority are remembered per seat in this browser. Auto-pass defaults to passing
+// when only mana abilities are available (the old on/off setting carries over); hold priority is off.
+const autoPassKey = "tbld.autoPassMode.seat" + seat;
 const autoPassBox = document.getElementById("autopass");
-autoPassBox.checked = localStorage.getItem(autoPassKey) !== "false";
-autoPassBox.onchange = () => { localStorage.setItem(autoPassKey, String(autoPassBox.checked)); sendPrefs(); };
+autoPassBox.value = localStorage.getItem(autoPassKey)
+  || (localStorage.getItem("tbld.autoPass.seat" + seat) === "false" ? "off" : "manaOnly");
+if (!autoPassBox.value) autoPassBox.value = "manaOnly";
+autoPassBox.onchange = () => { localStorage.setItem(autoPassKey, autoPassBox.value); sendPrefs(); };
+const holdKey = "tbld.holdPriority.seat" + seat;
+const holdBox = document.getElementById("holdpriority");
+holdBox.checked = localStorage.getItem(holdKey) === "true";
+holdBox.onchange = () => { localStorage.setItem(holdKey, String(holdBox.checked)); sendPrefs(); };
+// Yield all is the game's own state (End Turn turns it on too), shown from each snapshot
+const yieldBox = document.getElementById("yieldall");
+yieldBox.onchange = () => act("yieldAll", yieldBox.checked ? 1 : 0);
 
 // ------------------------------------------------------------------ priority stops
 
@@ -581,7 +617,9 @@ function loadStops() {
   return { own: new Set(DEFAULT_STOPS.own), opponent: new Set(DEFAULT_STOPS.opponent) };
 }
 function expand(set) { return PHASES.filter(p => set.has(p.id)).flatMap(p => [p.id, ...(p.also || [])]); }
-function sendPrefs() { send({ t: "pref", autoPass: autoPassBox.checked, stops: { own: expand(stops.own), opponent: expand(stops.opponent) } }); }
+function sendPrefs() {
+  send({ t: "pref", autoPass: autoPassBox.value, holdPriority: holdBox.checked, stops: { own: expand(stops.own), opponent: expand(stops.opponent) } });
+}
 function toggleStop(which, id) {
   const s = stops[which];
   if (s.has(id)) s.delete(id); else s.add(id);
@@ -703,7 +741,11 @@ function press(m) {
 
 // The space bar confirms the open popup, or presses the decision panel's main button (OK, pass
 // priority). It does nothing while typing in a text field.
-function isTyping(e) { const t = e.target; return t && (t.tagName === "INPUT" || t.tagName === "TEXTAREA" || t.tagName === "SELECT" || t.isContentEditable); }
+// Text fields keep the space bar; a focused switch or setting does not (it would toggle instead of passing)
+function isTyping(e) {
+  const t = e.target;
+  return t && ((t.tagName === "INPUT" && t.type !== "checkbox") || t.tagName === "TEXTAREA" || t.isContentEditable);
+}
 document.addEventListener("keydown", e => {
   if (e.key !== " " || isTyping(e) || e.ctrlKey || e.altKey || e.metaKey) return;
   e.preventDefault();
@@ -731,6 +773,7 @@ function render() {
   if (!state.players || !state.players.length) return;
   const me = state.players.find(p => p.id === state.me) || state.players[0];
   const opp = state.players.find(p => p !== me);
+  yieldBox.checked = !!state.yieldAll;
 
   // Auras and equipment are shown with the permanent they are attached to
   const onBattlefield = new Set(state.players.flatMap(p => p.battlefield.map(c => c.id)));

@@ -116,6 +116,44 @@ final class TbldBot implements WebSocket.Listener {
     /** A command zone held a card before this player kept a hand. */
     volatile boolean sawCommandBeforeKeep;
 
+    // Optional behaviour, set before the game starts
+    /** With five lands or fewer, tap a land for mana before casting a spell that isn't a creature. */
+    volatile boolean floatManaFirst;
+    /** Cast nothing until this player controls this many lands. */
+    volatile int castFromLands;
+    /** Use "Yield all" on opponents' turns (see {@link #decide}). */
+    volatile boolean yieldScript;
+
+    // Spells, payment and priority
+    /** Spells cast with mana already in the pool. */
+    volatile int floatCasts;
+    private volatile boolean floatCastPending;
+    /** Payment prompts shown while casting a spell with mana already in the pool. */
+    volatile int paymentPromptsAfterFloat;
+    private volatile boolean castPending;
+    /** Priority prompts right after a cast, with this player's own spell on top of the stack. */
+    volatile int heldAfterCast;
+    /** Priority prompts right after a cast. */
+    volatile int promptsAfterCast;
+    /** Each optional-cost question: its arguments, and the mana this player had (untapped lands and pool). */
+    final List<JsonObject> optionalCostAsks = new CopyOnWriteArrayList<>();
+    /** Idle priority prompts while this player had no mana ability to use (no untapped land, no Player Two emblem). */
+    volatile int idleWithoutManaSource;
+
+    // "Yield all"
+    volatile int yieldTurn = -1;
+    volatile int yieldOffTurn = -1;
+    /** Priority prompts in the turn this player yielded all, after yielding. */
+    volatile int promptsWhileYielding;
+    /** The game said this player was yielding, in the turn they yielded. */
+    volatile boolean sawYieldOn;
+    /** Some state after the yielding turn said this player was not yielding. */
+    volatile boolean sawYieldEnd;
+    /** A later state in the yielding turn still said this player was not yielding. */
+    volatile boolean yieldEndedEarly;
+    /** Priority prompts in the turn this player switched "Yield all" off again. */
+    volatile int promptsAfterYieldOff;
+
     TbldBot(final HttpClient http, final int port, final int seat, final boolean aggressive) throws Exception {
         this(http, port, seat, aggressive, 0);
     }
@@ -145,6 +183,14 @@ final class TbldBot implements WebSocket.Listener {
         final JsonObject o = new JsonObject();
         o.addProperty("t", "pref");
         o.addProperty("autoPass", on);
+        send(o);
+    }
+
+    /** Sends one preference, as the browser's settings do: autoPass ("off", "manaOnly", "noActions") or holdPriority. */
+    void setPref(final String key, final JsonElement value) {
+        final JsonObject o = new JsonObject();
+        o.addProperty("t", "pref");
+        o.add(key, value);
         send(o);
     }
 
@@ -227,6 +273,9 @@ final class TbldBot implements WebSocket.Listener {
                 switch (m) {
                     case "showPromptMessage" -> {
                         prompt = a.get(1).isJsonNull() ? "" : a.get(1).getAsString();
+                        if (floatCastPending && prompt.toLowerCase().contains("pay mana cost")) {
+                            paymentPromptsAfterFloat++;
+                        }
                         if (prompt.contains("Return ") && prompt.contains("bottom of your library")) {
                             returnPrompts++;
                             if (!keepPressed) {
@@ -241,9 +290,13 @@ final class TbldBot implements WebSocket.Listener {
                         if (prompt.startsWith("Priority") && !a.get(1).isJsonNull() && "OK".equals(a.get(1).getAsString())) {
                             if (idSet("actionable").isEmpty()) {
                                 idlePriorityPrompts++;
+                                if (myLands(true) == 0 && !hasCommandCard("Player Two")) {
+                                    idleWithoutManaSource++;
+                                }
                             } else {
                                 busyPriorityPrompts++;
                             }
+                            notePriorityPrompt();
                             final JsonObject s = state;
                             if (s != null && s.has("phaseId")) {
                                 priorityPhases.add((myTurn() ? "own:" : "opponent:") + s.get("phaseId").getAsString()
@@ -277,6 +330,14 @@ final class TbldBot implements WebSocket.Listener {
         gameOver = s.get("gameOver").getAsBoolean();
         if (turnOnePlayer < 0 && s.get("turn").getAsInt() == 1 && s.has("activePlayer")) {
             turnOnePlayer = s.get("activePlayer").getAsInt();
+        }
+        if (yieldTurn >= 0 && s.has("yieldAll")) {
+            final boolean yielding = s.get("yieldAll").getAsBoolean();
+            if (s.get("turn").getAsInt() == yieldTurn && yielding) {
+                sawYieldOn = true;
+            } else if (s.get("turn").getAsInt() > yieldTurn && !yielding) {
+                sawYieldEnd = true;
+            }
         }
         final int me = s.get("me").getAsInt();
         for (final JsonElement pe : s.getAsJsonArray("players")) {
@@ -354,6 +415,82 @@ final class TbldBot implements WebSocket.Listener {
     }
 
     // ------------------------------------------------------------------ deciding
+
+    /** Bookkeeping for each priority prompt: what followed a cast, and prompts while yielding. */
+    private void notePriorityPrompt() {
+        final JsonObject s = state;
+        if (castPending) {
+            castPending = false;
+            floatCastPending = false;
+            promptsAfterCast++;
+            if (s != null && s.has("stack")) {
+                final JsonArray st = s.getAsJsonArray("stack");
+                if (!st.isEmpty() && st.get(0).getAsJsonObject().has("controller")
+                        && st.get(0).getAsJsonObject().get("controller").getAsInt() == s.get("me").getAsInt()) {
+                    heldAfterCast++;
+                }
+            }
+        }
+        if (yieldTurn >= 0 && turn() == yieldTurn) {
+            promptsWhileYielding++;
+        }
+        if (yieldOffTurn >= 0 && turn() == yieldOffTurn) {
+            promptsAfterYieldOff++;
+        }
+    }
+
+    /** This player's lands on the battlefield, or only the untapped ones. */
+    private int myLands(final boolean untappedOnly) {
+        final JsonObject me = me();
+        int n = 0;
+        if (me != null) {
+            for (final JsonElement ce : me.getAsJsonArray("battlefield")) {
+                final JsonObject c = ce.getAsJsonObject();
+                if (isLand(c) && !(untappedOnly && c.has("tapped") && c.get("tapped").getAsBoolean())) {
+                    n++;
+                }
+            }
+        }
+        return n;
+    }
+
+    /** One of this player's untapped lands, or -1. */
+    private int untappedLand() {
+        final JsonObject me = me();
+        if (me != null) {
+            for (final JsonElement ce : me.getAsJsonArray("battlefield")) {
+                final JsonObject c = ce.getAsJsonObject();
+                if (isLand(c) && c.has("tapped") && !c.get("tapped").getAsBoolean()) {
+                    return c.get("id").getAsInt();
+                }
+            }
+        }
+        return -1;
+    }
+
+    /** The mana in a player's pool. */
+    private static int pool(final JsonObject p) {
+        int n = 0;
+        if (p != null && p.has("mana") && p.get("mana").isJsonObject()) {
+            for (final Map.Entry<String, JsonElement> e : p.getAsJsonObject("mana").entrySet()) {
+                n += e.getValue().getAsInt();
+            }
+        }
+        return n;
+    }
+
+    private boolean hasCommandCard(final String name) {
+        final JsonObject me = me();
+        if (me != null && me.has("command")) {
+            for (final JsonElement ce : me.getAsJsonArray("command")) {
+                final JsonObject c = ce.getAsJsonObject();
+                if (c.has("name") && name.equals(c.get("name").getAsString())) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
 
     private static boolean isLand(final JsonObject c) {
         return c.has("type") && c.get("type").getAsString().contains("Land");
@@ -584,10 +721,26 @@ final class TbldBot implements WebSocket.Listener {
 
         // Priority
         final boolean priority = "OK".equals(label1) && okEnabled && !label2.isEmpty();
+        // "Yield all" script, on an opponent's turn: first yield for the rest of a turn; on a later turn,
+        // yield and switch it straight off again
+        if (priority && yieldScript && !myTurn() && turn() >= 3) {
+            if (yieldTurn < 0) {
+                yieldTurn = turn();
+                act("yieldAll", 1, "yield all");
+                return;
+            }
+            if (yieldOffTurn < 0 && turn() >= yieldTurn + 2) {
+                yieldOffTurn = turn();
+                act("yieldAll", 1, "yield all");
+                act("yieldAll", 0, "stop yielding");
+                return;
+            }
+        }
         if (priority && myTurn() && state.get("phase").getAsString().toLowerCase().contains("main")
                 && state.getAsJsonArray("stack").isEmpty() && me.get("hand").isJsonArray()) {
             final Set<Integer> playable = idSet("actionable");
             final JsonArray hand = me.getAsJsonArray("hand");
+            final int lands = myLands(false);
             // A land first, then creatures, then other spells
             for (int pass = 0; pass < 3; pass++) {
                 for (final JsonElement ce : hand) {
@@ -603,7 +756,24 @@ final class TbldBot implements WebSocket.Listener {
                         act("card", id, "play " + c.get("name").getAsString());
                         return;
                     }
+                    if (!land && lands < castFromLands) {
+                        continue;
+                    }
+                    // Tap a land for mana first, so the spell is cast with mana already in the pool
+                    if (pass == 2 && !land && !creature && floatManaFirst && lands <= 5 && pool(me) == 0
+                            && attempted.add("float:" + turn() + ":" + id)) {
+                        final int source = untappedLand();
+                        if (source >= 0) {
+                            act("card", source, "tap a land for mana");
+                            return;
+                        }
+                    }
                     if ((pass == 1 && creature || pass == 2 && !land && !creature) && attempted.add("cast:" + turn() + ":" + id)) {
+                        if (pool(me) > 0) {
+                            floatCasts++;
+                            floatCastPending = true;
+                        }
+                        castPending = true;
                         act("card", id, "cast " + c.get("name").getAsString());
                         return;
                     }
@@ -622,6 +792,12 @@ final class TbldBot implements WebSocket.Listener {
         asked.addProperty("m", m);
         asked.add("a", a);
         dialogs.add(asked);
+        if ("getChoices".equals(m) && !a.get(0).isJsonNull() && a.get(0).getAsString().toLowerCase().contains("optional cost")) {
+            final JsonObject ask = new JsonObject();
+            ask.add("a", a);
+            ask.addProperty("mana", myLands(true) + pool(me()));
+            optionalCostAsks.add(ask);
+        }
         final JsonElement v;
         switch (m) {
             case "order" -> {

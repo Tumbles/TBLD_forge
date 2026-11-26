@@ -147,6 +147,10 @@ public class ForgePreferences extends AbstractPreferences<ForgePreferences.FPref
         YIELD_INTERRUPT_ON_MASS_REMOVAL ("false"),
         YIELD_AUTO_PASS_NO_ACTIONS ("false"),
         YIELD_AUTO_PASS_RESPECTS_INTERRUPTS ("false"),
+        // TBLD: "auto-pass if no actions" also counts activatable mana abilities as actions
+        YIELD_AUTO_PASS_COUNTS_MANA_ABILITIES ("false"),
+        // TBLD: off, casting a spell or activating an ability passes priority
+        YIELD_HOLD_PRIORITY ("true"),
         YIELD_AVAILABLE_ACTIONS_BUDGET_MS ("0"),
         YIELD_SKIP_PHASE_DELAY ("false"),
         YIELD_SKIP_RESOLVE_DELAY ("false"),

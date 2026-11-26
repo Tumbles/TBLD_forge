@@ -250,6 +250,8 @@ public final class TbldWebServer {
         final GameRules rules = new GameRules(GameType.Constructed);
         // TBLD: each player starts with the emblem for their place in turn order
         rules.setTbldStartingEmblems(true);
+        // TBLD: the first land each player plays in their first turn enters tapped
+        rules.setTbldFirstLandEntersTapped(true);
         match.startMatch(rules, null, players, guis, null);
     }
 

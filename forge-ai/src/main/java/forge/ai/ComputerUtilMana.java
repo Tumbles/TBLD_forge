@@ -2204,13 +2204,32 @@ public class ComputerUtilMana {
         return damage;
     }
 
+    /** Set while a person's Auto payment chooses its mana sources; see {@link #sparingPersonsEmblems}. */
+    private static final ThreadLocal<Boolean> SPARE_PERSONS_EMBLEMS = ThreadLocal.withInitial(() -> false);
+
+    /**
+     * TBLD: runs {@code body} (a person's Auto payment, or its preview) without a person's emblems as
+     * mana sources: the one-use Player Two emblem must be exiled by its owner. Everything else,
+     * such as whether a spell can be cast at all, counts the emblem's mana like any other.
+     */
+    public static <T> T sparingPersonsEmblems(final java.util.function.Supplier<T> body) {
+        final boolean before = SPARE_PERSONS_EMBLEMS.get();
+        SPARE_PERSONS_EMBLEMS.set(true);
+        try {
+            return body.get();
+        } finally {
+            SPARE_PERSONS_EMBLEMS.set(before);
+        }
+    }
+
     public static CardCollection getAvailableManaSources(final Player ai, final boolean checkPlayable) {
         final CardCollectionView list = CardCollection.combine(ai.getCardsIn(ZoneType.Battlefield), ai.getCardsIn(ZoneType.Hand),
                 ai.getCardsIn(ZoneType.Command));
+        final boolean spareEmblems = SPARE_PERSONS_EMBLEMS.get();
         final List<Card> manaSources = CardLists.filter(list, c -> {
             // TBLD: a person's emblem (the one-use Player Two emblem) is never spent by the Auto button.
             // isAI() stays false while a person's payment runs under a temporary AI controller.
-            if (!ai.isAI() && c.isEmblem()) {
+            if (spareEmblems && !ai.isAI() && c.isEmblem()) {
                 return false;
             }
             if (ai.isAI() && ComputerUtil.sacrificePunished(ai, c) && c.isInZone(ZoneType.Battlefield)) {

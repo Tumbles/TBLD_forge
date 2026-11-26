@@ -2,9 +2,11 @@ package forge.tbld;
 
 import com.google.common.collect.Lists;
 import forge.ai.AITest;
+import forge.ai.AvailableActions;
 import forge.ai.ComputerUtil;
 import forge.ai.ComputerUtilMana;
 import forge.ai.LobbyPlayerAi;
+import forge.ai.PlayerControllerAi;
 import forge.deck.Deck;
 import forge.game.Game;
 import forge.game.GameRules;
@@ -163,7 +165,20 @@ public class TbldStartingEmblemsTest extends AITest {
         final Player person = game.getPlayers().get(0);
         AssertJUnit.assertFalse(person.isAI());
         final Card emblem = TbldEmblems.give(game, person, 1);
-        AssertJUnit.assertFalse(ComputerUtilMana.getAvailableManaSources(person, true).contains(emblem));
+        AssertJUnit.assertFalse("Auto payment spends a person's emblem",
+                ComputerUtilMana.sparingPersonsEmblems(() -> ComputerUtilMana.getAvailableManaSources(person, true)).contains(emblem));
+        // Anything else counts its mana: two Mountains and Player Two cast Gray Ogre ({2}{R})
+        AssertJUnit.assertTrue(ComputerUtilMana.getAvailableManaSources(person, true).contains(emblem));
+        addCards("Mountain", 2, person);
+        final Card ogre = addCardToZone("Gray Ogre", person, ZoneType.Hand);
+        final SpellAbility cast = ogre.getFirstSpellAbility();
+        cast.setActivatingPlayer(person);
+        AssertJUnit.assertTrue("Gray Ogre is not shown as castable", AvailableActions.collectActionable(person, 5000).contains(ogre.getView()));
+        final boolean[] autoPays = new boolean[1];
+        person.runWithController(() -> autoPays[0] = ComputerUtilMana.sparingPersonsEmblems(
+                () -> ComputerUtilMana.canPayManaCost(cast, person, 0, false)),
+                new PlayerControllerAi(game, person, person.getOriginalLobbyPlayer()));
+        AssertJUnit.assertFalse("Auto payment would spend the emblem for Gray Ogre", autoPays[0]);
     }
 
     @Test

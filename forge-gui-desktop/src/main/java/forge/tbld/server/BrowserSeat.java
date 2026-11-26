@@ -34,6 +34,7 @@ import forge.gui.interfaces.IGuiGame;
 import forge.interfaces.IGameController;
 import forge.item.PaperCard;
 import forge.localinstance.properties.ForgePreferences.FPref;
+import forge.player.PlayerControllerHuman;
 import forge.trackable.TrackableCollection;
 import forge.util.ITriggerEvent;
 import forge.util.collect.FCollection;
@@ -85,6 +86,10 @@ public final class BrowserSeat implements IRemote {
     private volatile boolean retired;
     /** Pass priority automatically when the player has nothing to play or activate. Set by the browser. */
     private volatile boolean autoPass;
+    /** With {@link #autoPass}: a mana ability the player could activate also counts as something to do. */
+    private volatile boolean autoPassCountsMana;
+    /** Keep priority after casting a spell or activating an ability. Off, priority passes. Set by the browser. */
+    private volatile boolean holdPriority = true;
     /**
      * The phases in which this player stops to get priority while the stack is empty: on their own
      * turn, and on an opponent's turn. In the other phases they pass. Null until the browser sends
@@ -423,7 +428,16 @@ public final class BrowserSeat implements IRemote {
         final String t = msg.has("t") ? msg.get("t").getAsString() : "";
         if ("pref".equals(t)) {
             if (msg.has("autoPass")) {
-                autoPass = msg.get("autoPass").getAsBoolean();
+                // "off", "manaOnly" (pass when only mana abilities could be used) or "noActions"
+                // (pass only when not even a mana ability could be used); true and false mean manaOnly and off
+                final JsonElement mode = msg.get("autoPass");
+                final String m = mode.isJsonPrimitive() && mode.getAsJsonPrimitive().isBoolean()
+                        ? (mode.getAsBoolean() ? "manaOnly" : "off") : mode.getAsString();
+                autoPass = !"off".equals(m);
+                autoPassCountsMana = "noActions".equals(m);
+            }
+            if (msg.has("holdPriority")) {
+                holdPriority = msg.get("holdPriority").getAsBoolean();
             }
             if (msg.has("stops") && msg.get("stops").isJsonObject()) {
                 final JsonObject stops = msg.getAsJsonObject("stops");
@@ -463,7 +477,15 @@ public final class BrowserSeat implements IRemote {
         actions.execute(() -> {
             final IGameController controller = retired ? null : getController();
             if (controller != null) {
-                // Forge's "auto-pass if no actions": pass priority when nothing can be played or activated
+                controller.applyYieldUpdate(new YieldUpdate.SetYieldPref(FPref.YIELD_HOLD_PRIORITY, String.valueOf(holdPriority)));
+                // "Yield all" passes everything until the end of the turn: an opponent's spell or attack does not
+                // end it (Forge's defaults do); the player switches it off to respond
+                controller.applyYieldUpdate(new YieldUpdate.SetYieldPref(FPref.YIELD_INTERRUPT_ON_OPPONENT_SPELL, "false"));
+                controller.applyYieldUpdate(new YieldUpdate.SetYieldPref(FPref.YIELD_INTERRUPT_ON_ATTACKERS, "false"));
+                // Forge's "auto-pass if no actions": pass priority when nothing can be played or activated.
+                // Forge ignores mana abilities there; the TBLD pref counts them, and is set first so the
+                // sitting prompt is judged with both.
+                controller.applyYieldUpdate(new YieldUpdate.SetYieldPref(FPref.YIELD_AUTO_PASS_COUNTS_MANA_ABILITIES, String.valueOf(autoPassCountsMana)));
                 controller.applyYieldUpdate(new YieldUpdate.SetYieldPref(FPref.YIELD_AUTO_PASS_NO_ACTIONS, String.valueOf(autoPass)));
                 applyStops(controller);
             }
@@ -539,6 +561,15 @@ public final class BrowserSeat implements IRemote {
                 }
             }
             case "mana" -> controller.useMana((byte) id);
+            case "yieldAll" -> {
+                // "Yield all": pass priority for the rest of the turn (End Turn turns it on too); id 0 stops yielding.
+                // Turning it on while the player holds priority passes it now.
+                if (id == 1) {
+                    controller.applyYieldUpdate(new YieldUpdate.SetAutoPassUntilEndOfTurn(player, true));
+                } else if (controller.getYieldController().autoPassUntilEndOfTurn() && controller instanceof PlayerControllerHuman pch) {
+                    pch.autoPassCancel();
+                }
+            }
             case "undo" -> controller.undoLastAction();
             case "concede" -> controller.concede();
             default -> { }
@@ -858,6 +889,9 @@ public final class BrowserSeat implements IRemote {
         j.addProperty("phaseId", gv.getPhase() == null ? "" : gv.getPhase().name());
         j.addProperty("activePlayer", gv.getPlayerTurn() == null ? -1 : gv.getPlayerTurn().getId());
         j.addProperty("gameOver", gv.isGameOver());
+        // This player is passing priority until the end of the turn ("Yield all", or End Turn)
+        final IGameController controller = getController();
+        j.addProperty("yieldAll", controller != null && controller.getYieldController().autoPassUntilEndOfTurn());
 
         final JsonArray ps = new JsonArray();
         if (gv.getPlayers() != null) {
