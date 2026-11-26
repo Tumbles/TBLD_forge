@@ -117,10 +117,11 @@
   .badge.sick { left: -3px; top: -3px; color: #b8c4ff; border-color: #5b6aa8; font-style: italic; }
   .badge.cnt { left: -3px; bottom: -3px; background: #20402c; border-color: #3f9b62; }
   .badge.stackcount { background: #0d0f14; border-color: #6b7386; }
-  .tags { position: absolute; left: 50%; transform: translateX(-50%); bottom: -9px; display: flex; gap: 3px; z-index: 5; pointer-events: none; }
-  .half.opp .tags { bottom: auto; top: -9px; }
+  .tags { position: absolute; left: 50%; transform: translateX(-50%); top: 4px; display: flex; flex-direction: column; align-items: center;
+    gap: 2px; z-index: 5; pointer-events: none; }
+  .card.tapped .tags { top: calc(14.2% + 4px); }
   .tag { font-size: 10px; padding: 1px 6px; border-radius: 8px; white-space: nowrap; font-weight: 600; text-transform: capitalize;
-    max-width: calc(var(--ch) * 1.05); overflow: hidden; text-overflow: ellipsis; }
+    max-width: calc(var(--ch) * .68); overflow: hidden; text-overflow: ellipsis; box-shadow: 0 1px 3px rgba(0, 0, 0, .6); }
   .tag.attacking { background: var(--danger); color: #1a0808; }
   .tag.blocking, .tag.blocked { background: var(--block); color: #07121e; }
   .tag.tapped-tag { display: none; }
@@ -920,7 +921,7 @@ function renderDecision() {
   document.getElementById("dhead-text").textContent = mine ? "Your decision" : (state && state.gameOver ? "Game over" : "Waiting for opponent");
   if (state && state.gameOver && !hasButtons && !dialogQueue.length) {
     const won = [...(state.log || [])].reverse().find(l => / has won /.test(l));
-    document.getElementById("prompt").textContent = (won || "The game is over.") + " Restart to play again.";
+    document.getElementById("prompt").textContent = (won ? won.replace(/\.?\s*$/, ".") : "The game is over.") + " Restart to play again.";
   }
   const note = document.getElementById("dnote");
   note.textContent = dialogQueue.length ? "Answer the question in the popup" + (dialogQueue.length > 1 ? " (" + dialogQueue.length + " waiting)" : "") + "." : "";
