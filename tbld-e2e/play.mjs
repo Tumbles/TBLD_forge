@@ -50,7 +50,7 @@ async function read(page) {
       status: text("#status"), prompt: text("#prompt"), stack: text("#stack"),
       // eslint-disable-next-line no-undef
       selection: typeof selection === "undefined" ? "?" : JSON.stringify(selection),
-      buttons: [...document.querySelectorAll("#buttons button")].map(b => ({ text: b.textContent, disabled: b.disabled })),
+      buttons: [...document.querySelectorAll("button.dbtn")].map(b => ({ text: b.textContent, disabled: b.disabled })),
       // A popup marks its options "opt" ("picked" once chosen), says how many must be picked in
       // data-need, and marks the button that confirms "primary"
       dialog: dialogOpen ? {
@@ -72,7 +72,7 @@ async function click(s, selector, description, turn) {
   s.actions.push(`t${turn} ${description}`);
   await s.page.click(selector, { timeout: 2000 }).catch(e => s.actions.push("  click failed: " + e.message.split("\n")[0]));
 }
-const button = label => `#buttons button:text-is("${label}")`;
+const button = label => `button.dbtn:text-is("${label}")`;
 
 async function step(s) {
   const v = await read(s.page);
@@ -196,7 +196,7 @@ async function step(s) {
   }
   if (b["OK"]) return click(s, button("OK"), v.me.active ? "pass (" + v.status + ")" : "pass", turn);
   // Anything else (e.g. Play/Draw after the coin toss): the first button
-  if (v.buttons.length && !v.buttons[0].disabled) return click(s, "#buttons button >> nth=0", "press " + v.buttons[0].text, turn);
+  if (v.buttons.length && !v.buttons[0].disabled) return click(s, "button.dbtn >> nth=0", "press " + v.buttons[0].text, turn);
 }
 
 const start = Date.now();

@@ -173,9 +173,16 @@
   .attach-group { position: relative; display: flex; flex: none; }
   .attach-group > .card.attached { margin-right: calc(var(--ch) * -.55); z-index: 0; }
   .attach-group > .card:last-child { z-index: 1; }
-  /* A land stack's width is set by landStack(): its tapped cards are wider */
+  /* A land stack's width and each card's place (--i) are set by landStack() */
   .landstack { position: relative; flex: none; height: var(--ch); }
   .landstack > .card { position: absolute; top: 0; left: calc(var(--i) * 13px); }
+  /* Tapped lands lie along the bottom of the stack, under the untapped ones, so the stack forms an L.
+     Only the turned card itself takes clicks, not the empty corner above it. */
+  .landstack > .card.tapped { pointer-events: none; left: calc(var(--tap-x) + var(--i) * 13px); }
+  .landstack > .card.tapped .face { pointer-events: auto; transform: translateY(calc(var(--ch) * .142)) rotate(90deg); }
+  .landstack > .card.tapped .badges { inset: 28.4% 0 0; }
+  .landstack > .card.tapped .tags { top: calc(28.4% + 4px); }
+  .paybtn { display: flex; } .paybtn:empty { display: none; }
   .landstack > .stackcount { position: absolute; right: -4px; top: -6px; z-index: 30; }
 
   /* ---- side panel ---- */
@@ -696,7 +703,7 @@ function handle(msg) {
     dialogQueue = []; selection = null; promptCard = null;
     closeDialogBox();
     document.getElementById("prompt").textContent = "";
-    document.getElementById("buttons").replaceChildren();
+    clearButtons();
     document.getElementById("status").textContent = "Starting a new game...";
     cardCache.clear();
     renderDecision();
@@ -721,7 +728,7 @@ function handle(msg) {
         waiting = true;
         promptCard = null;
         document.getElementById("prompt").textContent = "Waiting for opponent...";
-        document.getElementById("buttons").replaceChildren();
+        clearButtons();
         renderDecision();
       }, 250);
       break;
@@ -740,17 +747,25 @@ function flash() {
   pr.style.color = "#ff8a8a"; setTimeout(() => pr.style.color = "", 400);
 }
 
+/** The Auto (pay) button's place: in this player's bar, between their hand and their lands. */
+let payBoxEl = null;
+function payBox() { if (!payBoxEl) { payBoxEl = el("div", "paybtn"); payBoxEl.id = "paybtn"; } return payBoxEl; }
+function clearButtons() { document.getElementById("buttons").replaceChildren(); payBox().replaceChildren(); }
+
 let spentTimer = null;
 function renderButtons(l1, l2, en1, en2) {
   if (spentTimer) { clearTimeout(spentTimer); spentTimer = null; }
   const b = document.getElementById("buttons");
-  b.replaceChildren();
-  if (l1) { const x = el("button", "btn primary", l1); x.disabled = !en1; x.onclick = () => press("ok"); b.append(x); }
+  clearButtons();
+  if (l1) {
+    const x = el("button", "btn primary dbtn", l1); x.disabled = !en1; x.onclick = () => press("ok");
+    (l1 === "Auto" ? payBox() : b).append(x);
+  }
   // While an action can be undone, Forge's priority prompt shows Undo in End Turn's place. End Turn
   // stays in its usual place (it turns on Yield all) and Undo comes after it.
   const undo = l2 && /^Undo\b/.test(l2);
-  if (undo) { const x = el("button", "btn", "End Turn"); x.onclick = () => press("yieldAll", 1); b.append(x); }
-  if (l2) { const x = el("button", "btn", l2); x.disabled = !en2; x.onclick = () => press("cancel"); b.append(x); }
+  if (undo) { const x = el("button", "btn dbtn", "End Turn"); x.onclick = () => press("yieldAll", 1); b.append(x); }
+  if (l2) { const x = el("button", "btn dbtn", l2); x.disabled = !en2; x.onclick = () => press("cancel"); b.append(x); }
   renderDecision();
 }
 /**
@@ -759,7 +774,7 @@ function renderButtons(l1, l2, en1, en2) {
  * engine sends nothing (the press had no effect), they come back after a second.
  */
 function press(m, id) {
-  const buttons = [...document.querySelectorAll("#buttons button")];
+  const buttons = [...document.querySelectorAll("button.dbtn")];
   const enabled = buttons.map(x => !x.disabled);
   buttons.forEach(x => { x.disabled = true; x.blur(); });
   if (spentTimer) clearTimeout(spentTimer);
@@ -787,7 +802,7 @@ document.addEventListener("keydown", e => {
     return;
   }
   if (document.getElementById("viewer").style.display === "block") return;
-  const ok = document.querySelector("#buttons .btn.primary");
+  const ok = document.querySelector("button.dbtn.primary");
   if (ok && !ok.disabled) ok.click();
 });
 // A focused button would also be pressed by the space bar when the key comes up
@@ -899,13 +914,14 @@ function landStack(group) {
   const ids = group.map(c => c.id).sort((a, b) => a - b).join(",");
   let st = landStackCache.get(ids);
   if (!st) { st = el("div", "landstack"); landStackCache.set(ids, st); }
-  // Wide enough for the last tapped card (sideways) and the top card
+  // Untapped lands fan out from the left edge; tapped ones lie along the bottom from the same edge, the
+  // ones further back peeking out further right. Nothing that stays untapped moves when a land is tapped,
+  // and the width (room for every land tapped) doesn't change, so the row doesn't shift either.
+  // Behind a wide fan of untapped lands, the tapped ones move right so that at least 16px of them shows.
   const n = group.length, t = group.filter(c => c.tapped).length;
-  const ends = [];
-  if (t) ends.push(`calc(${t - 1} * 13px + var(--ch))`);
-  if (t < n) ends.push(`calc(${n - 1} * 13px + var(--ch) * .716)`);
-  st.style.width = ends.length > 1 ? `max(${ends.join(", ")})` : ends[0];
-  const nodes = group.map((c, i) => { const x = cardEl(c, "bf"); x.style.setProperty("--i", i); return x; });
+  st.style.width = `calc(${n - 1} * 13px + var(--ch))`;
+  st.style.setProperty("--tap-x", `max(0px, ${n - t - 1} * 13px - var(--ch) * .284 + 16px)`);
+  const nodes = group.map((c, i) => { const x = cardEl(c, "bf"); x.style.setProperty("--i", i < t ? t - 1 - i : i - t); return x; });
   let count = st.querySelector(":scope > .stackcount");
   if (!count) count = el("div", "badge stackcount");
   count.textContent = "×" + group.length;
@@ -954,6 +970,7 @@ function renderPbar(bar, p, mine) {
     pool.append(m);
   }
   nodes.push(pool);
+  if (mine) nodes.push(payBox());
 
   if (!mine) {
     const backs = el("div", "handbacks");
@@ -1032,7 +1049,7 @@ window.addEventListener("resize", () => requestAnimationFrame(fitAll));
 
 function renderDecision() {
   const box = document.getElementById("decision");
-  const hasButtons = document.querySelectorAll("#buttons button").length > 0;
+  const hasButtons = document.querySelectorAll("button.dbtn").length > 0;
   const mine = hasButtons || dialogQueue.length > 0 || (!waiting && !!document.getElementById("prompt").textContent);
   box.classList.toggle("mine", mine);
   box.classList.toggle("waiting", !mine);

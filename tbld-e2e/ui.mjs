@@ -116,6 +116,14 @@ send({ t: "state", state: makeState() });
 await settle(300);
 const tappedBox = await page.locator('#half-me .card[data-id="4"] .face').boundingBox();
 check(tappedBox && tappedBox.width > tappedBox.height, "a tapped card is turned sideways");
+// the front tapped land (5) lies along the bottom of the untapped ones (1 to 3) and sticks out to the right: an L
+const frontTapped = await page.locator('#half-me .card[data-id="5"] .face').boundingBox();
+const untappedBox = await page.locator('#half-me .card[data-id="1"] .face').boundingBox();
+const topUntapped = await page.locator('#half-me .card[data-id="3"] .face').boundingBox();
+check(frontTapped && untappedBox && Math.abs((frontTapped.y + frontTapped.height) - (untappedBox.y + untappedBox.height)) < 1.5
+  && frontTapped.x > untappedBox.x - 1 && frontTapped.y > untappedBox.y + 10
+  && frontTapped.x + frontTapped.width >= topUntapped.x + topUntapped.width + 15,
+  "tapped lands lie along the bottom of their stack and stick out to the right, so with the untapped ones they form an L");
 const ogre = await page.locator('#half-me .card[data-id="12"] .face').boundingBox();
 check(ogre && ogre.width > ogre.height, "a tapped attacker is sideways too");
 check(await count('#half-me .card[data-id="10"].sick .badge.sick') === 1, "a summoning-sick creature is marked");
@@ -365,8 +373,22 @@ await settle();
 n = received.length;
 await page.click('#buttons button:text-is("Undo (1)")');
 check(!!(await waitFor(() => received.slice(n).find(m => m.t === "act" && m.m === "cancel"), "Undo")), "Undo still undoes");
+// paying a cost: Auto sits in the player's bar, between the hand and the lands; Cancel stays in the panel
+call("showPromptMessage", [{ player: 1 }, "Pay Mana Cost: {R}", null]);
+call("updateButtons", [{ player: 1 }, "Auto", "Cancel", true, true, true]);
+await settle();
+const autoBox = await page.locator('#half-me .pbar #paybtn button:text-is("Auto")').boundingBox();
+const handBox = await page.locator('#half-me .hand').boundingBox();
+const landsBox = await page.locator('#half-me .landstack').boundingBox();
+check(autoBox && autoBox.y > landsBox.y + landsBox.height - 1 && autoBox.y + autoBox.height < handBox.y + handBox.height
+  && JSON.stringify(await page.locator("#buttons button").allTextContents()) === '["Cancel"]',
+  "while paying, Auto sits between the hand and the lands, and Cancel stays in the decision panel");
+n = received.length;
+await page.keyboard.press(" ");
+check(!!(await waitFor(() => received.slice(n).find(m => m.t === "act" && m.m === "ok"), "Auto")), "the space bar presses Auto");
 call("awaitNextInput", []);
 await settle(400);
+check(await count("#paybtn button") === 0, "the Auto button goes away when the payment is done");
 check(await page.locator("#decision").evaluate(e => e.classList.contains("waiting")) && (await page.locator("#prompt").textContent()) === "Waiting for opponent...",
   "the decision panel goes quiet while the opponent decides");
 // a prompt about a card shows the card (Forge's scry 1 asks this way)
