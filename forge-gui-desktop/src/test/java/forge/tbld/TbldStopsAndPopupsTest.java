@@ -69,7 +69,7 @@ public class TbldStopsAndPopupsTest extends AITest {
     public void scryIsAskedWithTheCardsAndTheAnswerIsApplied() throws Exception {
         final TbldWebServer server = new TbldWebServer(2, () -> {
             final Deck d = new Deck("Scry test deck");
-            d.getMain().add("Mountain", 20);
+            d.getMain().add("Mountain|TBLD|69", 20);
             d.getMain().add("Magma Jet", 20);
             return d;
         });

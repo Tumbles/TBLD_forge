@@ -30,10 +30,10 @@
     color: var(--turn); opacity: 0; transition: opacity .3s; pointer-events: none; }
   .half.opp .turn-tag { bottom: 6px; } .half.me .turn-tag { top: 6px; }
   .half.active .turn-tag { opacity: 1; }
-  .bf { display: flex; flex-direction: column; justify-content: center; gap: 6px; flex: 1 1 auto; min-height: 0; }
+  .bf { display: flex; flex-direction: column; justify-content: center; gap: 12px; flex: 1 1 auto; min-height: 0; }
   .row { --ch: var(--bf-h); height: var(--bf-h); display: flex; align-items: center; gap: 8px; min-width: 0; }
-  .row.front { justify-content: center; }
-  .row .spacer { flex: 1 1 auto; min-width: 0; }
+  .row { justify-content: center; }
+  .row .spacer { flex: none; width: 18px; }
 
   /* ---- player bar ---- */
   .pbar { display: flex; align-items: center; gap: 14px; min-height: 48px; }
@@ -674,13 +674,50 @@ function flash() {
   pr.style.color = "#ff8a8a"; setTimeout(() => pr.style.color = "", 400);
 }
 
+let spentTimer = null;
 function renderButtons(l1, l2, en1, en2) {
+  if (spentTimer) { clearTimeout(spentTimer); spentTimer = null; }
   const b = document.getElementById("buttons");
   b.replaceChildren();
-  if (l1) { const x = el("button", "btn primary", l1); x.disabled = !en1; x.onclick = () => act("ok"); b.append(x); }
-  if (l2) { const x = el("button", "btn", l2); x.disabled = !en2; x.onclick = () => act("cancel"); b.append(x); }
+  if (l1) { const x = el("button", "btn primary", l1); x.disabled = !en1; x.onclick = () => press("ok"); b.append(x); }
+  if (l2) { const x = el("button", "btn", l2); x.disabled = !en2; x.onclick = () => press("cancel"); b.append(x); }
   renderDecision();
 }
+/**
+ * Presses a decision button. The buttons are then spent until the engine sends new ones, so a quick
+ * second press (or a second tap of the space bar) can't pass the next priority by accident. If the
+ * engine sends nothing (the press had no effect), they come back after a second.
+ */
+function press(m) {
+  const buttons = [...document.querySelectorAll("#buttons button")];
+  const enabled = buttons.map(x => !x.disabled);
+  buttons.forEach(x => { x.disabled = true; x.blur(); });
+  if (spentTimer) clearTimeout(spentTimer);
+  spentTimer = setTimeout(() => { spentTimer = null; buttons.forEach((x, i) => { if (x.isConnected) x.disabled = !enabled[i]; }); }, 1000);
+  act(m);
+}
+
+// The space bar confirms the open popup, or presses the decision panel's main button (OK, pass
+// priority). It does nothing while typing in a text field.
+function isTyping(e) { const t = e.target; return t && (t.tagName === "INPUT" || t.tagName === "TEXTAREA" || t.tagName === "SELECT" || t.isContentEditable); }
+document.addEventListener("keydown", e => {
+  if (e.key !== " " || isTyping(e) || e.ctrlKey || e.altKey || e.metaKey) return;
+  e.preventDefault();
+  if (e.repeat) return;
+  const dlg = document.getElementById("dialog");
+  if (dlg.style.display === "block") {
+    // A hidden popup is shown again first, so nothing is confirmed unseen
+    if (dlg.classList.contains("collapsed")) { dlg.classList.remove("collapsed"); return; }
+    const primary = dlg.querySelector(".popup .btn.primary");
+    if (primary && !primary.disabled) primary.click();
+    return;
+  }
+  if (document.getElementById("viewer").style.display === "block") return;
+  const ok = document.querySelector("#buttons .btn.primary");
+  if (ok && !ok.disabled) ok.click();
+});
+// A focused button would also be pressed by the space bar when the key comes up
+document.addEventListener("keyup", e => { if (e.key === " " && !isTyping(e)) e.preventDefault(); });
 
 // ------------------------------------------------------------------ board
 
@@ -734,10 +771,10 @@ function renderHalf(sec, p, mine, attachments) {
     return g;
   };
   setChildren(sec.querySelector('[data-row="creatures"]'), creatures.map(withAttachments));
-  // Lands at the left of the back row, stacked by name; other permanents at the right
+  // The back row, centered: lands stacked by name, then the other permanents after a gap
   const back = sec.querySelector('[data-row="back"]');
   const backNodes = landStacks(lands, attachments).map(g => g.length === 1 ? withAttachments(g[0]) : landStack(g));
-  backNodes.push(spacerFor(sec));
+  if (backNodes.length && others.length) backNodes.push(spacerFor(sec));
   backNodes.push(...others.map(withAttachments));
   setChildren(back, backNodes);
 
@@ -857,11 +894,12 @@ function openViewer(title, cards) {
 
 /** Overlaps the items of a row when they don't fit side by side. */
 function fit(row) {
-  const items = [...row.children].filter(x => !x.classList.contains("spacer"));
-  for (const x of items) x.style.marginLeft = "";
+  const all = [...row.children];
+  for (const x of all) x.style.marginLeft = "";
+  const items = all.filter(x => !x.classList.contains("spacer"));
   if (items.length < 2) return;
   const gap = parseFloat(getComputedStyle(row).columnGap) || 0;
-  const total = items.reduce((s, x) => s + x.offsetWidth, 0) + gap * (items.length - 1);
+  const total = all.reduce((s, x) => s + x.offsetWidth, 0) + gap * (all.length - 1);
   const avail = row.clientWidth;
   if (total <= avail) return;
   const minVisible = 26;
@@ -1134,6 +1172,7 @@ function showDialog() {
     actions.append(need);
     if (none) addButton(min === 0 ? "Choose none" : "Cancel", none);
     const confirm = addButton("Confirm", () => done(picked.slice()), true);
+    confirm.title = "Space";
     update();
   }
 

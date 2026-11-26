@@ -709,16 +709,35 @@ public final class BrowserSeat implements IRemote {
 
     /**
      * Where the browser loads the card's picture from, or null to have the browser draw the card.
-     * Official cards come from Scryfall by name. TBLD cards, tokens and face-down cards have no
-     * picture yet.
+     * TBLD cards come from this server ({@link TbldPictures}), for the card's version; official
+     * cards from Scryfall by name. Tokens and face-down cards have no picture.
      */
     static String imageUrl(final CardView cv, final CardStateView s) {
         final String set = s.getSetCode();
-        if (cv.isFaceDown() || cv.isToken() || set == null || set.isEmpty() || "TBLD".equalsIgnoreCase(set)) {
+        if (cv.isFaceDown() || cv.isToken() || set == null || set.isEmpty()) {
             return null;
+        }
+        if ("TBLD".equalsIgnoreCase(set)) {
+            return TbldPictures.urlFor(s.getName(), artIndex(s.getImageKey()));
         }
         return "https://api.scryfall.com/cards/named?format=image&version=normal&exact="
                 + URLEncoder.encode(s.getName(), StandardCharsets.UTF_8);
+    }
+
+    /** The art index in a card image key such as "c:Mountain|TBLD|69", or 0. */
+    static int artIndex(final String imageKey) {
+        if (imageKey == null) {
+            return 0;
+        }
+        final String[] parts = imageKey.split("\\|");
+        if (parts.length < 3) {
+            return 0;
+        }
+        try {
+            return Integer.parseInt(parts[2].replaceAll("[^0-9].*$", ""));
+        } catch (final NumberFormatException e) {
+            return 0;
+        }
     }
 
     private JsonObject cardJson(final CardView cv, final CombatView combat, final Map<Integer, CardView> seen) {

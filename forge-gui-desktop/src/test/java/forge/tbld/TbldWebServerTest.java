@@ -1,5 +1,7 @@
 package forge.tbld;
 
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import forge.ai.AITest;
 import forge.tbld.server.TbldWebServer;
 import org.testng.AssertJUnit;
@@ -44,6 +46,20 @@ public class TbldWebServerTest extends AITest {
             AssertJUnit.assertTrue("errors: " + bot1.errors + bot2.errors + report, bot1.errors.isEmpty() && bot2.errors.isEmpty());
             AssertJUnit.assertTrue("game did not progress" + report, bot1.maxTurn >= TARGET_TURN || bot1.gameOver);
             AssertJUnit.assertTrue("seat 1 played no land" + report, bot1.maxLands >= 1);
+
+            // The test deck's Mountains are TBLD Mountain version 69: named Mountain, with that version's picture
+            int mountains = 0;
+            for (final JsonElement pe : bot1.state.getAsJsonArray("players")) {
+                for (final JsonElement ce : pe.getAsJsonObject().getAsJsonArray("battlefield")) {
+                    final JsonObject c = ce.getAsJsonObject();
+                    if (c.has("name") && "Mountain".equals(c.get("name").getAsString())) {
+                        mountains++;
+                        AssertJUnit.assertEquals("TBLD", c.get("set").getAsString());
+                        AssertJUnit.assertEquals("/pics/TBLD%20Mountain69.png", c.has("img") ? c.get("img").getAsString() : "");
+                    }
+                }
+            }
+            AssertJUnit.assertTrue("no Mountain on the battlefield" + report, mountains > 0);
             AssertJUnit.assertFalse("a player saw the other's hand", bot1.sawOpponentHand || bot2.sawOpponentHand);
 
             // London mulligan: the cards go to the bottom only after the hand is kept

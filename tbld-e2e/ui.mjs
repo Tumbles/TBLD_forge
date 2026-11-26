@@ -104,6 +104,14 @@ check(await page.locator("#half-me").evaluate(e => e.classList.contains("active"
   "the active player's half is highlighted");
 check((await page.locator("#turnwho").textContent()) === "Your turn", "the phase bar says whose turn it is");
 check(await count('#half-opp .handbacks .card.back') === 5, "the opponent's hand is shown as card backs");
+const centered = sel => page.locator(sel).evaluate(row => {
+  const r = row.getBoundingClientRect();
+  const boxes = [...row.children].map(k => k.getBoundingClientRect());
+  const left = Math.min(...boxes.map(b => b.left)), right = Math.max(...boxes.map(b => b.right));
+  return Math.abs((left - r.left) - (r.right - right)) <= 2;
+});
+check(await centered('#half-me [data-row="back"]'), "lands and other permanents are centered in their row");
+check(await centered('#half-opp [data-row="back"]'), "a lone land is centered too");
 
 // pictures
 const mountainImg = await page.locator('#half-me .card[data-id="1"] img.art').evaluate(i => i.complete && i.naturalWidth > 0).catch(() => false);
@@ -220,8 +228,16 @@ call("updateButtons", [{ player: 1 }, "OK", "End Turn", true, true, false]);
 await settle();
 check(await page.locator("#decision").evaluate(e => e.classList.contains("mine")), "the decision panel lights up when it is this player's decision");
 check((await page.locator("#dhead-text").textContent()) === "Your decision", "the decision panel says so");
+await page.keyboard.press("Space");
+check(!!(await waitFor(() => received.find(m => m.t === "act" && m.m === "ok"), "OK")), "the space bar presses OK");
+await page.keyboard.press("Space");
+await settle(200);
+check(received.filter(m => m.t === "act" && m.m === "ok").length === 1, "a second press before the engine answers does nothing");
+check(await page.locator('#buttons button:text-is("OK")').isDisabled(), "pressed buttons are spent until new ones arrive");
+call("updateButtons", [{ player: 1 }, "OK", "End Turn", true, true, false]);
+await settle();
 await page.click('#buttons button:text-is("OK")');
-check(!!(await waitFor(() => received.find(m => m.t === "act" && m.m === "ok"), "OK")), "the OK button acts");
+check(!!(await waitFor(() => received.filter(m => m.t === "act" && m.m === "ok").length === 2, "a second OK")), "new buttons can be pressed again");
 call("awaitNextInput", []);
 await settle(400);
 check(await page.locator("#decision").evaluate(e => e.classList.contains("waiting")) && (await page.locator("#prompt").textContent()) === "Waiting for opponent...",
@@ -252,8 +268,8 @@ call("getChoices", ["Player 2 reveals their hand", -1, -1, hand3, null, null], 1
 await settle();
 check(await visible("#dialog .popup") && (await count("#dialog .choices .card")) === 4, "revealed cards are shown as cards in a popup");
 await page.screenshot({ path: path.join(here, "out/ui-popup-reveal.png") });
-await page.click("#dialog .primary");
-check(JSON.stringify((await replyFor(1))?.v) === "[]", "a reveal is closed with OK");
+await page.keyboard.press("Space");
+check(JSON.stringify((await replyFor(1))?.v) === "[]", "the space bar confirms a popup");
 check(!(await visible("#dialog .popup")), "the popup closes after the answer");
 
 // discard-style choice from a revealed hand: only some cards can be chosen
@@ -319,6 +335,15 @@ await settle();
 await page.click('#dialog .opt:text-is("2")');
 await page.click("#dialog .primary");
 check(JSON.stringify((await replyFor(8))?.v) === "[2]", "the next question follows");
+
+// typing in a text field: the space bar types a space and confirms nothing
+call("showInputDialog", ["Name a card", "Choose", null, "", null, false], 9);
+await settle();
+await page.locator("#dialog input").pressSequentially("Hill Giant");
+await settle();
+check(!received.find(m => m.t === "reply" && m.rid === 9), "typing a space in a text field doesn't confirm");
+await page.click('#dialog .p-actions button:text-is("OK")');
+check((await replyFor(9))?.v === "Hill Giant", "the typed text is answered");
 
 check(!errors.length, "no errors on the page " + JSON.stringify(errors));
 await browser.close();

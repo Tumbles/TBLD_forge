@@ -41,6 +41,8 @@ import io.netty.util.AttributeKey;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.InetSocketAddress;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -232,10 +234,10 @@ public final class TbldWebServer {
         match.startMatch(new GameRules(GameType.Constructed), null, players, guis, null);
     }
 
-    /** A fixed mono-red deck for testing. */
+    /** A fixed mono-red deck for testing. Its Mountains are TBLD Mountain version 69. */
     static Deck testDeck() {
         final Deck d = new Deck("TBLD test deck");
-        d.getMain().add("Mountain", 17);
+        d.getMain().add("Mountain|TBLD|69", 17);
         d.getMain().add("Searing Touch", 4);
         d.getMain().add("Shock", 4);
         d.getMain().add("Raging Goblin", 4);
@@ -318,6 +320,7 @@ public final class TbldWebServer {
             final String path = new QueryStringDecoder(req.uri()).path();
             final String resource = "/".equals(path) ? "index.html" : null;
             byte[] body = null;
+            String contentType = "text/html; charset=utf-8";
             if (resource != null) {
                 try (InputStream in = TbldWebServer.class.getResourceAsStream("/tbld/web/" + resource)) {
                     if (in != null) {
@@ -326,13 +329,28 @@ public final class TbldWebServer {
                 } catch (final IOException e) {
                     body = null;
                 }
+            } else if (path.startsWith(TbldPictures.URL_PREFIX)) {
+                // A TBLD card picture
+                final String fileName = path.substring(TbldPictures.URL_PREFIX.length());
+                final Path file = TbldPictures.file(fileName);
+                if (file != null) {
+                    try {
+                        body = Files.readAllBytes(file);
+                        contentType = TbldPictures.contentType(fileName);
+                    } catch (final IOException e) {
+                        body = null;
+                    }
+                }
             }
             final FullHttpResponse resp;
             if (body == null) {
                 resp = new DefaultFullHttpResponse(HttpVersion.HTTP_1_1, HttpResponseStatus.NOT_FOUND);
             } else {
                 resp = new DefaultFullHttpResponse(HttpVersion.HTTP_1_1, HttpResponseStatus.OK, Unpooled.wrappedBuffer(body));
-                resp.headers().set(HttpHeaderNames.CONTENT_TYPE, "text/html; charset=utf-8");
+                resp.headers().set(HttpHeaderNames.CONTENT_TYPE, contentType);
+                if (resource == null) {
+                    resp.headers().set(HttpHeaderNames.CACHE_CONTROL, "max-age=3600");
+                }
             }
             resp.headers().setInt(HttpHeaderNames.CONTENT_LENGTH, resp.content().readableBytes());
             ctx.writeAndFlush(resp).addListener(ChannelFutureListener.CLOSE);
