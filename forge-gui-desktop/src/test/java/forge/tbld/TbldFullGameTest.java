@@ -39,7 +39,13 @@ public class TbldFullGameTest extends AITest {
             AssertJUnit.assertTrue("seat 1 cast no creature" + report, attacker.castCreature);
             AssertJUnit.assertTrue("seat 2 cast no creature" + report, defender.castCreature);
             AssertJUnit.assertTrue("no attack" + report, attacker.sawAttack);
-            AssertJUnit.assertTrue("no block" + report, attacker.sawBlock || defender.sawBlock);
+            AssertJUnit.assertTrue("seat 2 was never shown a blocker it had chosen, before confirming the blocks" + report,
+                    defender.sawPlannedBlock);
+            AssertJUnit.assertTrue("seat 1 never saw a declared block" + report, attacker.sawBlock);
+            AssertJUnit.assertTrue("selecting a blocked attacker with no creature chosen changed something" + report,
+                    defender.attackerClickIgnored);
+            AssertJUnit.assertTrue("selecting a blocking creature did not just take its block back" + report,
+                    defender.unassignWorked);
             AssertJUnit.assertTrue("no creature died" + report, attacker.creatureDied || defender.creatureDied);
             AssertJUnit.assertTrue("no instant or sorcery resolved" + report, attacker.spellResolved || defender.spellResolved);
             AssertJUnit.assertFalse("a player saw the other's hand", attacker.sawOpponentHand || defender.sawOpponentHand);

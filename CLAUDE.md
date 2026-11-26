@@ -35,7 +35,11 @@ Not started: Scan, Journey, Upload, Spirited, Experience, luck counters, modifie
   - Then it sends `{t:"call", m, a, rid?}`. Calls with a `rid` block the engine until the browser answers `{t:"reply", rid, v}`; `v` is an index or an array of indices into the offered options.
   - Clicks arrive as `{t:"act", m: "ok"|"cancel"|"card"|"player"|"stack"|"mana"|"undo"|"concede", id}` and run on the seat's own thread. They must not run on the Netty thread: an action can make the engine ask the same player a question, and the answer arrives on the same connection.
   - Answered on the server without asking the player: combat damage assignment (all to the first blocker), dividing damage or counters, sideboarding, `manipulateCardList`. `getAbilityToPlay` with one playable ability uses it without asking. Ordering prompts keep the default order.
+  - In the snapshot, a blocker's `blocking` names the attacker it blocks, and an attacker's `blockedBy` lists its blockers. Until blockers are declared, Forge's `CombatView` holds the chosen blockers only as planned blockers (`getPlannedBlockers`), and `isBlocking` is false; the seat shows planned blockers to their controller only.
+  - `{t:"pref", autoPass}` turns on Forge's "auto-pass if no actions" (`FPref.YIELD_AUTO_PASS_NO_ACTIONS`) for that seat only, as a `YieldUpdate.SetYieldPref` override on its controller. The client's checkbox is on by default and remembered per seat in `localStorage`; it is resent on connect and on restart. Seats that never send it (the test bots) have it off.
+  - The log in the snapshot is the last 30 entries, oldest first; the client stays scrolled to the newest.
   - `-Dtbld.debug=true` logs every prompt, button change and selection to standard output.
+- Declaring blockers (`InputBlock`, changed for TBLD in all clients, as Brett asked): select one of your creatures, then the attacker it blocks; after that nothing is selected. Selecting an attacker with no creature chosen does nothing. Selecting a creature that is blocking takes its block back and does not select it. Selecting the chosen creature again cancels the choice.
 - `forge-gui-desktop/src/main/resources/tbld/web/index.html`: the client. One self-contained file of plain HTML and JavaScript. It renders the snapshot as text, the prompt and buttons, dialogs for questions, a "Chosen" panel from the engine's `Selection`, and outlines playable cards (`actionable`). Elements carry `data-*` attributes that the browser test relies on.
 - `forge-gui-desktop/src/main/java/forge/view/Main.java`: the command-line mode `tbld [port]` runs the server (default port 8080). `forge-gui-desktop/src/main/config/tbld-server.cmd` is the Windows launcher in the packaged build.
 
@@ -45,7 +49,10 @@ Known issue: after an action, the previous buttons stay visible for about 250 ms
 
 ## Building and running
 
-Requires JDK 17 or newer and Maven.
+Requires JDK 17 or newer and Maven. On Brett's PC, Maven is at `C:\Users\Tumbles\tools\apache-maven-3.9.16\bin\mvn.cmd` (not on PATH).
+
+- To build and test one module without the installer, add `-pl forge-gui-desktop -am` (without `-am`, Maven cannot resolve the `${revision}` parent version).
+- The packaged server locks its jar on Windows: stop it before rebuilding the package.
 
 - Build the desktop package: `mvn -B -P windows-linux install -DskipTests -T 1C`
 - The runnable package is `forge-installer/target/forge-installer-<version>/`. Run the server from that folder: `java -jar forge-gui-desktop-<version>-jar-with-dependencies.jar tbld 8080` (or `tbld-server.cmd`), then open `http://localhost:8080/` in two tabs and choose a seat in each.
@@ -56,10 +63,10 @@ Requires JDK 17 or newer and Maven.
 - TBLD tests (`forge-gui-desktop/src/test/java/forge/tbld/`):
   `mvn -B -P windows-linux install -T 1C -Dtest='forge.tbld.*Test' -Dsurefire.failIfNoSpecifiedTests=false`
   - `TbldFlashSupertypeTest`: Flash supertype timing; Searing Touch.
-  - `TbldWebServerTest`: serves the page; seat 2 mulligans once; restart.
-  - `TbldFullGameTest`: two `TbldBot`s play over the WebSocket protocol until a player loses, and the test checks for lands, creatures, a resolved spell, an attack, a block and a creature dying.
+  - `TbldWebServerTest`: serves the page; seat 2 mulligans once; seat 1 has auto-pass on and must never get a priority prompt with nothing to play (seat 2, with it off, must); restart.
+  - `TbldFullGameTest`: two `TbldBot`s play over the WebSocket protocol until a player loses, and the test checks for lands, creatures, a resolved spell, an attack, a block and a creature dying. The defender blocks by choosing a creature, then the attacker, and must see that creature marked as blocking before it presses OK. After its first block it checks once that selecting the blocked attacker changes nothing and that selecting the blocking creature takes the block back without selecting it.
   - `TbldBot` acts on the latest prompt, buttons, selection and state after each burst of messages, and never clicks a card that is already chosen (that would unchoose it).
-- Browser test (`tbld-e2e/play.mjs`): with the packaged server running on port 8090, `cd tbld-e2e && npm install && npx playwright install chromium && node play.mjs http://localhost:8090/`. Two Chromium tabs play a full game by reading and clicking the page; screenshots go to `tbld-e2e/out/`. It acts only after the page has been unchanged for 400 ms.
+- Browser test (`tbld-e2e/play.mjs`): with the packaged server running on port 8090, `cd tbld-e2e && npm install && npx playwright install chromium && node play.mjs http://localhost:8090/`. Two Chromium tabs play a full game by reading and clicking the page; screenshots go to `tbld-e2e/out/`. It acts only after the page has been unchanged for 400 ms. Run it against its own server: browser tabs left open on the same port reconnect and take the seats. A long game can hit its 6-minute limit (seen once on Brett's PC at turn 21); a rerun passed.
 - CI: `.github/workflows/tbld-build.yml` runs all of the above on every push to `master` and uploads the package (`tbld-forge-desktop`) and the screenshots (`tbld-browser-test`). Upstream's full test suite (`test-build.yaml`) runs only when started manually; it has not been run against TBLD changes.
 - Brett wants the full-game tests moved behind a manual switch once the web features are known to work.
 

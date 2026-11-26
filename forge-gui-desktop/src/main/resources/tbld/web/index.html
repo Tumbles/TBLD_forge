@@ -31,6 +31,7 @@
   #dialog .opt { display: block; margin: 3px 0; }
   #stack .item { cursor: pointer; margin: 2px 0; }
   #restart { float: right; font-size: 0.85em; }
+  #autopass-label { display: block; margin-top: 6px; font-size: 0.9em; cursor: pointer; }
   #chosen { display: none; }
   #log { flex: 1; overflow-y: auto; font-size: 0.85em; color: #aaa; }
   #tip { position: fixed; pointer-events: none; background: #111; border: 1px solid #666; padding: 6px; max-width: 280px; white-space: pre-wrap; display: none; z-index: 10; }
@@ -45,7 +46,8 @@
 <div id="game">
   <div id="board"></div>
   <div id="side">
-    <div class="panel"><button id="restart">Restart game</button><div id="status"></div></div>
+    <div class="panel"><button id="restart">Restart game</button><div id="status"></div>
+      <label id="autopass-label"><input type="checkbox" id="autopass"> Auto-pass when I have nothing to play</label></div>
     <div class="panel"><div id="prompt"></div><div id="buttons"></div></div>
     <div class="panel" id="chosen"></div>
     <div class="panel" id="dialog"></div>
@@ -84,8 +86,15 @@ function connect() {
   ws.onclose = () => { document.getElementById("status").textContent = "Disconnected. Reconnecting..."; setTimeout(connect, 2000); };
 }
 
+// Auto-pass is remembered per seat in this browser, and on by default
+const autoPassKey = "tbld.autoPass.seat" + seat;
+const autoPassBox = document.getElementById("autopass");
+autoPassBox.checked = localStorage.getItem(autoPassKey) !== "false";
+autoPassBox.onchange = () => { localStorage.setItem(autoPassKey, String(autoPassBox.checked)); sendPrefs(); };
+function sendPrefs() { send({ t: "pref", autoPass: autoPassBox.checked }); }
+
 function handle(msg) {
-  if (msg.t === "hello") { document.getElementById("status").textContent = "Seat " + msg.seat + ". Waiting for the other player..."; return; }
+  if (msg.t === "hello") { document.getElementById("status").textContent = "Seat " + msg.seat + ". Waiting for the other player..."; sendPrefs(); return; }
   if (msg.t === "state") { state = msg.state; render(); return; }
   if (msg.t === "reset") {
     dialogQueue = []; selection = null;
@@ -93,6 +102,7 @@ function handle(msg) {
     document.getElementById("prompt").textContent = "";
     document.getElementById("buttons").replaceChildren();
     document.getElementById("status").textContent = "Starting a new game...";
+    sendPrefs();
     return;
   }
   if (msg.t !== "call") return;
@@ -154,7 +164,8 @@ function renderCard(c) {
   if (c.sick && c.power !== undefined) tags.push("summoning sick");
   if (c.damage) tags.push(c.damage + " damage");
   if (c.attacking !== undefined) tags.push("attacking " + c.attacking);
-  if (c.blocking) tags.push("blocking");
+  if (c.blockedBy) tags.push("blocked by " + c.blockedBy.join(", "));
+  if (c.blocking !== undefined) tags.push("blocking " + c.blocking);
   if (c.counters) for (const [k, v] of Object.entries(c.counters)) tags.push(v + " " + k);
   if (tags.length) d.append(el("div", "tags", tags.join(", ")));
   d.onclick = () => act("card", c.id);
@@ -218,8 +229,11 @@ function render() {
   if (!state.stack.length) st.append(el("div", "zone-label", "(empty)"));
   state.stack.forEach(s => { const d = el("div", "item", s.text); d.onclick = () => act("stack", s.id); st.append(d); });
   renderChosen();
+  // Oldest entry at the top; stay scrolled to the newest unless the player has scrolled up
   const log = document.getElementById("log");
+  const atBottom = log.scrollTop + log.clientHeight >= log.scrollHeight - 4;
   log.replaceChildren(...state.log.map(l => el("div", "", l)));
+  if (atBottom) log.scrollTop = log.scrollHeight;
 }
 
 function renderChosen() {

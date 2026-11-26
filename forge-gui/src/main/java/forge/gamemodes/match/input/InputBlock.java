@@ -32,22 +32,21 @@ import forge.util.ITriggerEvent;
 import forge.util.Localizer;
 import forge.util.ThreadUtil;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
- * <p>
- * Input_Block class.
- * </p>
- *
- * @author Forge
- * @version $Id: InputBlock.java 24769 2014-02-09 13:56:04Z Hellfish $
+ * Declaring blockers (TBLD): select one of your creatures, then the attacker it blocks. After that
+ * nothing is selected, and selecting an attacker does nothing. Selecting a creature that is
+ * blocking takes its block back, without selecting it. Selecting the chosen creature again
+ * cancels the choice. A right-click on one of your creatures removes it from combat.
  */
 public class InputBlock extends InputSyncronizedBase {
 
     private static final long serialVersionUID = 6120743598368928128L;
 
-    private Card currentAttacker = null;
-    // some cards may block several creatures at a time. (ex:  Two-Headed Dragon, Vanguard's Shield)
+    /** The creatures chosen to block with, waiting for an attacker; several when a group was selected at once. */
+    private final List<Card> chosenBlockers = new ArrayList<>();
     private final Combat combat;
     private final Player defender;
 
@@ -55,31 +54,18 @@ public class InputBlock extends InputSyncronizedBase {
         super(controller);
         defender = defender0;
         combat = combat0;
-
-        //auto-select first attacker to declare blockers for
-        for (final Card attacker : combat.getAttackers()) {
-            for (final Card c : defender.getCreaturesInPlay()) {
-                if (CombatUtil.canBlock(attacker, c, combat)) {
-                    currentAttacker = attacker;
-                    return;
-                }
-            }
-        }
     }
 
     /** {@inheritDoc} */
     @Override
     protected final void showMessage() {
-        // could add "Reset Blockers" button
         Localizer localizer = Localizer.getInstance();
         getController().getGui().updateButtons(getOwner(), true, false, true);
 
-        if (currentAttacker == null) {
-            showMessage(localizer.getMessage("lblSelectBlockTarget"));
+        if (chosenBlockers.isEmpty()) {
+            showMessage(localizer.getMessage("lblSelectCreatureToBlockWith"));
         } else {
-            String attackerName = currentAttacker.isFaceDown() ? localizer.getMessage("lblMorph") : currentAttacker.getDisplayName() + " (" + currentAttacker.getId() + ")";
-            String message = localizer.getMessage("lblSelectBlocker") + attackerName + " " + localizer.getMessage("lblOrSelectBlockTarget");
-            showMessage(message);
+            showMessage(localizer.getMessage("lblSelectAttackerToBlock", blockerNames()));
         }
 
         if (combat != null)
@@ -88,14 +74,44 @@ public class InputBlock extends InputSyncronizedBase {
         getController().getGui().showCombat();
     }
 
+    private String blockerNames() {
+        final StringBuilder sb = new StringBuilder();
+        for (final Card c : chosenBlockers) {
+            if (sb.length() > 0) {
+                sb.append(", ");
+            }
+            sb.append(c.isFaceDown() ? Localizer.getInstance().getMessage("lblMorph") : c.getDisplayName() + " (" + c.getId() + ")");
+        }
+        return sb.toString();
+    }
+
     @Override
     protected boolean allowAwaitNextInput() {
         return true;
     }
 
+    /** Before a creature is chosen, the creatures that may block; after, the attackers it may block. */
     @Override
     protected List<CardView> getActionable() {
-        return getController().getBlockerCandidates(defender, combat);
+        if (chosenBlockers.isEmpty()) {
+            final List<CardView> result = new ArrayList<>();
+            for (final Card c : defender.getCreaturesInPlay()) {
+                if (canBeChosen(c)) {
+                    result.add(c.getView());
+                }
+            }
+            return result;
+        }
+        final List<CardView> result = new ArrayList<>();
+        for (final Card attacker : combat.getAttackers()) {
+            for (final Card blocker : chosenBlockers) {
+                if (CombatUtil.canBlock(attacker, blocker, combat)) {
+                    result.add(attacker.getView());
+                    break;
+                }
+            }
+        }
+        return result;
     }
 
     /** {@inheritDoc} */
@@ -111,55 +127,84 @@ public class InputBlock extends InputSyncronizedBase {
         }
     }
 
+    private boolean isPotentialBlocker(final Card card) {
+        return card.getController() == defender && card.isCreature() && defender.getZone(ZoneType.Battlefield).contains(card);
+    }
+
+    /** A creature may be chosen if it isn't blocking yet and could block some attacker. */
+    private boolean canBeChosen(final Card blocker) {
+        if (!isPotentialBlocker(blocker) || combat.isBlocking(blocker)) {
+            return false;
+        }
+        for (final Card attacker : combat.getAttackers()) {
+            if (CombatUtil.canBlock(attacker, blocker, combat)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /** Takes back every block of {@code blocker}. */
+    private void unassign(final Card blocker) {
+        combat.undoBlockingAssignment(blocker);
+        blocker.getGame().getMatch().fireEvent(new UiEventBlockerAssigned(CardView.get(blocker), null));
+    }
+
     /** {@inheritDoc} */
     @Override
     public final boolean onCardSelected(final Card card, final List<Card> otherCardsToSelect, final ITriggerEvent triggerEvent) {
         boolean isCorrectAction = false;
+        final List<Card> clicked = new ArrayList<>();
+        clicked.add(card);
+        if (otherCardsToSelect != null) {
+            clicked.addAll(otherCardsToSelect);
+        }
         if (triggerEvent != null && triggerEvent.getButton() == 3 && card.getController() == defender) {
-            combat.removeFromCombat(card);
-            card.getGame().getMatch().fireEvent(new UiEventBlockerAssigned(CardView.get(card), null));
-            if (otherCardsToSelect != null) {
-                for (Card c : otherCardsToSelect) {
-                    if (c.getController() == defender) {
-                        combat.removeFromCombat(c);
-                        c.getGame().getMatch().fireEvent(new UiEventBlockerAssigned(CardView.get(c), null));
-                    }
+            for (final Card c : clicked) {
+                if (c.getController() == defender) {
+                    combat.removeFromCombat(c);
+                    chosenBlockers.remove(c);
+                    c.getGame().getMatch().fireEvent(new UiEventBlockerAssigned(CardView.get(c), null));
                 }
             }
             isCorrectAction = true;
         } else if (combat.isAttacking(card)) {
-            currentAttacker = card;
-            isCorrectAction = true;
-        } else if (currentAttacker != null && card.isCreature() && defender.getZone(ZoneType.Battlefield).contains(card)) {
-            // card is valid to even be a blocker
-            if (combat.isBlocking(card, currentAttacker)) {
-                //if creature already blocking current attacker, remove blocker from combat
-                combat.removeBlockAssignment(currentAttacker, card);
-                card.getGame().getMatch().fireEvent(new UiEventBlockerAssigned(CardView.get(card), null));
-                if (otherCardsToSelect != null) {
-                    for (Card c : otherCardsToSelect) {
-                        if (combat.isBlocking(c, currentAttacker)) {
-                            combat.removeBlockAssignment(currentAttacker, c);
-                            c.getGame().getMatch().fireEvent(new UiEventBlockerAssigned(CardView.get(c), null));
-                        }
+            // Only a chosen creature can be assigned; with none chosen, selecting an attacker does nothing
+            for (final Card blocker : chosenBlockers) {
+                if (CombatUtil.canBlock(card, blocker, combat)) {
+                    combat.addBlocker(card, blocker);
+                    blocker.getGame().getMatch().fireEvent(new UiEventBlockerAssigned(CardView.get(blocker), CardView.get(card)));
+                    isCorrectAction = true;
+                }
+            }
+            if (isCorrectAction) {
+                chosenBlockers.clear();
+            }
+        } else if (isPotentialBlocker(card)) {
+            if (combat.isBlocking(card)) {
+                // Selecting a blocking creature takes its block back, and leaves it unselected
+                for (final Card c : clicked) {
+                    if (isPotentialBlocker(c) && combat.isBlocking(c)) {
+                        unassign(c);
                     }
                 }
+                chosenBlockers.clear();
+                isCorrectAction = true;
+            } else if (chosenBlockers.contains(card)) {
+                // Selecting the chosen creature again cancels the choice
+                chosenBlockers.clear();
                 isCorrectAction = true;
             } else {
-                isCorrectAction = CombatUtil.canBlock(currentAttacker, card, combat);
-                if (isCorrectAction) {
-                    combat.addBlocker(currentAttacker, card);
-                    card.getGame().getMatch().fireEvent(new UiEventBlockerAssigned(
-                            CardView.get(card), CardView.get(currentAttacker)));
-                    if (otherCardsToSelect != null) {
-                        for (Card c : otherCardsToSelect) {
-                            if (CombatUtil.canBlock(currentAttacker, c, combat)) {
-                                combat.addBlocker(currentAttacker, c);
-                                c.getGame().getMatch().fireEvent(new UiEventBlockerAssigned(
-                                        CardView.get(c), CardView.get(currentAttacker)));
-                            }
-                        }
+                final List<Card> chosen = new ArrayList<>();
+                for (final Card c : clicked) {
+                    if (canBeChosen(c)) {
+                        chosen.add(c);
                     }
+                }
+                if (!chosen.isEmpty()) {
+                    chosenBlockers.clear();
+                    chosenBlockers.addAll(chosen);
+                    isCorrectAction = true;
                 }
             }
         }
@@ -176,21 +221,31 @@ public class InputBlock extends InputSyncronizedBase {
     @Override
     public String getActivateAction(Card card) {
         if (combat.isAttacking(card)) {
-            return Localizer.getInstance().getMessage("lblDeclareBlockersForCard");
+            for (final Card blocker : chosenBlockers) {
+                if (CombatUtil.canBlock(card, blocker, combat)) {
+                    return Localizer.getInstance().getMessage("lblDeclareBlockersForCard");
+                }
+            }
+            return null;
         }
-        if (currentAttacker != null && card.isCreature() && defender.getZone(ZoneType.Battlefield).contains(card)) {
-            if (combat.isBlocking(card, currentAttacker)) {
-                return Localizer.getInstance().getMessage("lblRemoveFromCombat");
-            }
-            if (CombatUtil.canBlock(currentAttacker, card, combat)) {
-                return Localizer.getInstance().getMessage("lblBlockWithCard");
-            }
+        if (isPotentialBlocker(card) && combat.isBlocking(card)) {
+            return Localizer.getInstance().getMessage("lblRemoveFromCombat");
+        }
+        if (canBeChosen(card)) {
+            return Localizer.getInstance().getMessage("lblBlockWithCard");
         }
         return null;
     }
 
     @Override
     protected Selection getSelection() {
-        return currentAttacker == null ? Selection.NONE : Selection.ofChosen(List.of(CardView.get(currentAttacker)));
+        if (chosenBlockers.isEmpty()) {
+            return Selection.NONE;
+        }
+        final List<CardView> views = new ArrayList<>();
+        for (final Card c : chosenBlockers) {
+            views.add(CardView.get(c));
+        }
+        return Selection.ofChosen(views);
     }
 }

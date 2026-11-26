@@ -12,7 +12,7 @@ import java.net.http.HttpResponse;
 
 /**
  * Serves the web client, plays a few turns with two scripted players (seat 2 takes one
- * mulligan), and then restarts the match.
+ * mulligan; seat 1 has auto-pass on), and then restarts the match.
  */
 public class TbldWebServerTest extends AITest {
 
@@ -33,6 +33,7 @@ public class TbldWebServerTest extends AITest {
             AssertJUnit.assertTrue(page.body().contains("TBLD"));
 
             bot1 = new TbldBot(http, port, 1, false, 0);
+            bot1.setAutoPass(true);
             bot2 = new TbldBot(http, port, 2, false, 1);
 
             long deadline = System.currentTimeMillis() + 120000;
@@ -49,6 +50,11 @@ public class TbldWebServerTest extends AITest {
             AssertJUnit.assertTrue("seat 2 was not asked to put a card on the bottom" + report, bot2.returnPrompts > 0);
             AssertJUnit.assertFalse("seat 2 was asked to put a card on the bottom before keeping" + report, bot2.returnPromptBeforeKeep);
             AssertJUnit.assertTrue("seat 2 never had 6 cards in hand and 34 in library" + report, bot2.sawMulliganResult);
+
+            // Auto-pass: seat 1 is never asked for priority when it has nothing to do, but still is when it has
+            AssertJUnit.assertEquals("seat 1 (auto-pass on) got priority prompts with nothing to play" + report, 0, bot1.idlePriorityPrompts);
+            AssertJUnit.assertTrue("seat 1 (auto-pass on) got no priority prompts at all" + report, bot1.busyPriorityPrompts > 0);
+            AssertJUnit.assertTrue("seat 2 (auto-pass off) never got a priority prompt with nothing to play" + report, bot2.idlePriorityPrompts > 0);
 
             // Restart
             bot1.restart();

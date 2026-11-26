@@ -19,6 +19,7 @@ import forge.game.spellability.SpellAbilityView;
 import forge.game.spellability.StackItemView;
 import forge.game.zone.ZoneType;
 import forge.gamemodes.match.Selection;
+import forge.gamemodes.match.YieldUpdate;
 import forge.gamemodes.net.IRemote;
 import forge.gamemodes.net.event.IdentifiableNetEvent;
 import forge.gamemodes.net.event.NetEvent;
@@ -28,8 +29,10 @@ import forge.gamemodes.net.event.GuiGameEvent;
 import forge.gui.interfaces.IGuiGame;
 import forge.interfaces.IGameController;
 import forge.item.PaperCard;
+import forge.localinstance.properties.ForgePreferences.FPref;
 import forge.trackable.TrackableCollection;
 import forge.util.ITriggerEvent;
+import forge.util.collect.FCollection;
 import io.netty.channel.Channel;
 import io.netty.handler.codec.http.websocketx.TextWebSocketFrame;
 
@@ -72,6 +75,8 @@ public final class BrowserSeat implements IRemote {
     private volatile PlayerView player;
     /** Set when the match is abandoned; the seat then ignores the engine and answers nothing. */
     private volatile boolean retired;
+    /** Pass priority automatically when the player has nothing to play or activate. Set by the browser. */
+    private volatile boolean autoPass;
     private final ExecutorService actions;
 
     /** Questions waiting for the browser's answer, by request id. */
@@ -214,6 +219,7 @@ public final class BrowserSeat implements IRemote {
             for (final Object o : players) {
                 if (o instanceof PlayerView pv) {
                     player = pv;
+                    applyPrefsLater();
                     break;
                 }
             }
@@ -385,6 +391,13 @@ public final class BrowserSeat implements IRemote {
      */
     public void receive(final JsonObject msg) {
         final String t = msg.has("t") ? msg.get("t").getAsString() : "";
+        if ("pref".equals(t)) {
+            if (msg.has("autoPass")) {
+                autoPass = msg.get("autoPass").getAsBoolean();
+                applyPrefsLater();
+            }
+            return;
+        }
         if ("reply".equals(t)) {
             final CompletableFuture<JsonElement> f = pending.get(msg.get("rid").getAsInt());
             if (f != null) {
@@ -401,6 +414,24 @@ public final class BrowserSeat implements IRemote {
                 }
             });
         }
+    }
+
+    /**
+     * Applies this seat's preferences to its controller, on the seat's own thread: turning auto-pass
+     * on can pass the priority the player holds right now. Before the match starts there is no
+     * controller yet; the preferences are applied when the engine opens the player's view.
+     */
+    private void applyPrefsLater() {
+        if (retired) {
+            return;
+        }
+        actions.execute(() -> {
+            final IGameController controller = retired ? null : getController();
+            if (controller != null) {
+                // Forge's "auto-pass if no actions": pass priority when nothing can be played or activated
+                controller.applyYieldUpdate(new YieldUpdate.SetYieldPref(FPref.YIELD_AUTO_PASS_NO_ACTIONS, String.valueOf(autoPass)));
+            }
+        });
     }
 
     private void act(final JsonObject msg) {
@@ -586,12 +617,45 @@ public final class BrowserSeat implements IRemote {
             if (combat.isAttacking(cv)) {
                 final GameEntityView def = combat.getDefender(cv);
                 j.addProperty("attacking", def == null ? "" : def.getName());
+                final JsonArray blockedBy = new JsonArray();
+                for (final CardView blocker : shownBlockers(combat, cv)) {
+                    blockedBy.add(cardRef(blocker).get("name"));
+                }
+                if (!blockedBy.isEmpty()) {
+                    j.add("blockedBy", blockedBy);
+                }
             }
-            if (combat.isBlocking(cv)) {
-                j.addProperty("blocking", true);
+            for (final CardView attacker : combat.getAttackers()) {
+                if (shownBlockers(combat, attacker).contains(cv)) {
+                    j.addProperty("blocking", cardRef(attacker).get("name").getAsString());
+                    break;
+                }
             }
         }
         return j;
+    }
+
+    /**
+     * The blockers of {@code attacker} that this seat's player sees: declared blockers, and, while
+     * blockers are being chosen, the ones this player has chosen so far. Until blockers are
+     * declared, Forge's {@link CombatView} lists the chosen ones only as planned blockers.
+     */
+    private List<CardView> shownBlockers(final CombatView combat, final CardView attacker) {
+        final List<CardView> result = new ArrayList<>();
+        final FCollection<CardView> declared = combat.getBlockers(attacker);
+        if (declared != null) {
+            result.addAll(declared);
+        }
+        final FCollection<CardView> planned = combat.getPlannedBlockers(attacker);
+        final PlayerView me = player;
+        if (planned != null && me != null) {
+            for (final CardView b : planned) {
+                if (!result.contains(b) && b.getController() != null && b.getController().getId() == me.getId()) {
+                    result.add(b);
+                }
+            }
+        }
+        return result;
     }
 
     private JsonArray zone(final Collection<CardView> cards, final CombatView combat, final Map<Integer, CardView> seen) {
@@ -680,9 +744,9 @@ public final class BrowserSeat implements IRemote {
 
         final JsonArray log = new JsonArray();
         if (gv.getGameLog() != null) {
+            // The last 30 entries, oldest first
             final List<GameLogEntry> entries = gv.getGameLog().getAllEntries();
-            // Newest first; getAllEntries is in chronological order
-            for (int i = entries.size() - 1; i >= Math.max(0, entries.size() - 30); i--) {
+            for (int i = Math.max(0, entries.size() - 30); i < entries.size(); i++) {
                 log.add(entries.get(i).message());
             }
         }

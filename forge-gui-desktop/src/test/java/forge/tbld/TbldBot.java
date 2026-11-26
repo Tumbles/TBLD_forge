@@ -57,9 +57,13 @@ final class TbldBot implements WebSocket.Listener {
     // Memory that keeps the bot from repeating itself
     private int landTurn = -1;
     private final Set<String> attempted = new HashSet<>();
-    private int attackerClickedTurn = -1;
     private final Set<Integer> blockersClicked = new HashSet<>();
     private int blockTurn = -1;
+    /** The turn in which this bot last pressed OK to confirm its blocks. */
+    private int blocksConfirmedTurn = -1;
+    /** Steps of the one-time check of clicks on a blocked attacker and a blocking creature. */
+    private int probe;
+    private int probeBlocker = -1;
 
     // What happened in the game, for the test's assertions
     final List<String> errors = new CopyOnWriteArrayList<>();
@@ -69,7 +73,14 @@ final class TbldBot implements WebSocket.Listener {
     volatile int maxLands;
     volatile boolean castCreature;
     volatile boolean sawAttack;
+    /** An opposing creature was shown blocking, which happens only once blockers are declared. */
     volatile boolean sawBlock;
+    /** While choosing blockers, one of this player's creatures was shown blocking. */
+    volatile boolean sawPlannedBlock;
+    /** Selecting an attacker with no creature chosen left the existing block alone and chose nothing. */
+    volatile boolean attackerClickIgnored;
+    /** Selecting a blocking creature took its block back and did not select it. */
+    volatile boolean unassignWorked;
     volatile boolean creatureDied;
     volatile boolean spellResolved;
     volatile boolean sawOpponentHand;
@@ -82,6 +93,10 @@ final class TbldBot implements WebSocket.Listener {
     volatile int statesAfterReset;
     volatile int firstTurnAfterReset = Integer.MAX_VALUE;
     volatile int opponentLife = Integer.MIN_VALUE;
+    /** Priority prompts shown while this player had no card to play and no ability to activate. */
+    volatile int idlePriorityPrompts;
+    /** Priority prompts shown while this player had something to play or activate. */
+    volatile int busyPriorityPrompts;
 
     TbldBot(final HttpClient http, final int port, final int seat, final boolean aggressive) throws Exception {
         this(http, port, seat, aggressive, 0);
@@ -105,6 +120,14 @@ final class TbldBot implements WebSocket.Listener {
                 decide();
             }
         }, 1500, 1000, TimeUnit.MILLISECONDS);
+    }
+
+    /** Turns the server's auto-pass on or off for this seat, as the browser's checkbox does. */
+    void setAutoPass(final boolean on) {
+        final JsonObject o = new JsonObject();
+        o.addProperty("t", "pref");
+        o.addProperty("autoPass", on);
+        send(o);
     }
 
     void restart() {
@@ -181,6 +204,14 @@ final class TbldBot implements WebSocket.Listener {
                     case "updateButtons" -> {
                         buttons = a;
                         spentButtons = null;
+                        // A priority prompt sends its selection and message before its buttons
+                        if (prompt.startsWith("Priority") && !a.get(1).isJsonNull() && "OK".equals(a.get(1).getAsString())) {
+                            if (idSet("actionable").isEmpty()) {
+                                idlePriorityPrompts++;
+                            } else {
+                                busyPriorityPrompts++;
+                            }
+                        }
                     }
                     case "awaitNextInput" -> {
                         buttons = null;
@@ -236,7 +267,11 @@ final class TbldBot implements WebSocket.Listener {
                         sawAttack = true;
                     }
                     if (c.has("blocking")) {
-                        sawBlock = true;
+                        if (!mine) {
+                            sawBlock = true;
+                        } else if (prompt.toLowerCase().contains("block") && blocksConfirmedTurn != turn()) {
+                            sawPlannedBlock = true;
+                        }
                     }
                 }
             }
@@ -276,6 +311,19 @@ final class TbldBot implements WebSocket.Listener {
 
     private JsonObject me() {
         return player(true);
+    }
+
+    /** This player's card on the battlefield with the given id, or null. */
+    private JsonObject myCard(final int id) {
+        final JsonObject me = me();
+        if (me != null) {
+            for (final JsonElement ce : me.getAsJsonArray("battlefield")) {
+                if (ce.getAsJsonObject().get("id").getAsInt() == id) {
+                    return ce.getAsJsonObject();
+                }
+            }
+        }
+        return null;
     }
 
     private JsonObject opponent() {
@@ -380,21 +428,52 @@ final class TbldBot implements WebSocket.Listener {
                 }
             }
             if (attacker != null && !aggressive) {
-                if (attackerClickedTurn != turn()) {
-                    attackerClickedTurn = turn();
-                    act("card", attacker.get("id").getAsInt(), "choose attacker to block");
+                final Set<Integer> chosen = idSet("chosen");
+                // Once per game, after the first block: selecting an attacker with no creature chosen
+                // must change nothing, and selecting the blocking creature must take its block back
+                // without selecting it
+                if (probe == 0 && chosen.isEmpty()) {
+                    for (final JsonElement ce : me.getAsJsonArray("battlefield")) {
+                        final JsonObject c = ce.getAsJsonObject();
+                        if (c.has("blocking")) {
+                            probe = 1;
+                            probeBlocker = c.get("id").getAsInt();
+                            act("card", attacker.get("id").getAsInt(), "select attacker with no creature chosen");
+                            return;
+                        }
+                    }
+                }
+                if (probe == 1) {
+                    final JsonObject c = myCard(probeBlocker);
+                    attackerClickIgnored = c != null && c.has("blocking") && chosen.isEmpty();
+                    probe = 2;
+                    act("card", probeBlocker, "select the blocking creature");
                     return;
                 }
-                for (final JsonElement ce : me.getAsJsonArray("battlefield")) {
-                    final JsonObject c = ce.getAsJsonObject();
-                    final int id = c.get("id").getAsInt();
-                    if (isCreature(c) && !c.get("tapped").getAsBoolean() && !c.has("blocking") && blockersClicked.add(id)) {
-                        act("card", id, "block with " + c.get("name").getAsString());
+                if (probe == 2) {
+                    final JsonObject c = myCard(probeBlocker);
+                    unassignWorked = c != null && !c.has("blocking") && !chosen.contains(probeBlocker);
+                    probe = 3;
+                }
+                // Choose a creature, then the attacker it blocks
+                if (!chosen.isEmpty()) {
+                    if (attempted.add("assign:" + turn() + ":" + chosen)) {
+                        act("card", attacker.get("id").getAsInt(), "block " + attacker.get("name").getAsString());
                         return;
+                    }
+                } else {
+                    for (final JsonElement ce : me.getAsJsonArray("battlefield")) {
+                        final JsonObject c = ce.getAsJsonObject();
+                        final int id = c.get("id").getAsInt();
+                        if (isCreature(c) && !c.get("tapped").getAsBoolean() && !c.has("blocking") && blockersClicked.add(id)) {
+                            act("card", id, "choose blocker " + c.get("name").getAsString());
+                            return;
+                        }
                     }
                 }
             }
             if (okEnabled) {
+                blocksConfirmedTurn = turn();
                 act("ok", -1, "done blocking");
             }
             return;
@@ -524,6 +603,7 @@ final class TbldBot implements WebSocket.Listener {
     String summary() {
         final List<String> last = actions.subList(Math.max(0, actions.size() - 25), actions.size());
         return "seat " + seat + ": turn " + maxTurn + ", life " + myLife + ", lands " + maxLands
+                + ", priority prompts idle/busy " + idlePriorityPrompts + "/" + busyPriorityPrompts
                 + ", prompt=" + prompt.replace('\n', ' ') + ", buttons=" + buttons
                 + "\n  last actions: " + String.join(" | ", last);
     }

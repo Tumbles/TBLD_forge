@@ -15,8 +15,9 @@ fs.mkdirSync("out", { recursive: true });
 function makeSeat(seat) {
   return {
     seat, aggressive: seat === 1, page: null, errors: [], actions: [],
-    landTurn: -1, attempted: new Set(), attackerClicked: new Set(), blockersClicked: new Set(),
-    lastSignature: "", lastChange: Date.now(), seen: { lands: 0, creature: false, attack: false, block: false, died: false, spell: false },
+    landTurn: -1, attempted: new Set(), blockersClicked: new Set(), blocksConfirmedTurn: -1,
+    lastSignature: "", lastChange: Date.now(),
+    seen: { lands: 0, creature: false, attack: false, block: false, plannedBlock: false, died: false, spell: false },
   };
 }
 const seats = [makeSeat(1), makeSeat(2)];
@@ -80,6 +81,9 @@ async function step(s) {
   if (v.me.battlefield.some(isCreature)) s.seen.creature = true;
   for (const c of [...v.me.battlefield, ...v.opp.battlefield]) {
     if (c.tags.includes("attacking")) s.seen.attack = true;
+  }
+  // The opponent's blockers are shown only once blocks are declared
+  for (const c of v.opp.battlefield) {
     if (c.tags.includes("blocking")) s.seen.block = true;
   }
   for (const c of [...v.me.graveyard, ...v.opp.graveyard]) {
@@ -103,6 +107,8 @@ async function step(s) {
 
   const b = Object.fromEntries(v.buttons.map(x => [x.text, !x.disabled]));
   const p = v.prompt.toLowerCase();
+  // One mulligan for a hand with fewer than 2 lands, so that a land-starved game doesn't fail the land check
+  if (b["Mulligan"] && !s.mulliganed && v.me.hand.filter(isLand).length < 2) { s.mulliganed = true; return click(s, button("Mulligan"), "mulligan", turn); }
   if (b["Keep"]) return click(s, button("Keep"), "keep", turn);
   if (b["Auto"]) return click(s, button("Auto"), "auto-pay", turn);
   // Forge suggests passing until the end of the turn; a player who wants to play declines
@@ -119,16 +125,24 @@ async function step(s) {
     return;
   }
   if (p.includes("block")) {
+    // A chosen blocker is marked as blocking at once, before OK confirms the blocks
+    if (s.blocksConfirmedTurn !== turn && v.me.battlefield.some(c => c.tags.includes("blocking"))) s.seen.plannedBlock = true;
     const attacker = v.opp.battlefield.find(c => c.tags.includes("attacking"));
     if (attacker && !s.aggressive) {
-      if (!s.attackerClicked.has(turn)) {
-        s.attackerClicked.add(turn);
-        return click(s, `[data-me="0"] .card[data-id="${attacker.id}"]`, "choose attacker " + attacker.name, turn);
+      // Choose a creature, then the attacker it blocks
+      const chosen = v.me.battlefield.find(c => c.chosen);
+      if (chosen) {
+        const key = `assign:${turn}:${chosen.id}`;
+        if (!s.attempted.has(key)) {
+          s.attempted.add(key);
+          return click(s, `[data-me="0"] .card[data-id="${attacker.id}"]`, `block ${attacker.name} with ${chosen.name}`, turn);
+        }
+      } else {
+        const blocker = v.me.battlefield.find(c => isCreature(c) && !c.tapped && !c.tags.includes("blocking") && !s.blockersClicked.has(`${turn}:${c.id}`));
+        if (blocker) { s.blockersClicked.add(`${turn}:${blocker.id}`); return click(s, `[data-me="1"] .card[data-id="${blocker.id}"]`, "choose blocker " + blocker.name, turn); }
       }
-      const blocker = v.me.battlefield.find(c => isCreature(c) && !c.tapped && !c.tags.includes("blocking") && !s.blockersClicked.has(c.id));
-      if (blocker) { s.blockersClicked.add(blocker.id); return click(s, `[data-me="1"] .card[data-id="${blocker.id}"]`, "block with " + blocker.name, turn); }
     }
-    if (b["OK"]) return click(s, button("OK"), "done blocking", turn);
+    if (b["OK"]) { s.blocksConfirmedTurn = turn; return click(s, button("OK"), "done blocking", turn); }
     return;
   }
   if (p.includes("target")) {
@@ -190,7 +204,8 @@ if (!failure) {
     [a.seen.lands >= 3 && d.seen.lands >= 3, "a player played fewer than 3 lands"],
     [a.seen.creature && d.seen.creature, "a player cast no creature"],
     [a.seen.attack, "no attack"],
-    [a.seen.block || d.seen.block, "no block"],
+    [a.seen.block, "seat 1 never saw a block"],
+    [d.seen.plannedBlock, "seat 2 never saw its chosen blocker marked as blocking before confirming"],
     [a.seen.died || d.seen.died, "no creature died"],
     [a.seen.spell || d.seen.spell, "no instant or sorcery resolved"],
   ];
