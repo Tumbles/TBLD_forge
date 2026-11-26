@@ -59,6 +59,14 @@
   .pile.lib { cursor: default; }
   .command { --ch: var(--pile-h); position: relative; display: flex; gap: 6px; }
   .emblem-slot { flex: none; display: flex; }
+  /* An effect shows the art box of its source card's picture. The box was measured on TBLD Searing
+     Touch (750x1046, art 631x462 at 58,118), and official card pictures put their art in about the same place. */
+  .effect { position: relative; flex: none; height: var(--pile-h); aspect-ratio: 631 / 462; border-radius: 5px; overflow: hidden;
+    border: 1px solid #4a5163; background-color: #2a2f3b; background-repeat: no-repeat;
+    background-size: 118.86% 226.41%; background-position: 48.74% 20.21%; box-shadow: 0 2px 6px rgba(0, 0, 0, .5); cursor: default; }
+  .effect .effect-initials { position: absolute; inset: 0; display: grid; place-items: center; z-index: -1;
+    font-size: 12px; font-weight: 700; color: var(--muted); }
+  .effect[style*="background-image"] .effect-initials { display: none; }
   .command .command-label { position: absolute; left: 50%; bottom: -2px; transform: translate(-50%, 100%); font-size: 10px; color: var(--muted); white-space: nowrap; }
   .pool { display: flex; gap: 4px; }
   .pool .ms { cursor: pointer; width: 26px; height: 26px; font-size: 13px; }
@@ -260,6 +268,8 @@
   #preview .pv-info { margin-top: 8px; background: rgba(14, 16, 21, .95); border: 1px solid var(--line); border-radius: 8px;
     padding: 6px 10px; font-size: 12.5px; line-height: 1.45; }
   #preview .pv-info:empty { display: none; }
+  #preview .pv-art { height: auto; width: 100%; border-radius: 10px; box-shadow: 0 10px 40px rgba(0, 0, 0, .8); }
+  #preview .pv-name { font-weight: 700; margin-bottom: 2px; }
 
   /* ---- popups ---- */
   #dialog, #viewer { display: none; position: fixed; inset: 0; z-index: 50; background: rgba(6, 8, 12, .62); }
@@ -539,6 +549,17 @@ let previewFor = null;
 function showPreview(c, e) {
   const pv = document.getElementById("preview");
   previewFor = c;
+  if (c.effect) {
+    // An effect: its art, larger, and what it does
+    const art = el("div", "effect pv-art");
+    if (c.img) art.style.backgroundImage = 'url("' + c.img + '")';
+    const about = el("div", "pv-info");
+    about.append(el("div", "pv-name", c.name || "Effect"), el("div", "", c.text || ""));
+    pv.replaceChildren(art, about);
+    pv.style.display = "block";
+    movePreview(e);
+    return;
+  }
   const big = el("div", "card" + (c.tapped ? " tapped" : ""));
   big.append(face(c));
   const info = el("div", "pv-info");
@@ -905,7 +926,7 @@ function renderPbar(bar, p, mine) {
   if (effects.length) {
     const cz = el("div", "command");
     cz.dataset.zone = "Effects";
-    for (const c of effects) cz.append(cardEl(c, "command", { noClick: true }));
+    for (const c of effects) cz.append(c.effect ? effectEl(c) : cardEl(c, "command", { noClick: true }));
     cz.append(el("div", "command-label", "Effects"));
     nodes.push(cz);
   }
@@ -927,6 +948,17 @@ function renderPbar(bar, p, mine) {
     nodes.push(backs);
   }
   bar.replaceChildren(...nodes);
+}
+/** An effect (such as "can't gain life this turn"): the art of the card that made it. Hovering shows what it does. */
+function effectEl(c) {
+  const d = el("div", "effect");
+  d.dataset.id = c.id;
+  d.dataset.name = c.name || "";
+  // Under the art, in case there is none or it fails to load
+  d.append(el("span", "effect-initials", (c.name || "").replace(/'s Effect$/, "").split(/[\s,-]+/).filter(w => w).slice(0, 2).map(w => w[0]).join("")));
+  if (c.img) d.style.backgroundImage = 'url("' + c.img + '")';
+  hoverable(d, c);
+  return d;
 }
 function countEl(label, n) { const s = el("span"); s.append(label + " ", el("b", "", String(n))); return s; }
 

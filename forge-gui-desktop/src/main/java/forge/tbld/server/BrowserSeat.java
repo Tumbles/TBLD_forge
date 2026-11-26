@@ -5,6 +5,8 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonNull;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
+import forge.ImageKeys;
+import forge.card.GamePieceType;
 import forge.card.MagicColor;
 import forge.card.mana.ManaAtom;
 import forge.deck.CardPool;
@@ -737,10 +739,34 @@ public final class BrowserSeat implements IRemote {
         j.addProperty("colors", colors(s));
         j.addProperty("set", s.getSetCode() == null ? "" : s.getSetCode());
         j.addProperty("token", cv.isToken());
-        final String img = imageUrl(cv, s);
+        // An effect (such as "can't gain life this turn") is shown with the art of the card that made it
+        final boolean effect = cv.getGamePieceType() == GamePieceType.EFFECT && !cv.isEmblem();
+        if (effect) {
+            j.addProperty("effect", true);
+        }
+        final String img = effect ? sourceImageUrl(s.getImageKey()) : imageUrl(cv, s);
         if (img != null) {
             j.addProperty("img", img);
         }
+    }
+
+    /**
+     * The picture of the card an effect was made by. Forge gives an effect its source's image key,
+     * such as "c:Searing Touch|TBLD|1"; keys of other kinds (tokens and the like) have no picture here.
+     */
+    static String sourceImageUrl(final String imageKey) {
+        if (imageKey == null || !imageKey.startsWith(ImageKeys.CARD_PREFIX)) {
+            return null;
+        }
+        final String[] parts = imageKey.substring(ImageKeys.CARD_PREFIX.length()).split("\\|");
+        if (parts[0].isBlank()) {
+            return null;
+        }
+        if (parts.length > 1 && "TBLD".equalsIgnoreCase(parts[1])) {
+            return TbldPictures.urlFor(parts[0], artIndex(imageKey));
+        }
+        return "https://api.scryfall.com/cards/named?format=image&version=normal&exact="
+                + URLEncoder.encode(parts[0], StandardCharsets.UTF_8);
     }
 
     private static String colors(final CardStateView s) {

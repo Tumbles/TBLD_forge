@@ -87,6 +87,12 @@ public class TbldPriorityAndPaymentTest extends AITest {
 
             // Stack items name their targets by id, so the browser can draw a line to each
             AssertJUnit.assertTrue("seat 2 never saw its id among a stack item's targets" + report, bot2.sawTargetIdOnStack);
+
+            // Searing Touch's "can't gain life" effect is marked as an effect, with Searing Touch's picture
+            final JsonObject effect = bot1.commandCards.get("Searing Touch's Effect");
+            AssertJUnit.assertNotNull("seat 1 never saw Searing Touch's effect; command zone: " + bot1.commandCards.keySet() + report, effect);
+            AssertJUnit.assertTrue("the effect is not marked as one: " + effect, effect.has("effect") && effect.get("effect").getAsBoolean());
+            AssertJUnit.assertEquals("/pics/TBLD%20Searing%20Touch.png", effect.has("img") ? effect.get("img").getAsString() : "");
         } finally {
             if (bot1 != null) {
                 bot1.close();

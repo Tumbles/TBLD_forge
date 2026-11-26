@@ -135,6 +135,24 @@ check((await page.locator("#preview .pv-info").textContent()).includes("Summonin
 await page.mouse.move(700, 495);
 check(!(await visible("#preview")), "the preview hides when the pointer leaves the card");
 
+// an effect is shown as the art of the card that made it, and hovering it shows what it does
+const withEffect = makeState();
+withEffect.players[1].command = [...withEffect.players[1].command, card(65, "Searing Touch's Effect", "", { set: "TBLD", effect: true,
+  img: "/pics/" + encodeURIComponent("TBLD Searing Touch.png"), text: "A player dealt damage this way can't gain life this turn." })];
+send({ t: "state", state: withEffect });
+await settle(400);
+const fx = page.locator('#half-opp .command[data-zone="Effects"] .effect[data-name="Searing Touch\'s Effect"]');
+check(await fx.count() === 1 && (await count('#half-opp .command[data-zone="Effects"] .card')) === 0, "an effect is shown as art, not as a card");
+check((await fx.evaluate(e => getComputedStyle(e).backgroundImage)).includes("Searing%20Touch"), "the art comes from the card that made it");
+const fxBox = await fx.boundingBox();
+check(Math.abs(fxBox.width / fxBox.height - 631 / 462) < 0.05, "the effect has the art box's shape");
+await fx.hover();
+check(await visible("#preview .pv-art") && (await page.locator("#preview .pv-info").textContent()).includes("can't gain life"), "hovering an effect shows its art and what it does");
+await page.screenshot({ path: path.join(here, "out/ui-effect.png") });
+await page.mouse.move(700, 495);
+send({ t: "state", state: makeState() });
+await settle();
+
 // stack
 check(await count("#stack .stack-item.spell .card") === 1, "a spell on the stack is shown as a card");
 check(await count("#stack .stack-item.ability") === 1 && (await page.locator("#stack .stack-item.ability .si-kind").textContent()).startsWith("Triggered ability"),
