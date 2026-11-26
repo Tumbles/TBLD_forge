@@ -98,8 +98,22 @@ await settle(300);
 
 check(await count('#half-me [data-row="creatures"] .card[data-id="10"]') === 1, "creatures are in the front row");
 check(await count('#half-me [data-row="back"] .card[data-id="11"]') === 1, "a noncreature, nonland permanent is in the back row");
-check(await count('#half-me [data-row="back"] .landstack') === 2, "matching lands are stacked: untapped and tapped Mountains in two stacks");
-check((await page.locator('#half-me .landstack').first().textContent()).includes("×3"), "the untapped stack shows its count");
+check(await count('#half-me [data-row="back"] .landstack') === 1, "matching lands are stacked, tapped and untapped together");
+check((await page.locator('#half-me .landstack').first().textContent()).includes("×5"), "the stack shows its count");
+const stackIds = await page.locator('#half-me .landstack .card').evaluateAll(xs => xs.map(x => x.dataset.id));
+check(JSON.stringify(stackIds) === '["4","5","1","2","3"]', "tapped lands are at the back of the stack");
+// two clicks on the same spot tap two lands: after the first, the next untapped land is under the pointer
+const topBox = await page.locator('#half-me .card[data-id="3"] .face').boundingBox();
+const spot = { x: topBox.x + topBox.width / 2, y: topBox.y + topBox.height / 2 };
+const oneMoreTapped = makeState();
+oneMoreTapped.players[0].battlefield.find(c => c.id === 3).tapped = true;
+send({ t: "state", state: oneMoreTapped });
+await settle(300);
+check(await count('#half-me [data-row="back"] .landstack') === 1, "tapping a land keeps it in its stack");
+const under = await page.evaluate(({ x, y }) => { const c = document.elementFromPoint(x, y); return c && c.closest(".card") ? c.closest(".card").dataset.id : null; }, spot);
+check(under === "2", "after the top land is tapped, the next untapped one is in the same spot (" + under + ")");
+send({ t: "state", state: makeState() });
+await settle(300);
 const tappedBox = await page.locator('#half-me .card[data-id="4"] .face').boundingBox();
 check(tappedBox && tappedBox.width > tappedBox.height, "a tapped card is turned sideways");
 const ogre = await page.locator('#half-me .card[data-id="12"] .face').boundingBox();
@@ -339,6 +353,18 @@ call("updateButtons", [{ player: 1 }, "OK", "End Turn", true, true, false]);
 await settle();
 await page.click('#buttons button:text-is("OK")');
 check(!!(await waitFor(() => received.filter(m => m.t === "act" && m.m === "ok").length === 2, "a second OK")), "new buttons can be pressed again");
+// while an action can be undone, End Turn keeps its place and Undo comes after it
+call("updateButtons", [{ player: 1 }, "OK", "Undo (1)", true, true, false]);
+await settle();
+check(JSON.stringify(await page.locator("#buttons button").allTextContents()) === '["OK","End Turn","Undo (1)"]', "End Turn stays beside OK while Undo is offered");
+n = received.length;
+await page.click('#buttons button:text-is("End Turn")');
+check(!!(await waitFor(() => received.slice(n).find(m => m.t === "act" && m.m === "yieldAll" && m.id === 1), "End Turn")), "End Turn turns on Yield all while Undo is offered");
+call("updateButtons", [{ player: 1 }, "OK", "Undo (1)", true, true, false]);
+await settle();
+n = received.length;
+await page.click('#buttons button:text-is("Undo (1)")');
+check(!!(await waitFor(() => received.slice(n).find(m => m.t === "act" && m.m === "cancel"), "Undo")), "Undo still undoes");
 call("awaitNextInput", []);
 await settle(400);
 check(await page.locator("#decision").evaluate(e => e.classList.contains("waiting")) && (await page.locator("#prompt").textContent()) === "Waiting for opponent...",

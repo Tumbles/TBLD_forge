@@ -173,8 +173,8 @@
   .attach-group { position: relative; display: flex; flex: none; }
   .attach-group > .card.attached { margin-right: calc(var(--ch) * -.55); z-index: 0; }
   .attach-group > .card:last-child { z-index: 1; }
-  .landstack { position: relative; flex: none; height: var(--ch); width: calc(var(--slot) + (var(--n) - 1) * 13px); --slot: calc(var(--ch) * .716); }
-  .landstack.tapped { --slot: var(--ch); }
+  /* A land stack's width is set by landStack(): its tapped cards are wider */
+  .landstack { position: relative; flex: none; height: var(--ch); }
   .landstack > .card { position: absolute; top: 0; left: calc(var(--i) * 13px); }
   .landstack > .stackcount { position: absolute; right: -4px; top: -6px; z-index: 30; }
 
@@ -746,6 +746,10 @@ function renderButtons(l1, l2, en1, en2) {
   const b = document.getElementById("buttons");
   b.replaceChildren();
   if (l1) { const x = el("button", "btn primary", l1); x.disabled = !en1; x.onclick = () => press("ok"); b.append(x); }
+  // While an action can be undone, Forge's priority prompt shows Undo in End Turn's place. End Turn
+  // stays in its usual place (it turns on Yield all) and Undo comes after it.
+  const undo = l2 && /^Undo\b/.test(l2);
+  if (undo) { const x = el("button", "btn", "End Turn"); x.onclick = () => press("yieldAll", 1); b.append(x); }
   if (l2) { const x = el("button", "btn", l2); x.disabled = !en2; x.onclick = () => press("cancel"); b.append(x); }
   renderDecision();
 }
@@ -754,13 +758,13 @@ function renderButtons(l1, l2, en1, en2) {
  * second press (or a second tap of the space bar) can't pass the next priority by accident. If the
  * engine sends nothing (the press had no effect), they come back after a second.
  */
-function press(m) {
+function press(m, id) {
   const buttons = [...document.querySelectorAll("#buttons button")];
   const enabled = buttons.map(x => !x.disabled);
   buttons.forEach(x => { x.disabled = true; x.blur(); });
   if (spentTimer) clearTimeout(spentTimer);
   spentTimer = setTimeout(() => { spentTimer = null; buttons.forEach((x, i) => { if (x.isConnected) x.disabled = !enabled[i]; }); }, 1000);
-  act(m);
+  act(m, id);
 }
 
 // The space bar confirms the open popup, or presses the decision panel's main button (OK, pass
@@ -872,26 +876,35 @@ function emblemSlot(c, mine) {
 const spacers = new Map();
 function spacerFor(sec) { if (!spacers.has(sec)) spacers.set(sec, el("div", "spacer")); return spacers.get(sec); }
 
-/** Lands in groups of identical ones: same name, same state, nothing attached. */
+/**
+ * Lands in groups of identical ones: same name, same state, nothing attached. Tapped and untapped
+ * lands share a stack, tapped ones at the back, so tapping the top land leaves the next untapped one
+ * where it was (two clicks on the same spot tap two lands).
+ */
 function landStacks(lands, attachments) {
-  const chosen = chosenCardIds(), selectable = selectableCardIds();
+  const chosen = chosenCardIds();
   const groups = new Map();
   for (const c of lands) {
     const key = attachments.has(c.id) ? "single:" + c.id
-      : JSON.stringify([c.name, c.tapped, chosen.has(c.id), selectable.has(c.id), c.counters || null, c.damage || 0, c.attacking, c.blocking, c.token]);
+      : JSON.stringify([c.name, chosen.has(c.id), c.counters || null, c.damage || 0, c.attacking, c.blocking, c.token]);
     if (!groups.has(key)) groups.set(key, []);
     groups.get(key).push(c);
   }
-  return [...groups.values()];
+  return [...groups.values()].map(g => [...g.filter(c => c.tapped), ...g.filter(c => !c.tapped)]);
 }
 
 const landStackCache = new Map();
 function landStack(group) {
-  const ids = group.map(c => c.id).join(",");
+  // Keyed by its lands, not their order, so tapping one keeps the stack element (and the turning animation)
+  const ids = group.map(c => c.id).sort((a, b) => a - b).join(",");
   let st = landStackCache.get(ids);
   if (!st) { st = el("div", "landstack"); landStackCache.set(ids, st); }
-  st.classList.toggle("tapped", !!group[0].tapped);
-  st.style.setProperty("--n", group.length);
+  // Wide enough for the last tapped card (sideways) and the top card
+  const n = group.length, t = group.filter(c => c.tapped).length;
+  const ends = [];
+  if (t) ends.push(`calc(${t - 1} * 13px + var(--ch))`);
+  if (t < n) ends.push(`calc(${n - 1} * 13px + var(--ch) * .716)`);
+  st.style.width = ends.length > 1 ? `max(${ends.join(", ")})` : ends[0];
   const nodes = group.map((c, i) => { const x = cardEl(c, "bf"); x.style.setProperty("--i", i); return x; });
   let count = st.querySelector(":scope > .stackcount");
   if (!count) count = el("div", "badge stackcount");
