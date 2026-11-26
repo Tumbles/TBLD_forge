@@ -153,6 +153,8 @@ final class TbldBot implements WebSocket.Listener {
     volatile boolean yieldEndedEarly;
     /** Priority prompts in the turn this player switched "Yield all" off again. */
     volatile int promptsAfterYieldOff;
+    /** A stack item that targeted this player carried this player's id in its targetPlayers. */
+    volatile boolean sawTargetIdOnStack;
 
     TbldBot(final HttpClient http, final int port, final int seat, final boolean aggressive) throws Exception {
         this(http, port, seat, aggressive, 0);
@@ -330,6 +332,18 @@ final class TbldBot implements WebSocket.Listener {
         gameOver = s.get("gameOver").getAsBoolean();
         if (turnOnePlayer < 0 && s.get("turn").getAsInt() == 1 && s.has("activePlayer")) {
             turnOnePlayer = s.get("activePlayer").getAsInt();
+        }
+        if (s.has("stack")) {
+            for (final JsonElement se : s.getAsJsonArray("stack")) {
+                final JsonObject item = se.getAsJsonObject();
+                if (item.has("targetPlayers")) {
+                    for (final JsonElement t : item.getAsJsonArray("targetPlayers")) {
+                        if (t.getAsInt() == s.get("me").getAsInt()) {
+                            sawTargetIdOnStack = true;
+                        }
+                    }
+                }
+            }
         }
         if (yieldTurn >= 0 && s.has("yieldAll")) {
             final boolean yielding = s.get("yieldAll").getAsBoolean();

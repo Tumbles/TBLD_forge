@@ -477,19 +477,30 @@ public final class BrowserSeat implements IRemote {
         actions.execute(() -> {
             final IGameController controller = retired ? null : getController();
             if (controller != null) {
-                controller.applyYieldUpdate(new YieldUpdate.SetYieldPref(FPref.YIELD_HOLD_PRIORITY, String.valueOf(holdPriority)));
+                setPref(controller, FPref.YIELD_HOLD_PRIORITY, String.valueOf(holdPriority));
                 // "Yield all" passes everything until the end of the turn: an opponent's spell or attack does not
                 // end it (Forge's defaults do); the player switches it off to respond
-                controller.applyYieldUpdate(new YieldUpdate.SetYieldPref(FPref.YIELD_INTERRUPT_ON_OPPONENT_SPELL, "false"));
-                controller.applyYieldUpdate(new YieldUpdate.SetYieldPref(FPref.YIELD_INTERRUPT_ON_ATTACKERS, "false"));
+                setPref(controller, FPref.YIELD_INTERRUPT_ON_OPPONENT_SPELL, "false");
+                setPref(controller, FPref.YIELD_INTERRUPT_ON_ATTACKERS, "false");
                 // Forge's "auto-pass if no actions": pass priority when nothing can be played or activated.
                 // Forge ignores mana abilities there; the TBLD pref counts them, and is set first so the
                 // sitting prompt is judged with both.
-                controller.applyYieldUpdate(new YieldUpdate.SetYieldPref(FPref.YIELD_AUTO_PASS_COUNTS_MANA_ABILITIES, String.valueOf(autoPassCountsMana)));
-                controller.applyYieldUpdate(new YieldUpdate.SetYieldPref(FPref.YIELD_AUTO_PASS_NO_ACTIONS, String.valueOf(autoPass)));
+                setPref(controller, FPref.YIELD_AUTO_PASS_COUNTS_MANA_ABILITIES, String.valueOf(autoPassCountsMana));
+                setPref(controller, FPref.YIELD_AUTO_PASS_NO_ACTIONS, String.valueOf(autoPass));
                 applyStops(controller);
             }
         });
+    }
+
+    /**
+     * Sets one of the controller's preferences, only if it changes: a change can make Forge rescan
+     * the player's possible actions from this thread while the game runs, so unchanged values are
+     * not sent again each time the browser sends its settings.
+     */
+    private static void setPref(final IGameController controller, final FPref pref, final String value) {
+        if (!value.equals(controller.getYieldController().getStringPref(pref))) {
+            controller.applyYieldUpdate(new YieldUpdate.SetYieldPref(pref, value));
+        }
     }
 
     /**
@@ -947,19 +958,26 @@ public final class BrowserSeat implements IRemote {
                 if (si.getSourceCard() != null) {
                     s.add("source", cardRef(si.getSourceCard()));
                 }
+                // Target names for the text, and ids so the client can draw a line to each target
                 final JsonArray targets = new JsonArray();
+                final JsonArray targetCards = new JsonArray();
+                final JsonArray targetPlayers = new JsonArray();
                 if (si.getTargetCards() != null) {
                     for (final CardView t : si.getTargetCards()) {
                         targets.add(cardRef(t).get("name"));
+                        targetCards.add(t.getId());
                     }
                 }
                 if (si.getTargetPlayers() != null) {
                     for (final PlayerView t : si.getTargetPlayers()) {
                         targets.add(t.getName());
+                        targetPlayers.add(t.getId());
                     }
                 }
                 if (!targets.isEmpty()) {
                     s.add("targets", targets);
+                    s.add("targetCards", targetCards);
+                    s.add("targetPlayers", targetPlayers);
                 }
                 st.add(s);
             }
@@ -968,9 +986,9 @@ public final class BrowserSeat implements IRemote {
 
         final JsonArray log = new JsonArray();
         if (gv.getGameLog() != null) {
-            // The last 30 entries, oldest first
+            // The last 100 entries, oldest first (the browser shows them in its log popup)
             final List<GameLogEntry> entries = gv.getGameLog().getAllEntries();
-            for (int i = Math.max(0, entries.size() - 30); i < entries.size(); i++) {
+            for (int i = Math.max(0, entries.size() - 100); i < entries.size(); i++) {
                 log.add(entries.get(i).message());
             }
         }

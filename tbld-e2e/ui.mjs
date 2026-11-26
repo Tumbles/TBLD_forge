@@ -79,7 +79,7 @@ function makeState(over = {}) {
         battlefield: [mountain(40), creature(41, "Hill Giant", 3, 3, { blocking: "Gray Ogre", damage: 2 })] },
     ],
     stack: [
-      { id: 100, text: "Shock deals 2 damage to target creature.", ability: false, trigger: false, controller: 2, source: ref(shockCard), targets: ["Gray Ogre"] },
+      { id: 100, text: "Shock deals 2 damage to target creature.", ability: false, trigger: false, controller: 2, source: ref(shockCard), targets: ["Gray Ogre"], targetCards: [12], targetPlayers: [] },
       { id: 101, text: "Raging Goblin: when it attacks, it deals 1 damage.", ability: true, trigger: true, controller: 1, source: ref(creature(10, "Raging Goblin", 1, 1)) },
     ],
     log: ["Turn 3 (Player 1)", "Player 1 cast Shock targeting Hill Giant"],
@@ -144,34 +144,55 @@ const abilityH = (await page.locator("#stack .stack-item.ability .card").boundin
 check(spellH > abilityH * 1.5, "spells are shown larger than abilities");
 check((await page.locator("#stack .stack-item.spell .si-targets").textContent()).includes("Gray Ogre"), "a stack item lists its targets");
 
-// the stack has a set size and scrolls; the toggle between stack and log swaps which one is small
+// the stack takes the sidebar below the decision panel and scrolls; the log is a popup
 const box = sel => page.locator(sel).evaluate(e => ({ h: e.clientHeight, sh: e.scrollHeight, top: e.getBoundingClientRect().top }));
-const spellItemH = (await page.locator("#stack .stack-item.spell").boundingBox()).height;
-const smallStack = await box("#stack");
-check(Math.abs(smallStack.h - (1.5 * spellItemH + 8)) <= 4, `the stack shows one and a half spells (${smallStack.h}px for ${spellItemH}px spells)`);
-check(smallStack.sh > smallStack.h, "a stack taller than its area scrolls");
+const stackArea = await box("#stack");
+check(await count("#side #log") === 0, "the log is not in the sidebar");
 const bigStack = makeState();
-bigStack.stack = [...bigStack.stack, ...bigStack.stack.map(s => ({ ...s, id: s.id + 10 })), ...bigStack.stack.map(s => ({ ...s, id: s.id + 20 }))];
+bigStack.stack = Array.from({ length: 6 }, (_, k) => bigStack.stack.map(s => ({ ...s, id: s.id + 10 * k }))).flat();
 send({ t: "state", state: bigStack });
 await settle();
-check((await box("#stack")).h === smallStack.h, "the stack area keeps its size as the stack grows");
+const bigArea = await box("#stack");
+check(bigArea.h === stackArea.h && bigArea.sh > bigArea.h, "a growing stack keeps its area and scrolls");
 const longLog = makeState({ log: Array.from({ length: 30 }, (_, i) => "Log line " + (i + 1)) });
 send({ t: "state", state: longLog });
 await settle();
-const logSmallStack = await box("#log");
-await page.screenshot({ path: path.join(here, "out/ui-stack-small.png") });
-await page.click("#split-toggle");
+await page.click("#log-open");
 await settle();
-await page.screenshot({ path: path.join(here, "out/ui-log-small.png") });
-const lineH = await page.locator("#log div").first().evaluate(e => e.getBoundingClientRect().height);
-const smallLog = await box("#log");
-check(Math.abs((smallLog.h - 20) / lineH - 5) < 0.5, `the toggle shrinks the log to five lines (${smallLog.h}px, lines of ${lineH}px)`);
-check((await box("#stack")).h > smallStack.h + 100 && logSmallStack.h > smallLog.h + 100, "and gives the rest to the stack");
-check(await page.locator("#log").evaluate(e => e.scrollTop + e.clientHeight >= e.scrollHeight - 4), "the small log still shows the newest lines");
-check(await page.evaluate(() => localStorage.getItem("tbld.sidebarSplit")) === "log-small", "the choice is remembered");
-await page.click("#split-toggle");
+check(await visible("#viewer #log") && (await page.locator("#viewer .p-title").textContent()) === "Game log", "the Game log button opens the log as a popup");
+check(await count("#viewer #log div") === 30, "the popup shows the log");
+check(await page.locator("#log").evaluate(e => e.scrollTop + e.clientHeight >= e.scrollHeight - 4), "the log opens at the newest line");
+send({ t: "state", state: makeState({ log: [...longLog.log, "Log line 31"] }) });
 await settle();
-check((await box("#stack")).h === smallStack.h && (await box("#log")).h === logSmallStack.h, "the toggle switches back");
+check((await page.locator("#log div").last().textContent()) === "Log line 31", "the open log follows the game");
+await page.screenshot({ path: path.join(here, "out/ui-log.png") });
+await page.click('#viewer button:text-is("Close")');
+check(!(await visible("#viewer")), "the log popup closes");
+send({ t: "state", state: makeState() });
+await settle();
+
+// lines from stack items to their targets, numbered at both ends
+const ringAt = end => page.locator(`#arrows circle[data-end="${end}"]`).first().evaluate(c => ({ x: +c.getAttribute("cx"), y: +c.getAttribute("cy") }));
+check(await count("#arrows path") === 1, "a stack item with a target has a line to it (and one without has none)");
+const ogreBox = await page.locator('#half-me .card[data-id="12"]').boundingBox();
+const toCard = await ringAt("target");
+check(toCard.x >= ogreBox.x && toCard.x <= ogreBox.x + ogreBox.width && Math.abs(toCard.y - ogreBox.y) < 20, "the line ends at the targeted card");
+const shockItem = await page.locator('#stack .stack-item[data-stack="100"]').boundingBox();
+const fromItem = await ringAt("stack");
+check(Math.abs(fromItem.x - shockItem.x) < 12 && fromItem.y >= shockItem.y && fromItem.y <= shockItem.y + shockItem.height, "the line starts at the stack item");
+check((await page.locator("#arrows text").allTextContents()).every(t => t === "1") && (await count("#arrows text")) === 2, "both ends carry the item's number");
+await page.screenshot({ path: path.join(here, "out/ui-target-lines.png") });
+const atPlayer = makeState();
+atPlayer.stack = [{ ...atPlayer.stack[1] }, { ...atPlayer.stack[0], targets: ["Player 2"], targetCards: [], targetPlayers: [2] }];
+send({ t: "state", state: atPlayer });
+await settle();
+const who = await page.locator('.who[data-player-name="2"]').boundingBox();
+const toPlayer = await ringAt("target");
+check(toPlayer.x >= who.x && toPlayer.x <= who.x + who.width && toPlayer.y >= who.y && toPlayer.y <= who.y + who.height, "a line to a player ends at their name");
+check((await page.locator("#arrows text").first().textContent()) === "2", "the number is the item's place on the stack");
+send({ t: "state", state: makeState({ stack: [] }) });
+await settle();
+check(await count("#arrows path") === 0, "the lines go when the stack is empty");
 send({ t: "state", state: makeState() });
 await settle();
 

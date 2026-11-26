@@ -84,6 +84,9 @@ public class TbldPriorityAndPaymentTest extends AITest {
             AssertJUnit.assertTrue("seat 1 cast nothing" + report, bot1.promptsAfterCast >= 1);
             AssertJUnit.assertEquals("seat 1 (hold priority off) got priority over its own spell" + report, 0, bot1.heldAfterCast);
             AssertJUnit.assertTrue("seat 2 (hold priority on) never got priority over its own spell" + report, bot2.heldAfterCast >= 1);
+
+            // Stack items name their targets by id, so the browser can draw a line to each
+            AssertJUnit.assertTrue("seat 2 never saw its id among a stack item's targets" + report, bot2.sawTargetIdOnStack);
         } finally {
             if (bot1 != null) {
                 bot1.close();
