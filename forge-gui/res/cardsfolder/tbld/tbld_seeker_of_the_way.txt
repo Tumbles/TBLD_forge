@@ -1,0 +1,8 @@
+Name:Seeker of the Way
+ManaCost:1 W
+Types:Creature Human Monk
+PT:2/2
+K:Prowess
+T:Mode$ SpellCast | ValidCard$ Card.nonCreature | ValidActivatingPlayer$ You | Execute$ TrigPump | TriggerZones$ Battlefield | TriggerDescription$ Whenever you cast a noncreature spell, CARDNAME gains lifelink until end of turn.
+SVar:TrigPump:DB$ Pump | Defined$ Self | KW$ Lifelink | SpellDescription$ CARDNAME gains lifelink until end of turn.
+Oracle:Prowess\nWhenever you cast a noncreature spell, this gains lifelink this turn.

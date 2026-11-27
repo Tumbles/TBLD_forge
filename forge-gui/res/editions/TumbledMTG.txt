@@ -366,6 +366,107 @@ Type=Custom_Set
 360 R Drag to the Bottom
 361 U Stifle
 362 R Twist of Fate
+363 C Abbot of Keral Keep
+364 C Abzan Ascendancy
+365 C Aethergeode Miner
+366 C Aetheric Amplifier
+367 C Aethertorch Renegade
+368 U Akroan Conscriptor
+369 C Apex of Power
+370 C Arcane Artisan
+371 U Artful Maneuver
+372 C As Foretold
+373 C Atog
+374 U Axis of Mortality
+375 C Basking Rootwalla
+376 C Become Immense
+377 C Bloodtithe Harvester
+378 U Bone Shards
+379 C Butcher of the Horde
+380 C Cabal Therapist
+381 C Campus Renovation
+382 C Captains Claws
+383 C Clever Lumimancer
+384 U Consulate Crackdown
+385 U Consulate Turret
+386 C Crash Through
+387 C Deeproot Waters
+388 C Desolation Twin
+389 C Despoiler of Souls
+390 U Dread Shade
+391 U Dream Devourer
+392 C Drownyard Temple
+393 C Echoing Decay
+394 C Electrostatic Pummeler
+395 C Ereboss Intervention
+396 U Essence Infusion
+397 C Evernight Shade
+398 C Felidar Sovereign
+399 C Fire Giants Fury
+400 C Firedrinker Satyr
+401 C Flamewake Phoenix
+402 C Fleshtaker
+403 U Followed Footsteps
+404 U Forerunner of Slaughter
+405 C Furious Spinesplitter
+406 C Ghitu Lavarunner
+407 C Ghor-Clan Rampager
+408 C Ghost Ark
+409 U Glorious End
+410 C Gnawing Vermin
+411 C Goblin Sledder
+412 C Grasp of Fate
+413 U Hard Evidence
+414 C Haunted Dead
+415 U Havoc Demon
+416 U Highspire Infusion
+417 U Hydras Growth
+418 C Jeskai Ascendancy
+419 C Jolted Awake
+420 C Kiki-Jiki Mirror Breaker
+421 C Kiln Fiend
+422 C Lathnu Hellion
+423 C Leonin Arbiter
+424 C Magus of the Tabernacle
+425 C Magus of the Vineyard
+426 U Merrow Commerce
+427 C Near-Death Experience
+428 U Noose Constrictor
+429 C Ojutai Exemplars
+430 U Paladin of Atonement
+431 C Plasma Bolt
+432 C Poison Dart Frog
+433 C Putrid Leech
+434 C Pyretic Charge
+435 C Rafiq of the Many
+436 C Rally the Peasants
+437 C Rebellious Strike
+438 C Reckless Bushwhacker
+439 C Redress Fate
+440 C Release to Memory
+441 C Riddle Gate Gargoyle
+442 U Righteous Authority
+443 U Rise to Glory
+444 C Rubblebelt Rioters
+445 C Savage Knuckleblade
+446 C Scholar of the Ages
+447 C Seance
+448 C Seeker of the Way
+449 C Skirsdag High Priest
+450 C Smothering Abomination
+451 C Splendid Reclamation
+452 C Stasis
+453 U Stitchwing Skaab
+454 C Stromkirk Condemned
+455 U Strongarm Monk
+456 C Tajic Blade of the Legion
+457 C Talrand Sky Summoner
+458 C Targ Nar Demon-Fang Gnoll
+459 C Urabrask Heretic Praetor
+460 C Urtet Remnant of Memnarch
+461 C Valorous Stance
+462 C Wail of War
+463 U Warren Pilferers
 F1 L Forest
 F2 L Forest
 F3 L Forest

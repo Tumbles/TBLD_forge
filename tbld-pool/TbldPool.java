@@ -70,6 +70,20 @@ public class TbldPool {
     static final Map<String, String> BASIC_LETTER = Map.of("Plains", "P", "Island", "I", "Swamp", "S", "Mountain", "M", "Forest", "F", "Wastes", "W");
     static final Pattern EMBLEM_PIC = Pattern.compile("!Player (\\w+) Emblem");
     static final List<String> FIELDS = List.of("cost", "type", "pt", "text", "rarity", "color", "tags", "layout", "back", "related", "backface");
+    static final Set<String> TYPE_WORDS = Set.of("Legendary", "Basic", "Snow", "World", "Flash", "Token", "Artifact", "Creature", "Enchantment",
+        "Land", "Sorcery", "Instant", "Kindred", "Tribal", "Battle", "Planeswalker", "Emblem");
+
+    /** A misspelt card type (a word before the dash that is no card type or supertype), or null. */
+    static String typeProblem(final Entry e) {
+        for (final String face : e.get("type").split(" // ")) {
+            for (final String w : face.split(" - ")[0].trim().split(" ")) {
+                if (!w.isEmpty() && !TYPE_WORDS.contains(w)) {
+                    return "the type line \"" + e.get("type") + "\" has \"" + w + "\", which is no card type";
+                }
+            }
+        }
+        return null;
+    }
 
     public static void main(final String[] args) throws Exception {
         System.setOut(new java.io.PrintStream(new java.io.FileOutputStream(java.io.FileDescriptor.out), true, StandardCharsets.UTF_8));
@@ -215,6 +229,11 @@ public class TbldPool {
             cards.size(), cards.values().stream().filter(Entry::isBasic).count(), tokens.size());
         reportChanges("card", oldCards, cards);
         reportChanges("token", oldTokens, tokens);
+        for (final Entry e : cards.values()) {
+            if (typeProblem(e) != null) {
+                warnings.add(e.name + ": " + typeProblem(e));
+            }
+        }
         warnings.forEach(w -> System.out.println("Warning: " + w));
         if (!args.contains("--no-pics")) {
             importPictures(Paths.get(src.getProperty("pictures")), cards, tokens);
@@ -762,9 +781,17 @@ public class TbldPool {
             t = t.replace(shortName, "this");
         }
         t = t.replaceAll("\\{([0-9WUBRGCXSE]+)\\}", "$1").replaceAll("\\{([WUBRG2])/([WUBRGP])\\}", "$1/$2").replace("{T}", "T").replace("{Q}", "Q");
-        t = t.replace("onto the battlefield", "into play").replace("enters the battlefield", "enters").replace("on the battlefield", "in play");
+        t = t.replace("onto the battlefield", "into play").replace("enters the battlefield", "enters").replace("on the battlefield", "in play")
+            .replace("the battlefield", "play");
         t = t.replaceAll("\\byou gain\\b", "gain").replaceAll("\\bYou gain\\b", "Gain");
-        t = t.replace("instant or sorcery", "sorcery").replace("instant and sorcery", "sorcery").replace("Instant", "Flash sorcery").replace("instant", "flash sorcery");
+        t = t.replace("instant or sorcery", "sorcery").replace("instant and sorcery", "sorcery").replace("instant and/or sorcery", "sorcery")
+            .replace("Instant", "Flash sorcery").replace("instant", "flash sorcery");
+        // Brett's templating: "this turn", "at your upkeep", "at the next end step", no planeswalkers
+        t = t.replace("until end of turn", "this turn").replace("Until end of turn", "This turn");
+        t = t.replaceAll("(?i)at the beginning of combat on your turn", "at your beginning of combat step");
+        t = t.replaceAll("(?i)at the beginning of (your|each opponent's|each player's|each|the next|the|that player's|enchanted player's) ", "at $1 ");
+        t = t.replace(" or planeswalker", "").replace(", or planeswalker", "").replace(" and/or planeswalker", "").replace(" or battle", "");
+        t = t.replace("Activate only as a sorcery.", "Can't be activated at flash speed.");
         return normCompare(t);
     }
 
@@ -772,7 +799,8 @@ public class TbldPool {
         return t.replaceAll("\\s*\\([^)]*\\)", "").replaceAll("[’']", "'").replaceAll("[“”]", "\"").replaceAll("[—–]", "-")
             .replaceAll("(?i)\\bthis (card|creature|spell|land|artifact|enchantment|permanent|aura|equipment)\\b", "this")
             .replaceAll("\\ban (sorcery|flash)", "a $1").replaceAll("\\s+", " ").trim().toLowerCase(Locale.ROOT).replaceAll("[.,]", "")
-            .replace("owner's", "owners");
+            .replace("owner's", "owners").replaceAll("(\\d+/\\d+ [a-z ]+?) (creature )?tokens?\\b", "$1 token")
+            .replace("at at ", "at ");
     }
 
     static boolean sameText(final Entry e, final Ref r) {
@@ -809,7 +837,7 @@ public class TbldPool {
                 r.state = "todo";
                 if (withRefs) {
                     r.ref = ref(e);
-                    r.auto = r.ref != null && !e.multiFace() && sameText(e, r.ref);
+                    r.auto = r.ref != null && !e.multiFace() && typeProblem(e) == null && sameText(e, r.ref);
                 }
             } else {
                 r.problems = compare(s, cards, tokens);
@@ -973,6 +1001,10 @@ public class TbldPool {
             }
             if (e.multiFace()) {
                 System.out.println(n + ": has several faces; write it by hand");
+                continue;
+            }
+            if (typeProblem(e) != null) {
+                System.out.println(n + ": " + typeProblem(e) + "; Brett must fix the card first");
                 continue;
             }
             final Ref r = ref(e);

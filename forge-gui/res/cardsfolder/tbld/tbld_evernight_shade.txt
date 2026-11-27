@@ -1,0 +1,7 @@
+Name:Evernight Shade
+ManaCost:3 B
+Types:Creature Spirit
+PT:1/1
+K:Undying
+A:AB$ Pump | Cost$ B | Defined$ Self | NumAtt$ +1 | NumDef$ +1 | SpellDescription$ CARDNAME gets +1/+1 until end of turn.
+Oracle:B: This gets +1/+1 this turn.\nUndying (When this dies, if it had no +1/+1 counters, return it to play under its owner's control with a +1/+1 counter.)
