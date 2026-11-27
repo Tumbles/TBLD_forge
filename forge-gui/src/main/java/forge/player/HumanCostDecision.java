@@ -1296,8 +1296,11 @@ public class HumanCostDecision extends CostDecisionMakerBase {
         String type = cost.getType();
 
         if (cost.payCostFromSource()) {
+            // TBLD: "Sacrifice this" in an activated ability's cost (a Blood token's) is not confirmed;
+            // activating the ability is the decision. Costs paid for an effect ("unless ...") still ask.
+            final boolean ownActivatedCost = ability.isActivatedAbility() && !isEffect();
             if (source.getController() == ability.getActivatingPlayer() && source.canBeSacrificedBy(ability, isEffect()) &&
-                    (mandatory || controller.confirmPayment(cost, Localizer.getInstance().getMessage("lblSacrificeCardConfirm", source.getTranslatedName()), ability))) {
+                    (mandatory || ownActivatedCost || controller.confirmPayment(cost, Localizer.getInstance().getMessage("lblSacrificeCardConfirm", source.getTranslatedName()), ability))) {
                 return PaymentDecision.card(source);
             }
             return null;

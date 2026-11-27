@@ -133,6 +133,8 @@ final class TbldBot implements WebSocket.Listener {
     private volatile boolean castPending;
     /** Priority prompts right after a cast, with this player's own spell on top of the stack. */
     volatile int heldAfterCast;
+    /** Priority prompts right after a cast, with this player's own triggered ability on top of the stack. */
+    volatile int triggerAfterCast;
     /** Priority prompts right after a cast. */
     volatile int promptsAfterCast;
     /** Each optional-cost question: its arguments, and the mana this player had (untapped lands and pool). */
@@ -439,9 +441,13 @@ final class TbldBot implements WebSocket.Listener {
             promptsAfterCast++;
             if (s != null && s.has("stack")) {
                 final JsonArray st = s.getAsJsonArray("stack");
-                if (!st.isEmpty() && st.get(0).getAsJsonObject().has("controller")
-                        && st.get(0).getAsJsonObject().get("controller").getAsInt() == s.get("me").getAsInt()) {
-                    heldAfterCast++;
+                final JsonObject top = st.isEmpty() ? null : st.get(0).getAsJsonObject();
+                if (top != null && top.has("controller") && top.get("controller").getAsInt() == s.get("me").getAsInt()) {
+                    if (top.has("trigger") && top.get("trigger").getAsBoolean()) {
+                        triggerAfterCast++;
+                    } else {
+                        heldAfterCast++;
+                    }
                 }
             }
         }

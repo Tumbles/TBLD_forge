@@ -2,6 +2,7 @@ package forge.tbld;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import com.google.gson.JsonPrimitive;
 import forge.ai.AITest;
 import forge.deck.Deck;
 import forge.tbld.server.TbldWebServer;
@@ -22,9 +23,109 @@ public class TbldWebTriggersTest extends AITest {
     /** Seat 1 attacks with Jungleborn Pioneers and their Merfolk; seat 2 blocks with Ironscale Hydras. */
     private static Deck deck(final int seat) {
         final Deck d = new Deck("Trigger test deck " + seat);
-        d.getMain().add("Forest|TBLD|11", 17);
-        d.getMain().add(seat == 1 ? "Jungleborn Pioneer" : "Ironscale Hydra", 23);
+        // Seat 2's Hydras cost five: more Forests, so a run of few lands doesn't keep them all in hand
+        d.getMain().add("Forest|TBLD|11", seat == 1 ? 17 : 24);
+        d.getMain().add(seat == 1 ? "Jungleborn Pioneer" : "Ironscale Hydra", seat == 1 ? 23 : 16);
         return d;
+    }
+
+    /** Crackling Cyclops, and Searing Touch to cast for its trigger. */
+    private static Deck cyclopsDeck() {
+        final Deck d = new Deck("Cast trigger test deck");
+        d.getMain().add("Mountain|TBLD|69", 17);
+        d.getMain().add("Crackling Cyclops", 12);
+        d.getMain().add("Searing Touch", 11);
+        return d;
+    }
+
+    /**
+     * Without "Hold priority" a player passes priority after casting a spell, but not when the cast
+     * put a trigger on the stack: Crackling Cyclops's trigger gives its controller priority over it.
+     */
+    @Test(timeOut = 300000)
+    public void castTriggerGivesPriorityWithoutHoldPriority() throws Exception {
+        final TbldWebServer server = new TbldWebServer(2, TbldWebTriggersTest::cyclopsDeck);
+        final int port = server.start(0);
+        TbldBot bot1 = null;
+        TbldBot bot2 = null;
+        try {
+            final HttpClient http = HttpClient.newHttpClient();
+            bot1 = new TbldBot(http, port, 1, true);
+            bot1.setPref("holdPriority", new JsonPrimitive(false));
+            bot2 = new TbldBot(http, port, 2, false);
+            final long deadline = System.currentTimeMillis() + 240000;
+            while (System.currentTimeMillis() < deadline && !(bot1.gameOver && bot2.gameOver)
+                    && bot1.triggerAfterCast < 1) {
+                Thread.sleep(100);
+            }
+            final String report = "\n" + bot1.summary() + "\n" + bot2.summary();
+            AssertJUnit.assertTrue("errors: " + bot1.errors + bot2.errors + report, bot1.errors.isEmpty() && bot2.errors.isEmpty());
+            AssertJUnit.assertTrue("seat 1 never got priority over Crackling Cyclops's trigger" + report, bot1.triggerAfterCast >= 1);
+            AssertJUnit.assertEquals("seat 1 (hold priority off) got priority over its own spell" + report, 0, bot1.heldAfterCast);
+        } finally {
+            if (bot1 != null) {
+                bot1.close();
+            }
+            if (bot2 != null) {
+                bot2.close();
+            }
+            server.stop();
+        }
+    }
+
+    /** Jungleborn Pioneers and their Merfolk, for Stand Together's two targets. */
+    private static Deck standTogetherDeck() {
+        final Deck d = new Deck("Two targets test deck");
+        d.getMain().add("Forest|TBLD|11", 17);
+        d.getMain().add("Jungleborn Pioneer", 12);
+        d.getMain().add("Stand Together", 11);
+        return d;
+    }
+
+    /** A stack item with two targets, as the snapshot names them by id. */
+    private static boolean twoTargetsOnStack(final TbldBot bot) {
+        final JsonObject s = bot.state;
+        if (s == null || !s.has("stack")) {
+            return false;
+        }
+        for (final JsonElement e : s.getAsJsonArray("stack")) {
+            final JsonObject item = e.getAsJsonObject();
+            if (item.has("targetCards") && item.getAsJsonArray("targetCards").size() >= 2) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /** Stand Together's second target is on its sub-ability; the stack item still lists both, so both get a line. */
+    @Test(timeOut = 300000)
+    public void everyTargetOfASpellIsListed() throws Exception {
+        final TbldWebServer server = new TbldWebServer(2, TbldWebTriggersTest::standTogetherDeck);
+        final int port = server.start(0);
+        TbldBot bot1 = null;
+        TbldBot bot2 = null;
+        try {
+            final HttpClient http = HttpClient.newHttpClient();
+            bot1 = new TbldBot(http, port, 1, false);
+            bot2 = new TbldBot(http, port, 2, false);
+            boolean seen = false;
+            final long deadline = System.currentTimeMillis() + 240000;
+            while (System.currentTimeMillis() < deadline && !(bot1.gameOver && bot2.gameOver) && !seen) {
+                seen = twoTargetsOnStack(bot1) || twoTargetsOnStack(bot2);
+                Thread.sleep(50);
+            }
+            final String report = "\n" + bot1.summary() + "\n" + bot2.summary();
+            AssertJUnit.assertTrue("errors: " + bot1.errors + bot2.errors + report, bot1.errors.isEmpty() && bot2.errors.isEmpty());
+            AssertJUnit.assertTrue("Stand Together never showed two targets on the stack" + report, seen);
+        } finally {
+            if (bot1 != null) {
+                bot1.close();
+            }
+            if (bot2 != null) {
+                bot2.close();
+            }
+            server.stop();
+        }
     }
 
     private boolean merfolk;

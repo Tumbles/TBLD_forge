@@ -48,6 +48,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.EnumSet;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -873,11 +874,18 @@ public final class BrowserSeat implements IRemote {
                     j.add("blockedBy", blockedBy);
                 }
             }
+            // The attackers this creature blocks: the first one's name, and every one's id (for the block lines)
+            final JsonArray blockingIds = new JsonArray();
             for (final CardView attacker : combat.getAttackers()) {
                 if (shownBlockers(combat, attacker).contains(cv)) {
-                    j.addProperty("blocking", cardRef(attacker).get("name").getAsString());
-                    break;
+                    if (blockingIds.isEmpty()) {
+                        j.addProperty("blocking", cardRef(attacker).get("name").getAsString());
+                    }
+                    blockingIds.add(attacker.getId());
                 }
+            }
+            if (!blockingIds.isEmpty()) {
+                j.add("blockingIds", blockingIds);
             }
         }
         return j;
@@ -997,20 +1005,29 @@ public final class BrowserSeat implements IRemote {
                 if (si.getSourceCard() != null) {
                     s.add("source", cardRef(si.getSourceCard()));
                 }
-                // Target names for the text, and ids so the client can draw a line to each target
+                // Target names for the text, and ids so the client can draw a line to each target. A spell's
+                // later targets ("and another target creature", as on Stand Together) are on its sub-abilities.
                 final JsonArray targets = new JsonArray();
                 final JsonArray targetCards = new JsonArray();
                 final JsonArray targetPlayers = new JsonArray();
-                if (si.getTargetCards() != null) {
-                    for (final CardView t : si.getTargetCards()) {
-                        targets.add(cardRef(t).get("name"));
-                        targetCards.add(t.getId());
+                final Set<Integer> cardIds = new HashSet<>();
+                final Set<Integer> playerIds = new HashSet<>();
+                for (StackItemView part = si; part != null; part = part.getSubInstance()) {
+                    if (part.getTargetCards() != null) {
+                        for (final CardView t : part.getTargetCards()) {
+                            if (cardIds.add(t.getId())) {
+                                targets.add(cardRef(t).get("name"));
+                                targetCards.add(t.getId());
+                            }
+                        }
                     }
-                }
-                if (si.getTargetPlayers() != null) {
-                    for (final PlayerView t : si.getTargetPlayers()) {
-                        targets.add(t.getName());
-                        targetPlayers.add(t.getId());
+                    if (part.getTargetPlayers() != null) {
+                        for (final PlayerView t : part.getTargetPlayers()) {
+                            if (playerIds.add(t.getId())) {
+                                targets.add(t.getName());
+                                targetPlayers.add(t.getId());
+                            }
+                        }
                     }
                 }
                 if (!targets.isEmpty()) {

@@ -1731,11 +1731,12 @@ public class PlayerControllerHuman extends PlayerController implements IGameCont
     public List<SpellAbility> chooseSpellAbilityToPlay() {
         final MagicStack stack = getGame().getStack();
 
-        // TBLD: without "hold priority", casting a spell or activating an ability passes priority
+        // TBLD: without "hold priority", casting a spell or activating an ability passes priority,
+        // unless something triggered and went on the stack above it (Crackling Cyclops's trigger, say)
         if (passAfterPlay) {
             passAfterPlay = false;
             final SpellAbilityStackInstance top = stack.peek();
-            if (!isMacroActive() && top != null && top.getActivatingPlayer() == player) {
+            if (!isMacroActive() && top != null && top.getActivatingPlayer() == player && !top.isTrigger()) {
                 getGui().awaitNextInput();
                 return null;
             }

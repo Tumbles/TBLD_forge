@@ -76,7 +76,7 @@ function makeState(over = {}) {
         command: [emblem(60, "Player One", "Book of Lore", "You skip your first draw step.")] },
       { id: 2, name: "Player 2", life: 18, library: 31, hand: 5, mana: {}, exile: [], graveyard: [],
         command: [emblem(61, "Player Two", "Shard of Mana", "Exile this: Add {C}.")],
-        battlefield: [mountain(40), creature(41, "Hill Giant", 3, 3, { blocking: "Gray Ogre", damage: 2 })] },
+        battlefield: [mountain(40), creature(41, "Hill Giant", 3, 3, { blocking: "Gray Ogre", blockingIds: [12], damage: 2 })] },
     ],
     stack: [
       { id: 100, text: "Shock deals 2 damage to target creature.", ability: false, trigger: false, controller: 2, source: ref(shockCard), targets: ["Gray Ogre"], targetCards: [12], targetPlayers: [] },
@@ -233,7 +233,7 @@ await settle();
 
 // lines from stack items to their targets, numbered at both ends
 const ringAt = end => page.locator(`#arrows circle[data-end="${end}"]`).first().evaluate(c => ({ x: +c.getAttribute("cx"), y: +c.getAttribute("cy") }));
-check(await count("#arrows path") === 1, "a stack item with a target has a line to it (and one without has none)");
+check(await count("#arrows path:not(.block)") === 1, "a stack item with a target has a line to it (and one without has none)");
 const ogreBox = await page.locator('#half-me .card[data-id="12"]').boundingBox();
 const toCard = await ringAt("target");
 check(toCard.x >= ogreBox.x && toCard.x <= ogreBox.x + ogreBox.width && Math.abs(toCard.y - ogreBox.y) < 20, "the line ends at the targeted card");
@@ -252,7 +252,20 @@ check(toPlayer.x >= who.x && toPlayer.x <= who.x + who.width && toPlayer.y >= wh
 check((await page.locator("#arrows text").first().textContent()) === "2", "the number is the item's place on the stack");
 send({ t: "state", state: makeState({ stack: [] }) });
 await settle();
-check(await count("#arrows path") === 0, "the lines go when the stack is empty");
+check(await count("#arrows path:not(.block)") === 0, "the lines go when the stack is empty");
+// a line joins each blocker to the attacker it blocks, from facing edge to facing edge
+check(await count('#arrows path.block[data-blocker="41"][data-attacker="12"]') === 1 && (await count("#arrows path.block")) === 1, "a line joins the blocker to its attacker");
+const blockEnds = await page.locator("#arrows circle.block").evaluateAll(cs => cs.map(c => ({ x: +c.getAttribute("cx"), y: +c.getAttribute("cy") })));
+const giantBox = await page.locator('#half-opp .card[data-id="41"]').boundingBox();
+const ogreBox2 = await page.locator('#half-me .card[data-id="12"]').boundingBox();
+check(blockEnds.length === 2 && Math.abs(blockEnds[0].y - (giantBox.y + giantBox.height)) < 2 && Math.abs(blockEnds[1].y - ogreBox2.y) < 2,
+  "the block line runs from the blocker's bottom edge to the attacker's top edge");
+await page.screenshot({ path: path.join(here, "out/ui-block-lines.png") });
+const noCombat = makeState({ stack: [] });
+delete noCombat.players[1].battlefield[1].blockingIds;
+send({ t: "state", state: noCombat });
+await settle();
+check(await count("#arrows path.block") === 0, "no block line without a block");
 send({ t: "state", state: makeState() });
 await settle();
 
@@ -294,6 +307,29 @@ check(await count("#half-opp .who.targetable") === 1, "a player that can be targ
 check(await count('#half-me .hand .card[data-id="20"].selectable') === 1, "a playable card is highlighted");
 await page.click('[data-player-name="2"]');
 check(!!(await waitFor(() => received.find(m => m.t === "act" && m.m === "player" && m.id === 2), "a player click")), "clicking a player selects them");
+selectionMsg({ cards: [], min: 0, max: 0, targets: [], chosen: [], actionable: [] });
+await settle();
+check(!(await page.locator("#half-me .hand").evaluate(e => e.classList.contains("choosing"))), "the hand is not lit up while only casting");
+
+// choosing cards from the hand (discard, exile): the whole hand is lit up like the decision panel
+selectionMsg({ cards: [20, 21], min: 1, max: 1, targets: [], chosen: [], actionable: [] });
+await settle();
+const handBg = await page.locator("#half-me .hand").evaluate(e => e.classList.contains("choosing") ? getComputedStyle(e, "::before").backgroundImage : "");
+const handTop = await page.locator("#half-me .hand").evaluate(e => e.getBoundingClientRect().top + parseFloat(getComputedStyle(e, "::before").top));
+const labelBottom = Math.max(...await page.locator("#half-me .pile-label").evaluateAll(ls => ls.map(l => l.getBoundingClientRect().bottom)));
+check(handTop >= labelBottom - 0.5, `the lit-up hand starts below the pile labels (${handTop} vs ${labelBottom})`);
+const panelBg = await page.locator("#decision").evaluate(e => {
+  const had = e.classList.contains("mine");
+  e.classList.add("mine");
+  const bg = getComputedStyle(e).backgroundImage;
+  if (!had) e.classList.remove("mine");
+  return bg;
+});
+check(handBg.includes("gradient") && handBg === panelBg, "a choice from the hand lights the hand up with the decision panel's gradient");
+await page.screenshot({ path: path.join(here, "out/ui-hand-choice.png") });
+selectionMsg({ cards: [41], min: 1, max: 1, targets: [], chosen: [], actionable: [] });
+await settle();
+check(!(await page.locator("#half-me .hand").evaluate(e => e.classList.contains("choosing"))), "a choice of a card on the battlefield leaves the hand as it is");
 selectionMsg({ cards: [], min: 0, max: 0, targets: [], chosen: [], actionable: [] });
 function selectionMsg(sel) { call("setSelection", [sel]); }
 
