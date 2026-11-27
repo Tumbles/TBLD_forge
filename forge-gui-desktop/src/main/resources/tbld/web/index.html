@@ -103,6 +103,14 @@
   .stop.opp.on { background: var(--their); border-color: var(--their); }
   .stop.own.on { background: var(--turn); border-color: var(--turn); }
   .ph.current.mine .stop.own, .ph.current.theirs .stop.opp { outline: 2px solid rgba(255, 255, 255, .6); outline-offset: 1px; }
+  /* In any combat step the table and the phase bar turn red, the combat steps form a red band and a Combat tag shows */
+  #combattag { display: none; margin-left: 8px; padding: 1px 7px; border-radius: 4px; font-size: 11px; font-weight: 700;
+    letter-spacing: .06em; text-transform: uppercase; color: #fff; background: #c8414a; vertical-align: 1px; }
+  #table.combat { background: radial-gradient(ellipse at 50% 50%, #2c181b 0%, #151113 75%); }
+  #table.combat #combattag { display: inline-block; }
+  #table.combat #phasebar { border-color: rgba(255, 99, 99, .75); background: rgba(58, 22, 27, .92); box-shadow: 0 0 18px rgba(255, 80, 80, .35); }
+  #table.combat .ph.combat-step { background: rgba(255, 99, 99, .16); }
+  #table.combat .half.active { border-color: rgba(255, 110, 110, .45); }
   .legend { font-size: 10.5px; color: var(--muted); line-height: 1.45; white-space: nowrap; }
   .legend i { display: inline-block; width: 16px; height: 7px; border-radius: 4px; margin-right: 5px; vertical-align: middle; }
 
@@ -330,7 +338,7 @@
       <div class="turn-tag">Their turn</div>
     </section>
     <div id="phasebar">
-      <div id="turninfo"><div id="turnwho"></div><div id="status">Connecting...</div></div>
+      <div id="turninfo"><div><span id="turnwho"></span><span id="combattag">⚔ Combat</span></div><div id="status">Connecting...</div></div>
       <div class="phases" id="phases"></div>
       <div class="legend"><div><i style="background: var(--their)"></i>stop on their turn</div><div><i style="background: var(--turn)"></i>stop on your turn</div></div>
     </div>
@@ -652,8 +660,10 @@ function buildPhaseBar() {
 function renderPhaseBar() {
   const phaseId = state && state.phaseId;
   const mineTurn = state && state.activePlayer === state.me;
+  document.getElementById("table").classList.toggle("combat", !!phaseId && phaseId.startsWith("COMBAT_"));
   for (const ph of document.querySelectorAll("#phases .ph")) {
     const p = PHASES.find(x => x.id === ph.dataset.phase);
+    ph.classList.toggle("combat-step", p.id.startsWith("COMBAT_"));
     const current = phaseId === p.id || (p.also || []).includes(phaseId) || (phaseId === "CLEANUP" && p.id === "END_OF_TURN");
     ph.classList.toggle("current", !!current);
     ph.classList.toggle("mine", !!current && mineTurn);

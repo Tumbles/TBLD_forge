@@ -143,6 +143,15 @@ check((await page.locator('#half-opp .card[data-id="41"] .badge.dmg').textConten
 check(await page.locator("#half-me").evaluate(e => e.classList.contains("active")) && !(await page.locator("#half-opp").evaluate(e => e.classList.contains("active"))),
   "the active player's half is highlighted");
 check((await page.locator("#turnwho").textContent()) === "Your turn", "the phase bar says whose turn it is");
+check(!(await page.locator("#table").evaluate(e => e.classList.contains("combat"))) && !(await page.locator("#combattag").isVisible()),
+  "outside combat the table is not marked as in combat");
+send({ t: "state", state: makeState({ phase: "Combat, declare attackers", phaseId: "COMBAT_DECLARE_ATTACKERS" }) });
+await settle(300);
+check(await page.locator("#table").evaluate(e => e.classList.contains("combat")) && await page.locator("#combattag").isVisible()
+  && await count("#phases .ph.combat-step") === 5, "in a combat step the table is marked as in combat, with a Combat tag");
+await page.screenshot({ path: path.join(here, "out/ui-combat.png") });
+send({ t: "state", state: makeState() });
+await settle(300);
 check(await count('#half-opp .handbacks .card.back') === 5, "the opponent's hand is shown as card backs");
 const centered = sel => page.locator(sel).evaluate(row => {
   const r = row.getBoundingClientRect();
