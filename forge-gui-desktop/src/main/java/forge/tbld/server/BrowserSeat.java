@@ -959,6 +959,14 @@ public final class BrowserSeat implements IRemote {
                 p.addProperty("id", pv.getId());
                 p.addProperty("name", pv.getName());
                 p.addProperty("life", pv.getLife());
+                // Player counters (energy, poison, ...), by name ("Energy")
+                if (pv.getCounters() != null && !pv.getCounters().isEmpty()) {
+                    final JsonObject counters = new JsonObject();
+                    for (final CounterType ct : pv.getCounters().elementSet()) {
+                        counters.addProperty(ct.getName(), pv.getCounters().count(ct));
+                    }
+                    p.add("counters", counters);
+                }
                 p.addProperty("library", size(pv.getCards(ZoneType.Library)));
                 final boolean mine = me != null && pv.getId() == me.getId();
                 if (mine) {

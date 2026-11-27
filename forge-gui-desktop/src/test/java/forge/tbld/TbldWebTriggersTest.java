@@ -128,6 +128,61 @@ public class TbldWebTriggersTest extends AITest {
         }
     }
 
+    /** Forests and Servants of the Conduit, which give their controller energy. */
+    private static Deck energyDeck() {
+        final Deck d = new Deck("Energy test deck");
+        d.getMain().add("Forest|TBLD|11", 17);
+        d.getMain().add("Servant of the Conduit", 23);
+        return d;
+    }
+
+    /** A player with energy, as the snapshot gives a player's counters by name. */
+    private static boolean energyShown(final TbldBot bot) {
+        final JsonObject s = bot.state;
+        if (s == null || !s.has("players")) {
+            return false;
+        }
+        for (final JsonElement pe : s.getAsJsonArray("players")) {
+            final JsonObject p = pe.getAsJsonObject();
+            if (p.has("counters") && p.getAsJsonObject("counters").has("Energy")
+                    && p.getAsJsonObject("counters").get("Energy").getAsInt() > 0) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /** Servant of the Conduit's energy is in the snapshot, so the client can show it. */
+    @Test(timeOut = 300000)
+    public void playerEnergyIsInTheSnapshot() throws Exception {
+        final TbldWebServer server = new TbldWebServer(2, TbldWebTriggersTest::energyDeck);
+        final int port = server.start(0);
+        TbldBot bot1 = null;
+        TbldBot bot2 = null;
+        try {
+            final HttpClient http = HttpClient.newHttpClient();
+            bot1 = new TbldBot(http, port, 1, false);
+            bot2 = new TbldBot(http, port, 2, false);
+            boolean seen = false;
+            final long deadline = System.currentTimeMillis() + 240000;
+            while (System.currentTimeMillis() < deadline && !(bot1.gameOver && bot2.gameOver) && !seen) {
+                seen = energyShown(bot1) || energyShown(bot2);
+                Thread.sleep(50);
+            }
+            final String report = "\n" + bot1.summary() + "\n" + bot2.summary();
+            AssertJUnit.assertTrue("errors: " + bot1.errors + bot2.errors + report, bot1.errors.isEmpty() && bot2.errors.isEmpty());
+            AssertJUnit.assertTrue("no player's energy ever showed in the snapshot" + report, seen);
+        } finally {
+            if (bot1 != null) {
+                bot1.close();
+            }
+            if (bot2 != null) {
+                bot2.close();
+            }
+            server.stop();
+        }
+    }
+
     private boolean merfolk;
     private boolean hydraCounter;
     private boolean triggerLogged;

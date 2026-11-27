@@ -67,7 +67,7 @@ function makeState(over = {}) {
   return {
     me: 1, turn: 3, phase: "Main phase, precombat", phaseId: "MAIN1", activePlayer: 1, gameOver: false,
     players: [
-      { id: 1, name: "Player 1", life: 20, library: 30, mana: { R: 1 }, exile: [],
+      { id: 1, name: "Player 1", life: 20, library: 30, mana: { R: 1 }, exile: [], counters: { Energy: 3 },
         hand: [card(20, "Shock", "Instant", { cost: "{R}", colors: "R" }), searing, card(21, "Lava Axe", "Sorcery", { cost: "{4}{R}", colors: "R" })],
         battlefield: [mountain(1), mountain(2), mountain(3), mountain(4, { tapped: true }), mountain(5, { tapped: true }),
           creature(10, "Raging Goblin", 1, 1, { sick: true }), card(11, "Bone Saw", "Artifact - Equipment", { cost: "{0}" }),
@@ -153,6 +153,8 @@ await page.screenshot({ path: path.join(here, "out/ui-combat.png") });
 send({ t: "state", state: makeState() });
 await settle(300);
 check(await count('#half-opp .handbacks .card.back') === 5, "the opponent's hand is shown as card backs");
+check((await page.locator('#half-me .pbar .pcounter.energy[data-counter="Energy"]').textContent()).includes("3")
+  && await count('#half-opp .pcounter') === 0, "a player's energy is shown in their bar, and a player without counters shows none");
 const centered = sel => page.locator(sel).evaluate(row => {
   const r = row.getBoundingClientRect();
   const boxes = [...row.children].map(k => k.getBoundingClientRect());

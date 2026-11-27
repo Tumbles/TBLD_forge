@@ -47,6 +47,11 @@
   .pname { font-weight: 600; }
   .life { font-size: 22px; font-weight: 800; min-width: 34px; text-align: center; font-variant-numeric: tabular-nums; }
   .life.low { color: var(--danger); }
+  .pcounters { display: flex; gap: 4px; }
+  .pcounter { padding: 3px 9px; border-radius: 13px; font-size: 14px; font-weight: 700; font-variant-numeric: tabular-nums;
+    background: var(--panel); border: 1px solid var(--line); white-space: nowrap; }
+  .pcounter.energy { color: #ffd84a; border-color: rgba(255, 216, 74, .6); }
+  .pcounter.poison { color: #8fe36b; border-color: rgba(143, 227, 107, .6); }
   .counts { display: flex; gap: 10px; color: var(--muted); font-size: 12px; }
   .counts b { color: var(--text); font-weight: 600; }
   .piles { display: flex; gap: 8px; }
@@ -932,6 +937,20 @@ function renderPbar(bar, p, mine) {
   const initials = p.name.replace(/[^A-Za-z0-9 ]/g, "").split(" ").map(w => w[0] || "").join("").slice(0, 2).toUpperCase();
   who.append(el("div", "avatar", initials), el("div", "pname", p.name), el("div", "life" + (p.life <= 5 ? " low" : ""), String(p.life)));
   nodes.push(who);
+
+  // Player counters (energy, poison, ...) beside the life total
+  const playerCounters = Object.entries(p.counters || {}).filter(([, v]) => v > 0);
+  if (playerCounters.length) {
+    const box = el("div", "pcounters");
+    const icons = { Energy: "⚡", Poison: "☠" };
+    for (const [k, v] of playerCounters) {
+      const x = el("div", "pcounter " + k.toLowerCase(), (icons[k] || k) + " " + v);
+      x.dataset.counter = k;
+      x.title = v + " " + k.toLowerCase() + (v === 1 ? " counter" : " counters");
+      box.append(x);
+    }
+    nodes.push(box);
+  }
 
   const counts = el("div", "counts");
   const handCount = Array.isArray(p.hand) ? p.hand.length : p.hand;
