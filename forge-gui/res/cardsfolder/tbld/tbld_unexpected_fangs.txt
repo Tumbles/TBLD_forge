@@ -1,0 +1,8 @@
+Name:Unexpected Fangs
+ManaCost:1 B
+Types:Flash Sorcery
+K:Strive:2 B
+A:SP$ PutCounter | ValidTgts$ Creature | TgtPrompt$ Select any number of target creatures | TargetMin$ 0 | TargetMax$ MaxTargets | CounterTypes$ P1P1,Lifelink | SpellDescription$ Put a +1/+1 counter and a lifelink counter on any number of target creatures.
+SVar:MaxTargets:Count$Valid Creature
+DeckHas:Ability$Counters|LifeGain
+Oracle:Strive — This costs 2B more to cast for each target beyond the first.\nPut a +1/+1 counter and a lifelink counter on any number of target creatures.

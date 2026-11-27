@@ -1,0 +1,12 @@
+Name:Silent Skimmer
+ManaCost:2 B
+Types:Creature Eldrazi
+PT:0/5
+K:Devoid
+K:Flying
+T:Mode$ Attacks | ValidCard$ Card.Self | Execute$ TrigExile | TriggerDescription$ Whenever CARDNAME attacks, exile the top three cards of defending player's library. They lose 3 life.
+SVar:TrigExile:DB$ Dig | Defined$ TriggeredDefendingPlayer | DigNum$ 3 | ChangeNum$ All | DestinationZone$ Exile | SubAbility$ DBLoseLife
+SVar:DBLoseLife:DB$ LoseLife | Defined$ TriggeredDefendingPlayer | LifeAmount$ 3
+K:TypeCycling:Eldrazi:ExiledMoveToGrave<2/Card.OppOwn/cards an opponent owns>
+SVar:HasAttackEffect:TRUE
+Oracle:Devoid, flying\nWhenever this attacks, exile the top three cards of defending player’s library. They lose 3 life.\nEldrazicycling—Put two cards an opponent owns from exile into their graveyard.

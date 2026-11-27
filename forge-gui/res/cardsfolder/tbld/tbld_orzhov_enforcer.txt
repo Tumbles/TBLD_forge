@@ -1,0 +1,9 @@
+Name:Orzhov Enforcer
+ManaCost:1 B
+Types:Creature Human Rogue
+PT:1/2
+K:Deathtouch
+K:Extort
+K:Afterlife:1
+DeckHas:Ability$Token
+Oracle:Deathtouch\nExtort (Whenever you cast a spell, you may pay W/B. If you do, each opponent loses 1 life and you gain 1 life.)\nAfterlife 1 (When this dies, create a 1/1 white Spirit token with flying.)

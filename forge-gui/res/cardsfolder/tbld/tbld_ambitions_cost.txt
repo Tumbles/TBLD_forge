@@ -1,0 +1,7 @@
+Name:Ambitions Cost
+ManaCost:3 B
+Types:Flash Sorcery
+A:SP$ Draw | NumCards$ 3 | SpellDescription$ Draw three cards and lose 3 life. | SubAbility$ DBLoseLife
+SVar:DBLoseLife:DB$ LoseLife | LifeAmount$ 3
+K:Cycling:2
+Oracle:Draw three cards and lose 3 life.\nCycling 2 (2, Discard this: Draw a card.)

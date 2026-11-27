@@ -1,0 +1,8 @@
+Name:Vampire of the Dire Moon
+ManaCost:B
+Types:Creature Vampire
+PT:1/1
+K:Deathtouch
+K:Lifelink
+A:AB$ Animate | Cost$ B T | ValidTgts$ Creature | TgtPrompt$ Select target creature | Types$ Vampire | Duration$ AsLongAsControl | SpellDescription$ Target creature becomes a Vampire in addition to its other types for as long as you control CARDNAME.
+Oracle:Deathtouch, lifelink\nB, T: Target creature becomes a Vampire in addition to its other types for as long as you control this.

@@ -1,0 +1,8 @@
+Name:Skinrender
+ManaCost:2 B B
+Types:Creature Phyrexian
+PT:3/3
+K:Toxic:3
+T:Mode$ ChangesZone | Origin$ Any | Destination$ Battlefield | ValidCard$ Card.Self | Execute$ TrigPutCounter | TriggerDescription$ When CARDNAME enters, put three -1/-1 counters on up to one target creature.
+SVar:TrigPutCounter:DB$ PutCounter | ValidTgts$ Creature | TgtPrompt$ Select up to one target creature | TargetMin$ 0 | TargetMax$ 1 | CounterType$ M1M1 | IsCurse$ True | CounterNum$ 3
+Oracle:Toxic 3 (Players dealt combat damage by this also get three poison counters.)\nWhen this enters, put three -1/-1 counters on up to one target creature.

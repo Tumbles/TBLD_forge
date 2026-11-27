@@ -936,6 +936,155 @@ Type=Custom_Set
 959 U Play with Fire
 960 R Root Out
 961 U Strafe
+962 U Aether Snap
+963 C Alms of the Vein
+964 U Ambitions Cost
+965 C Arbiter of Woe
+966 U Army of the Damned
+967 U Bankrupt in Blood
+968 U Bearer of Silence
+969 U Blood Fountain
+970 U Blood Pet
+971 C Blood Scrivener
+972 U Bloodcrazed Paladin
+973 C Bloodgift Demon
+974 U Bloodthrone Vampire
+975 U Bone Miser
+976 C Bump in the Night
+977 U Callous Bloodmage
+978 C Carrion Feeder
+979 U Caustic Crawler
+980 C Cleaving Reaper
+981 C Cling to Dust
+982 C Cruel Reality
+983 U Culling Drone
+984 U Daggerdrome Imp
+985 U Dark Deal
+986 U Dead Revels
+988 U Debt to the Kami
+989 U Defeat
+990 U Defiant Bloodlord
+991 C Diabolic Intent
+992 C Diabolic Revelation
+993 U Diabolic Tutor
+994 C Disciple of the Vault
+995 U Discordant Piper
+996 U Disfigure
+997 C Dispossess
+998 C Divest
+999 C Doomsday
+1000 U Drakestown Forgotten
+1001 U Dregscape Zombie
+1002 U Drossclaw
+1003 U Dutiful Return
+1004 U Endless Ranks of the Dead
+1005 U Entomber Exarch
+1006 C Ever After
+1007 U Execute
+1008 C Extirpate
+1009 U Eye Collector
+1010 U Facevaulter
+1011 U False Cure
+1012 U Festering Goblin
+1013 U Foul-Tongue Shriek
+1014 U Fungal Infection
+1015 U Geth Thane of Contracts
+1016 U Ghoulraiser
+1017 U Glaze Fiend
+1018 U Glint-Sleeve Siphoner
+1019 U Gnarled Scarhide
+1020 U Go Blank
+1021 C Gonti Night Minister
+1022 U Grasp of Darkness
+1023 C Grave Scrabbler
+1024 U Grip of Desolation
+1025 C Hooded Blightfang
+1026 C Infernal Tutor
+1027 C Infinite Obliteration
+1028 C Ink-Eyes Servant of Oni
+1029 U Knucklebone Witch
+1030 U Lilianas Mastery
+1031 U Lilianas Steward
+1032 C Lord of the Accursed
+1033 U Marauding Blight-Priest
+1034 U Markov Dreadknight
+1035 C Massacre Girl
+1036 C Masterminds Acquisition
+1037 U Megrim
+1038 U Memoricide
+1039 U Mob
+1040 U Moonglove Winnower
+1041 U Moriok Scavenger
+1042 U Nezumi Ronin
+1043 U Nim Lasher
+1044 U Nullpriest of Oblivion
+1045 U Okiba-Gang Shinobi
+1046 U Ordeal of Erebos
+1047 U Orzhov Enforcer
+1048 C Painful Truths
+1049 C Palace Siege
+1050 U Pestilence
+1051 U Phyrexian Negator
+1052 U Piper of the Swarm
+1053 C Pitiless Horde
+1054 U Plunge into Darkness
+1055 C Poison the Cup
+1056 U Priest of the Blood Rite
+1057 U Pulse Tracker
+1058 U Qarsi Sadist
+1059 U Raiders Spoils
+1060 U Ravenous Rats
+1061 U Reaper from the Abyss
+1062 C Reapers Talisman
+1063 U Reaping the Graves
+1064 U Reaver Drone
+1065 U Return Upon the Tide
+1066 U Revenge of the Rats
+1067 U Rot Hulk
+1068 U Salvage Slasher
+1069 C Sanctum Seeker
+1070 S Scheming Symmetry
+1071 U Scion of the Swarm
+1072 U Scrounge
+1073 C Serrated Scorpion
+1074 U Shrieking Affliction
+1075 U Shrivel
+1076 U Sibsig Muckdraggers
+1077 U Sifter of Skulls
+1078 U Silent Skimmer
+1079 U Skinrender
+1080 U Skulduggery
+1081 U Sludge Crawler
+1082 R Souldrinker
+1083 C Spoils of the Vault
+1084 R Stroke of Midnight
+1085 U Sultai Scavenger
+1086 U Syphon Life
+1088 C Tangled Colony
+1089 U Tattered Apparition
+1090 C Terisiares Devastation
+1091 C Terror Tide
+1092 C The Creation of Avacyn
+1094 U Thriving Rats
+1095 C Tinybones Bauble Burglar
+1096 C Tomb Tyrant
+1097 C Torment of Hailfire
+1098 U Torment of Scarabs
+1099 C Tormented Hero
+1100 U Tragic Slip
+1101 U Typhoid Rats
+1102 C Ulcerate
+1103 U Unexpected Fangs
+1104 U Vampire Cutthroat
+1105 U Vampire of the Dire Moon
+1106 C Vampires Kiss
+1107 U Vicious Conquistador
+1108 U Vito Thorn of the Dusk Rose
+1109 U Voracious Null
+1110 U Voracious Vermin
+1111 U Whisper Blood Liturgist
+1112 C Wishclaw Talisman
+1113 U Wits End
 F1 L Forest
 F2 L Forest
 F3 L Forest

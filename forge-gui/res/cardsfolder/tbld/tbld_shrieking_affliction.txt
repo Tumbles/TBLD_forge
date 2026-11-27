@@ -1,0 +1,7 @@
+Name:Shrieking Affliction
+ManaCost:B
+Types:Enchantment
+T:Mode$ Phase | Phase$ Upkeep | ValidPlayer$ Opponent | TriggerZones$ Battlefield | CheckSVar$ CardsInHand | SVarCompare$ LE1 | Execute$ TrigDamage | TriggerDescription$ At each opponent's upkeep, if they have one or fewer cards in hand, CARDNAME deals 3 damage to them.
+SVar:TrigDamage:DB$ DealDamage | Defined$ TriggeredPlayer | NumDmg$ 3
+SVar:CardsInHand:TriggeredPlayer$CardsInHand
+Oracle:At each opponent's upkeep, if they have one or fewer cards in hand, this deals 3 damage to them.

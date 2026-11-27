@@ -1,0 +1,8 @@
+Name:Ghoulraiser
+ManaCost:B B
+Types:Creature Zombie
+PT:2/2
+S:Mode$ CantBlock | ValidCard$ Card.Self | Description$ CARDNAME can't block.
+T:Mode$ ChangesZone | Origin$ Any | Destination$ Battlefield | ValidCard$ Card.Self | Execute$ TrigChangeZone | TriggerDescription$ When CARDNAME enters, return a Zombie card chosen at random from your graveyard to your hand.
+SVar:TrigChangeZone:DB$ ChangeZone | ChangeType$ Zombie.YouCtrl | Origin$ Graveyard | Destination$ Hand | Hidden$ True | AtRandom$ True
+Oracle:This can’t block.\nWhen this enters, return a Zombie card chosen at random from your graveyard to your hand.

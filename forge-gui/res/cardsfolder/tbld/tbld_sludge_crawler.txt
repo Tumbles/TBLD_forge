@@ -1,0 +1,10 @@
+Name:Sludge Crawler
+ManaCost:B
+Types:Creature Eldrazi
+PT:1/1
+K:Devoid
+K:Ingest
+K:Menace
+A:AB$ Pump | Cost$ 2 | Defined$ Self | NumAtt$ +1 | NumDef$ +1 | SpellDescription$ CARDNAME gets +1/+1 this turn.
+DeckHints:Type$Processor
+Oracle:Devoid (This card has no color.)\nIngest (Whenever this deals combat damage to a player, they exile the top two cards of their library.)\nMenace\n2/C: This gets +1/+1 this turn.

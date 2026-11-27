@@ -1,0 +1,12 @@
+Name:Vito Thorn of the Dusk Rose
+ManaCost:2 B
+Types:Legendary Creature Vampire Cleric
+PT:1/3
+T:Mode$ LifeGained | ValidPlayer$ You | TriggerZones$ Battlefield | Execute$ TrigDrain | TriggerDescription$ Whenever you gain life, target opponent loses that much life.
+SVar:TrigDrain:DB$ LoseLife | ValidTgts$ Opponent | LifeAmount$ X
+SVar:X:TriggerCount$LifeAmount
+A:AB$ PumpAll | Cost$ 3 B B | ValidCards$ Creature.YouCtrl | KW$ Lifelink | CheckSVar$ Y | SVarCompare$ LE10 | SpellDescription$ Creatures you control gain lifelink this turn. Activate only if an opponent has 10 or less life.
+SVar:Y:PlayerCountOpponents$LowestLifeTotal
+SVar:PlayMain1:TRUE
+DeckHas:Ability$LifeGain
+Oracle:Whenever you gain life, target opponent loses that much life.\n3BB: Creatures you control gain lifelink this turn. Activate only if an opponent has 10 or less life.

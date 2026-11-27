@@ -1,0 +1,8 @@
+Name:Grip of Desolation
+ManaCost:4 B B
+Types:Sorcery
+K:Devoid
+R:Event$ Counter | ValidCard$ Card.Self | ValidSA$ Spell | Layer$ CantHappen | Description$ This spell can't be countered.
+A:SP$ ChangeZone | ValidTgts$ Creature,Land | TgtPrompt$ Select target creature or land | Origin$ Battlefield | Destination$ Exile | SpellDescription$ Exile target creature or land.
+K:Rebound
+Oracle:Devoid (This card has no color.)\nThis spell can't be countered\nExile target creature or land.\nRebound (If you cast this from your hand, exile it as it resolves. At your next upkeep, you may cast this from exile without paying its mana cost.)

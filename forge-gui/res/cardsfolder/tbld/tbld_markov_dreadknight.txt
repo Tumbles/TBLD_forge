@@ -1,0 +1,8 @@
+Name:Markov Dreadknight
+ManaCost:1 B B
+Types:Creature Vampire Knight
+PT:3/3
+K:Flying
+A:AB$ PutCounter | Cost$ B Discard<1/Card> | CounterType$ P1P1 | CounterNum$ 2 | SpellDescription$ Put two +1/+1 counters on CARDNAME.
+DeckHas:Ability$Discard
+Oracle:Flying\nB, Discard a card: Put two +1/+1 counters on this.

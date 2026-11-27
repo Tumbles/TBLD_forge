@@ -1,0 +1,8 @@
+Name:Blood Pet
+ManaCost:B
+Types:Creature Thrull
+PT:1/1
+A:AB$ Mana | Cost$ Sac<1/CARDNAME> | Produced$ B | SubAbility$ DBEnergy | SpellDescription$ You add B, get EE (two energy counters), and gain 2 life.
+SVar:DBEnergy:DB$ PutCounter | Defined$ You | CounterType$ ENERGY | CounterNum$ 2 | SubAbility$ DBGainLife
+SVar:DBGainLife:DB$ GainLife | LifeAmount$ 2
+Oracle:Sacrifice this: You add B, get EE (two energy counters), and gain 2 life.

@@ -1,0 +1,7 @@
+Name:Army of the Damned
+ManaCost:4 B B B
+Types:Sorcery
+K:Flashback:B B B B B B
+A:SP$ Token | TokenAmount$ 13 | TokenScript$ b_2_2_zombie_decayed | TokenOwner$ You | SpellDescription$ Create thirteen 2/2 black Zombie tokens with decayed.
+DeckHas:Ability$Token
+Oracle:Create thirteen 2/2 black Zombie tokens with decayed. (They can’t block. When they attack, sacrifice them at end of combat.)\nFlashback BBBBBB (six)

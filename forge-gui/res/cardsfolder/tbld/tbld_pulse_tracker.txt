@@ -1,0 +1,10 @@
+Name:Pulse Tracker
+ManaCost:B
+Types:Creature Vampire Rogue
+PT:1/1
+S:Mode$ Continuous | Affected$ Card.Self | AddKeyword$ Menace | CheckSVar$ X | SVarCompare$ LE10 | Description$ As long as an opponent has 10 or less life, CARDNAME has menace.
+SVar:X:PlayerCountOpponents$LowestLifeTotal
+T:Mode$ Attacks | ValidCard$ Card.Self | Execute$ TrigDrain | TriggerDescription$ Whenever CARDNAME attacks, each opponent loses 1 life.
+SVar:TrigDrain:DB$ LoseLife | Defined$ Player.Opponent | LifeAmount$ 1
+SVar:HasAttackEffect:TRUE
+Oracle:As long as an opponent has 10 or less life, this has menace.\nWhenever this attacks, each opponent loses 1 life.

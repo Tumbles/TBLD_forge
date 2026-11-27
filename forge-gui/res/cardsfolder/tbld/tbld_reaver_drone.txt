@@ -1,0 +1,11 @@
+Name:Reaver Drone
+ManaCost:B
+Types:Creature Eldrazi
+PT:2/1
+K:Devoid
+K:Ingest
+T:Mode$ Phase | Phase$ Upkeep | ValidPlayer$ You | Execute$ TrigLoseLife | TriggerZones$ Battlefield | TriggerDescription$ At your upkeep, lose 1 life unless you control another colorless creature.
+SVar:TrigLoseLife:DB$ LoseLife | Defined$ You | LifeAmount$ 1 | ConditionPresent$ Creature.YouCtrl+Colorless+Other | ConditionCompare$ EQ0
+A:AB$ ChangeZone | Cost$ ExiledMoveToGrave<2/Card.OppOwn/cards an opponent owns> | Origin$ Graveyard | Destination$ Hand | ActivationZone$ Graveyard | SpellDescription$ Return CARDNAME from your graveyard to your hand.
+DeckHints:Keyword$Devoid & Color$Colorless
+Oracle:Devoid (This card has no color.)\nIngest (Whenever this deals combat damage to a player, they exile the top two cards of their library.)\nAt your upkeep, lose 1 life unless you control another colorless creature.\nPut two cards an opponent owns from exile into their graveyard: Return this from your graveyard to your hand.

@@ -1,0 +1,7 @@
+Name:Nezumi Ronin
+ManaCost:1 B
+Types:Creature Rat Samurai
+PT:3/1
+K:Bushido:1
+K:Skulk
+Oracle:Bushido 1 (When this blocks or becomes blocked, it gets +1/+1 this turn.)\nSkulk (This can’t be blocked by creatures with greater power.)

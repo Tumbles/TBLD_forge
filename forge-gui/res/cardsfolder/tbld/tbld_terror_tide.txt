@@ -1,0 +1,7 @@
+Name:Terror Tide
+ManaCost:2 B B
+Types:Sorcery
+A:SP$ PumpAll | ValidCards$ Creature | NumAtt$ -X | NumDef$ -X | IsCurse$ True | SpellDescription$ Fathomless descent — All creatures get -X/-X this turn, where X is the number of nonsorcery cards in your graveyard.
+SVar:X:Count$ValidGraveyard Card.nonSorcery+YouOwn
+DeckHints:Ability$Graveyard|Mill|Discard
+Oracle:Fathomless descent — All creatures get -X/-X this turn, where X is the number of nonsorcery cards in your graveyard.

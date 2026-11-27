@@ -1,0 +1,9 @@
+Name:Nim Lasher
+ManaCost:2 B
+Types:Creature Zombie
+PT:1/1
+S:Mode$ Continuous | AffectedDefined$ Self | AddPower$ X | Description$ CARDNAME gets +1/+0 for each artifact you control.
+SVar:X:Count$Valid Artifact.YouCtrl
+K:Escape:B ExileFromGrave<3/Card.Other/other>
+SVar:BuffedBy:Artifact
+Oracle:This gets +1/+0 for each artifact your control.\nEscape—B, Exile three other cards from your graveyard. (You may cast this card from your graveyard for its escape cost.)

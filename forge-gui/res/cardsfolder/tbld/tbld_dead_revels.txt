@@ -1,0 +1,6 @@
+Name:Dead Revels
+ManaCost:4 B
+Types:Sorcery
+K:Spectacle:1 B
+A:SP$ ChangeZone | Origin$ Graveyard | Destination$ Hand | TargetMin$ 0 | TargetMax$ 3 | TgtPrompt$ Choose up to three target creature cards in your graveyard | ValidTgts$ Creature.YouOwn | SpellDescription$ Return up to three target creature cards from your graveyard to your hand.
+Oracle:Spectacle 1B (You may cast this for its spectacle cost if an opponent lost life this turn.)\nReturn up to three target creature cards from your graveyard to your hand.

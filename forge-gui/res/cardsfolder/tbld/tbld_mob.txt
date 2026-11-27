@@ -1,0 +1,7 @@
+Name:Mob
+ManaCost:X X B B
+Types:Flash Sorcery
+K:Convoke
+A:SP$ Destroy | ValidTgts$ Creature | TgtPrompt$ Select X target creatures | TargetMin$ X | TargetMax$ X | SpellDescription$ Destroy X target creatures.
+SVar:X:Count$xPaid
+Oracle:Convoke (Your creatures can help cast this. Each creature you tap while casting this pays for 1 or one mana of that creature’s color.)\nDestroy X target creatures.

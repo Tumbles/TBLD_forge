@@ -1,0 +1,7 @@
+Name:Stroke of Midnight
+ManaCost:2 B
+Types:Sorcery
+A:SP$ Mill | Defined$ You | NumCards$ 12 | SpellDescription$ Mill twelve cards.
+K:Suspend:3:B
+DeckHas:Ability$Mill|Graveyard
+Oracle:Mill twelve cards.\nSuspend 3—B (Rather than cast this from your hand, you may pay B and exile it with three time counters. At your upkeep, remove a time counter. When the last is removed, cast it without paying its mana cost.)

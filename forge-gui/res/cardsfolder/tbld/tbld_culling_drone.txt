@@ -1,0 +1,10 @@
+Name:Culling Drone
+ManaCost:1 B
+Types:Creature Eldrazi
+PT:2/2
+K:Devoid
+K:Ingest
+A:AB$ Token | Cost$ 1 B Sac<1/Creature.nonSpawn/non-Spawn creature> | TokenAmount$ 2 | TokenScript$ tbld_c_1_1_eldrazi_spawn_sac | TokenOwner$ You | SpellDescription$ Create two 1/1 colorless Eldrazi Spawn tokens with "Sacrifice this: Add C."
+DeckHints:Type$Processor
+DeckHas:Ability$Token|Sacrifice
+Oracle:Devoid, ingest\n1B, Sacrifice a non-Spawn creature: Create two 1/1 colorless Eldrazi Spawn tokens with “Sacrifice this: Add C.”

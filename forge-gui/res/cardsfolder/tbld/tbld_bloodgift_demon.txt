@@ -1,0 +1,9 @@
+Name:Bloodgift Demon
+ManaCost:3 B B
+Types:Creature Demon
+PT:5/3
+K:Flying
+T:Mode$ Phase | Phase$ Upkeep | ValidPlayer$ You | TriggerZones$ Battlefield | Execute$ TrigDraw | TriggerDescription$ At your upkeep, target player draws two cards and loses 2 life.
+SVar:TrigDraw:DB$ Draw | ValidTgts$ Player | NumCards$ 2 | SubAbility$ DBLoseLife
+SVar:DBLoseLife:DB$ LoseLife | Defined$ Targeted | LifeAmount$ 2
+Oracle:Flying\nAt your upkeep, target player draws two cards and loses 2 life.

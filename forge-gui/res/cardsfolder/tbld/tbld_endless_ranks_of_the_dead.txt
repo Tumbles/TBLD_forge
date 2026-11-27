@@ -1,0 +1,8 @@
+Name:Endless Ranks of the Dead
+ManaCost:1 B B
+Types:Enchantment
+T:Mode$ Phase | Phase$ Upkeep | ValidPlayer$ You | TriggerZones$ Battlefield | Execute$ TrigToken | TriggerDescription$ At your upkeep, create X 2/2 black Zombie tokens with decayed, where X is half the number of Zombies you control, rounded up.
+SVar:TrigToken:DB$ Token | TokenAmount$ X | TokenScript$ b_2_2_zombie_decayed | TokenOwner$ You
+SVar:X:Count$Valid Creature.Zombie+YouCtrl/HalfUp
+AI:RemoveDeck:Random
+Oracle:At your upkeep, create X 2/2 black Zombie tokens with decayed, where X is half the number of Zombies you control, rounded up.

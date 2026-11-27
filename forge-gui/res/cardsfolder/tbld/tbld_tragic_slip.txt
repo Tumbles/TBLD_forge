@@ -1,0 +1,7 @@
+Name:Tragic Slip
+ManaCost:B
+Types:Flash Sorcery
+K:Split second
+A:SP$ Pump | ValidTgts$ Creature | NumAtt$ -X | NumDef$ -X | IsCurse$ True | SpellDescription$ Target creature gets -1/-1 this turn. Morbid — That creature gets -13/-13 this turn instead if a creature died this turn.
+SVar:X:Count$Morbid.13.1
+Oracle:Split second (Players can’t cast spells or activate abilities that aren’t mana abilities while this spell is on the stack.)\nTarget creature gets -1/-1 this turn.\nMorbid — That creature gets -13/-13 this turn instead if a creature died this turn.

@@ -1,0 +1,11 @@
+Name:Phyrexian Negator
+ManaCost:1 B
+Types:Creature Phyrexian
+PT:5/5
+K:Ward:Sac<1/Permanent>
+K:Trample
+T:Mode$ DamageDoneOnce | ValidTarget$ Card.Self | Execute$ TrigSac | TriggerZones$ Battlefield | TriggerDescription$ Whenever CARDNAME is dealt damage, sacrifice that many permanents.
+SVar:TrigSac:DB$ Sacrifice | Amount$ X | SacValid$ Permanent
+SVar:X:TriggerCount$DamageAmount
+AI:RemoveDeck:All
+Oracle:Ward—Sacrifice a permanent. (Whenever this becomes the target of a spell or ability an opponent controls, counter it unless that player sacrifices a permanent.)\nTrample\nWhenever this is dealt damage, sacrifice that many permanents.

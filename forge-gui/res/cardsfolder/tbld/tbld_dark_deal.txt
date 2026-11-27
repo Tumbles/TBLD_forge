@@ -1,0 +1,12 @@
+Name:Dark Deal
+ManaCost:1 B
+Types:Sorcery
+A:SP$ RepeatEach | RepeatPlayers$ Player | RepeatSubAbility$ DBDiscard | SpellDescription$ Each player discards all the cards in their hand, then draws that many cards minus one.
+SVar:DBDiscard:DB$ Discard | Defined$ Player.IsRemembered | Mode$ Hand | RememberDiscarded$ True | SubAbility$ DBDraw
+SVar:DBDraw:DB$ Draw | NumCards$ X | Defined$ Player.IsRemembered | SubAbility$ CleanDrawn
+SVar:CleanDrawn:DB$ Cleanup | ClearRemembered$ True
+SVar:X:Remembered$Amount/Minus.1
+K:Cycling:2
+AI:RemoveDeck:All
+DeckHas:Ability$Graveyard
+Oracle:Each player discards all the cards in their hand, then draws that many cards minus one.\nCycling 2 (2, Discard this: Draw a card.)

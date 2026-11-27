@@ -1,0 +1,6 @@
+Name:Scrounge
+ManaCost:3 B
+Types:Sorcery
+K:Buyback:B
+A:SP$ ChangeZone | Origin$ Graveyard | Destination$ Battlefield | ValidTgts$ Opponent | Hidden$ True | ChangeType$ Artifact.TargetedPlayerCtrl | ChangeNum$ 1 | GainControl$ True | IsCurse$ True | Chooser$ Targeted | Mandatory$ True | SpellDescription$ Target opponent chooses an artifact card in their graveyard. Put that card into play under your control.
+Oracle:Buyback B (You may pay an additional B as you cast this. If you do, put this into your hand as it resolves.)\nTarget opponent chooses an artifact card in their graveyard. Put that card into play under your control.

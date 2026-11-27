@@ -1,0 +1,7 @@
+Name:Defeat
+ManaCost:B
+Types:Sorcery
+A:SP$ Destroy | ValidTgts$ Creature.powerLE2+YouDontCtrl | TgtPrompt$ Select target creature you don't control with power 2 or less | SubAbility$ DBDiscard | SpellDescription$ Destroy target creature you don't control with power 2 or less. Raid — Each opponent that was attacked this turn discards a card.
+SVar:DBDiscard:DB$ Discard | Defined$ Player.Opponent | NumCards$ 1 | Mode$ TgtChoose | ConditionCheckSVar$ RaidTest | ConditionSVarCompare$ GE1
+SVar:RaidTest:Count$AttackersDeclared
+Oracle:Destroy target creature you don’t control with power 2 or less.\nRaid — Each opponent that was attacked this turn discards a card.

@@ -1,0 +1,7 @@
+Name:Dutiful Return
+ManaCost:3 B
+Types:Sorcery
+A:SP$ ChangeZone | Origin$ Graveyard | Destination$ Hand | TargetMin$ 0 | TargetMax$ 2 | TgtPrompt$ Choose up to two target creature cards in your graveyard | ValidTgts$ Creature.YouOwn | SpellDescription$ Return up to two target creature cards from your graveyard to your hand.
+K:Rebound
+DeckHints:Ability$Graveyard
+Oracle:Return up to two target creature cards from your graveyard to your hand.\nRebound (If you cast this from your hand, exile it as it resolves. At your next upkeep, you may cast this from exile without paying its mana cost.)

@@ -1,0 +1,8 @@
+Name:Salvage Slasher
+ManaCost:B
+Types:Artifact Creature Human Rogue
+PT:1/2
+S:Mode$ Continuous | AffectedDefined$ Self | AddPower$ X | Description$ CARDNAME gets +1/+0 for each artifact card in your graveyard.
+SVar:X:Count$ValidGraveyard Artifact.YouOwn
+K:Dash:1 B
+Oracle:This gets +1/+0 for each artifact card in your graveyard.\nDash 1B (You may cast this for its dash cost. If you do, it gains haste, and it’s returned from play to its owner’s hand at the next end step.)

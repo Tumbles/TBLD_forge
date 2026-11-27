@@ -1,0 +1,10 @@
+Name:Defiant Bloodlord
+ManaCost:3 B B
+Types:Flash Creature Vampire
+PT:4/5
+K:Flying
+T:Mode$ LifeGained | ValidPlayer$ You | TriggerZones$ Battlefield | Execute$ TrigDrain | TriggerDescription$ Whenever you gain life, each opponent loses that much life.
+SVar:TrigDrain:DB$ LoseLife | Defined$ Player.Opponent | LifeAmount$ X
+SVar:X:TriggerCount$LifeAmount
+DeckHints:Ability$LifeGain
+Oracle:Flying\nWhenever you gain life, each opponent loses that much life.

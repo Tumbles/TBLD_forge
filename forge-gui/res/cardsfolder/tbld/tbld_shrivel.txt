@@ -1,0 +1,9 @@
+Name:Shrivel
+ManaCost:1 B
+Types:Sorcery
+K:Replicate:1 B
+A:SP$ PumpAll | ValidCards$ Creature | NumAtt$ -1 | NumDef$ -1 | IsCurse$ True | SubAbility$ DBEffect | SpellDescription$ All creatures get -1/-1 this turn. If a creature would die this turn, exile it instead.
+SVar:DBEffect:DB$ Effect | ReplacementEffects$ ExileDying
+SVar:ExileDying:Event$ Moved | ValidCard$ Creature | Origin$ Battlefield | Destination$ Graveyard | ReplaceWith$ DBExile | Description$ If a creature would die this turn, exile it instead.
+SVar:DBExile:DB$ ChangeZone | Defined$ ReplacedCard | Origin$ Battlefield | Destination$ Exile
+Oracle:Replicate 1B (When you cast this, copy it for each time you paid its replicate cost.)\nAll creatures get -1/-1 this turn. If a creature would die this turn, exile it instead.

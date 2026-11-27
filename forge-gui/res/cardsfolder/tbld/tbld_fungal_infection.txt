@@ -1,0 +1,9 @@
+Name:Fungal Infection
+ManaCost:B
+Types:Flash Sorcery
+A:SP$ Pump | ValidTgts$ Creature | NumAtt$ -1 | NumDef$ -1 | IsCurse$ True | SubAbility$ DBGerminate | SpellDescription$ Target creature gets -1/-1 this turn. Germinate.
+SVar:DBGerminate:DB$ GenericChoice | Defined$ You | Choices$ DBCounter,DBSaproling
+SVar:DBCounter:DB$ PutCounter | Choices$ Creature.YouCtrl | ChoiceTitle$ Choose a creature you control | CounterType$ P1P1 | CounterNum$ 1 | SpellDescription$ Put a +1/+1 counter on a creature you control.
+SVar:DBSaproling:DB$ Token | TokenScript$ g_1_1_saproling | TokenOwner$ You | SpellDescription$ Create a 1/1 green Saproling token.
+DeckHas:Ability$Token|Counters
+Oracle:Target creature gets -1/-1 this turn.\nGerminate. (Put a +1/+1 counter on a creature you control or create a 1/1 green Saproling token.)

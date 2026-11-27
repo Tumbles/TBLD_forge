@@ -1,0 +1,11 @@
+Name:Bloodthrone Vampire
+ManaCost:1 B
+Types:Creature Vampire Noble
+PT:2/1
+A:AB$ Pump | Cost$ Sac<1/Creature> | Defined$ Self | NumAtt$ +2 | NumDef$ +2 | AILogic$ Aristocrat | SpellDescription$ CARDNAME gets +2/+2 this turn.
+A:AB$ ChangeZone | Cost$ 1 B | Origin$ Graveyard | Destination$ Exile | ValidTgts$ Creature | TgtPrompt$ Select target creature card in a graveyard | CheckSVar$ X | SVarCompare$ LE10 | SubAbility$ DBToken | SpellDescription$ Exile target creature card from a graveyard. Create a 2/2 black Zombie token with decayed. Activate only if an opponent has 10 or less life.
+SVar:DBToken:DB$ Token | TokenScript$ b_2_2_zombie_decayed | TokenOwner$ You
+SVar:X:PlayerCountOpponents$LowestLifeTotal
+SVar:AIPreference:SacCost$Creature.Other
+DeckHas:Ability$Sacrifice|Token
+Oracle:Sacrifice a creature: This gets +2/+2 this turn.\n1B: Exile target creature card from a graveyard. Create a 2/2 black Zombie token with decayed. Activate only if an opponent has 10 or less life.

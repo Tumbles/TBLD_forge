@@ -1,0 +1,12 @@
+Name:Piper of the Swarm
+ManaCost:1 B
+Types:Creature Human Shaman
+PT:1/3
+S:Mode$ Continuous | Affected$ Rat.YouCtrl | AddKeyword$ Menace | Description$ Rats you control have menace.
+A:AB$ Token | Cost$ 1 B T | TokenScript$ b_1_1_rat_noblock | TokenOwner$ You | SpellDescription$ Create a 1/1 black Rat token that can't block.
+A:AB$ GainControl | Cost$ 2 B B T Sac<3/Rat> | ValidTgts$ Creature | SpellDescription$ Gain control of target creature.
+SVar:AIPreference:SacCost$Creature.Rat+token,Creature.Rat+cmcLE3
+SVar:PlayMain1:TRUE
+DeckHints:Type$Rat
+DeckHas:Ability$Token
+Oracle:Rats you control have menace.\n1B, T: Create a 1/1 black Rat token that can’t block.\n2BB, T, Sacrifice three Rats: Gain control of target creature.

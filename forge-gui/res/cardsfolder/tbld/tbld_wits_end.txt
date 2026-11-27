@@ -1,0 +1,7 @@
+Name:Wits End
+ManaCost:5 B B
+Types:Sorcery
+R:Event$ Counter | ValidCard$ Card.Self | ValidSA$ Spell | Layer$ CantHappen | Description$ This spell can't be countered.
+A:SP$ Discard | Mode$ Hand | ValidTgts$ Player | SpellDescription$ Target player discards their hand.
+K:Suspend:2:2 B B
+Oracle:This spell can’t be countered.\nTarget player discards their hand.\nSuspend 2—2BB (Rather than cast this from your hand, you may pay 2BB and exile it with two time counters. At your upkeep, remove a time counter. When the last is removed, cast it without paying its mana cost.)

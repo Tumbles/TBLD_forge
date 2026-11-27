@@ -1,0 +1,11 @@
+Name:Nullpriest of Oblivion
+ManaCost:1 B
+Types:Creature Vampire Cleric
+PT:2/2
+K:Lifelink
+T:Mode$ ChangesZone | Origin$ Any | Destination$ Battlefield | ValidCard$ Card.Self | OptionalDecider$ You | Execute$ TrigReturn | TriggerDescription$ When CARDNAME enters, you may pay 1BB. When you do, put target creature card from a graveyard into play under your control. If an opponent has 10 or less life, that creature gains haste this turn.
+SVar:TrigReturn:AB$ ChangeZone | Cost$ 1 B B | Origin$ Graveyard | Destination$ Battlefield | GainControl$ True | ValidTgts$ Creature | TgtPrompt$ Select target creature card in a graveyard | SubAbility$ DBHaste
+SVar:DBHaste:DB$ Pump | Defined$ Targeted | KW$ Haste | ConditionCheckSVar$ X | ConditionSVarCompare$ LE10
+SVar:X:PlayerCountOpponents$LowestLifeTotal
+DeckHas:Ability$LifeGain|Graveyard
+Oracle:Lifelink\nWhen this enters, you may pay 1BB. When you do, put target creature card from a graveyard into play under your control. If an opponent has 10 or less life, that creature gains haste this turn.

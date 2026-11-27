@@ -1,0 +1,9 @@
+Name:Sibsig Muckdraggers
+ManaCost:8 B
+Types:Creature Zombie
+PT:3/6
+K:Delve
+T:Mode$ ChangesZone | Origin$ Any | Destination$ Battlefield | ValidCard$ Card.Self | Execute$ TrigChangeZone | TriggerDescription$ When CARDNAME enters, return up to two target creature cards from your graveyard to your hand.
+SVar:TrigChangeZone:DB$ ChangeZone | Origin$ Graveyard | Destination$ Hand | ValidTgts$ Creature.YouCtrl | TgtPrompt$ Select up to two target creature cards in your graveyard | TargetMin$ 0 | TargetMax$ 2
+DeckHints:Ability$Graveyard
+Oracle:Delve (Each card you exile from your graveyard while casting this pays for 1.)\nWhen this enters, return up to two target creature cards from your graveyard to your hand.

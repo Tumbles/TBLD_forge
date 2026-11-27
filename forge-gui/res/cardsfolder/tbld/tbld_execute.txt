@@ -1,0 +1,7 @@
+Name:Execute
+ManaCost:2 B
+Types:Flash Sorcery
+A:SP$ ChangeZone | ValidTgts$ Creature.White | TgtPrompt$ Select target white creature | Origin$ Battlefield | Destination$ Exile | SubAbility$ DBDraw | SpellDescription$ Exile target white creature. Draw a card.
+SVar:DBDraw:DB$ Draw
+AI:RemoveDeck:Random
+Oracle:Exile target white creature.\nDraw a card.

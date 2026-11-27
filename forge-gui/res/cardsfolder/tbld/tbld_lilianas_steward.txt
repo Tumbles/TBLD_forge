@@ -1,0 +1,6 @@
+Name:Lilianas Steward
+ManaCost:B
+Types:Creature Zombie Advisor
+PT:1/2
+A:AB$ Discard | Cost$ T Sac<1/CARDNAME> | ValidTgts$ Player | NumCards$ 1 | Mode$ TgtChoose | SpellDescription$ Target player discards a card.
+Oracle:T, Sacrifice this: Target player discards a card.

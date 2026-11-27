@@ -1,0 +1,14 @@
+Name:Plunge into Darkness
+ManaCost:1 B
+Types:Flash Sorcery
+A:SP$ Sacrifice | Defined$ You | Amount$ SacX | SacValid$ Creature | RememberSacrificed$ True | Optional$ True | SubAbility$ DBGainLife | SpellDescription$ Sacrifice any number of creatures. Gain 4 life for each creature sacrificed this way. Pay X life. Exile the top X cards of your library, then put one of them into your hand.
+SVar:DBGainLife:DB$ GainLife | Defined$ You | LifeAmount$ GainLifeX | SubAbility$ DBCleanup
+SVar:DBCleanup:DB$ Cleanup | ClearRemembered$ True | SubAbility$ DBChooseNumber
+SVar:SacX:Count$Valid Creature.YouCtrl
+SVar:GainLifeX:Count$RememberedSize/Times.4
+SVar:DBChooseNumber:DB$ ChooseNumber | Defined$ You | ListTitle$ amount of life to pay | Max$ LifeAmountX | AILogic$ DigACard | SubAbility$ DBDig
+SVar:DBDig:DB$ Dig | DigNum$ Y | DestinationZone2$ Exile | UnlessCost$ PayLife<Y> | UnlessSwitched$ True | UnlessPayer$ You
+SVar:Y:Count$ChosenNumber
+SVar:LifeAmountX:Count$YourLifeTotal/LimitMin.0
+AI:RemoveDeck:All
+Oracle:Sacrifice any number of creatures. Gain 4 life for each creature sacrificed this way.\nPay X life. Exile the top X cards of your library, then put one of them into your hand.

@@ -1,0 +1,9 @@
+Name:Moonglove Winnower
+ManaCost:2 B B
+Types:Creature Elf Rogue
+PT:3/3
+K:Deathtouch
+T:Mode$ ChangesZone | Origin$ Any | Destination$ Battlefield | ValidCard$ Card.Self | Execute$ TrigDestroy | TriggerDescription$ When CARDNAME enters, destroy target creature whose power and toughness aren't equal.
+SVar:TrigDestroy:DB$ Destroy | ValidTgts$ Creature.!equalPT | TgtPrompt$ Select target creature whose power and toughness aren't equal
+K:TypeCycling:Elf:2
+Oracle:Deathtouch\nWhen this enters, destroy target creature whose power and toughness aren’t equal.\nElfcycling 2

@@ -1,0 +1,6 @@
+Name:Reaping the Graves
+ManaCost:B B
+Types:Flash Sorcery
+A:SP$ ChangeZone | Origin$ Graveyard | Destination$ Hand | ChangeType$ Creature.YouOwn | ChangeNum$ 1 | Hidden$ True | AtRandom$ True | SpellDescription$ Return a creature card at random from your graveyard to your hand.
+K:Storm
+Oracle:Return a creature card at random from your graveyard to your hand.\nStorm (When you cast this, copy it for each spell cast before it this turn.)

@@ -1,0 +1,7 @@
+Name:Caustic Crawler
+ManaCost:2 B B
+Types:Creature Insect
+PT:4/2
+T:Mode$ ChangesZone | Origin$ Any | Destination$ Battlefield | ValidCard$ Land.YouCtrl | OptionalDecider$ You | TriggerZones$ Battlefield | Execute$ TrigCounters | TriggerDescription$ Landfall - Whenever a land enters under your control, you may put two -1/-1 counters on target creature.
+SVar:TrigCounters:DB$ PutCounter | ValidTgts$ Creature | CounterType$ M1M1 | CounterNum$ 2 | IsCurse$ True
+Oracle:Landfall - Whenever a land enters under your control, you may put two -1/-1 counters on target creature.

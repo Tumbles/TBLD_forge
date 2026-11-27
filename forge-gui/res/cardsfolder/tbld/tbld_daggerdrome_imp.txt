@@ -1,0 +1,9 @@
+Name:Daggerdrome Imp
+ManaCost:B
+Types:Creature Devil
+PT:1/1
+K:Flying
+K:Lifelink
+S:Mode$ CantBlock | ValidCard$ Card.Self | Description$ CARDNAME can't block.
+K:Encore:1 B
+Oracle:Flying, lifelink\nThis can’t block.\nEncore 1B (1B, Exile this from your graveyard: For each opponent, create a token copy with haste that attacks them this turn if able. Sacrifice them at the next end step. Can’t be activated at flash speed.)

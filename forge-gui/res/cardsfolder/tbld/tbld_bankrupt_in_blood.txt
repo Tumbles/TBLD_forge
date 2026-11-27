@@ -1,0 +1,7 @@
+Name:Bankrupt in Blood
+ManaCost:B
+Types:Sorcery
+R:Event$ Counter | ValidCard$ Card.Self | ValidSA$ Spell | Layer$ CantHappen | Description$ This spell can't be countered.
+A:SP$ Draw | Cost$ B Sac<2/Creature> | NumCards$ 3 | SpellDescription$ Draw three cards.
+SVar:AIPreference:SacCost$Creature.token,Creature.cmcLE2
+Oracle:This spell can't be countered.\nAs an additional cost this, sacrifice two creatures.\nDraw three cards.

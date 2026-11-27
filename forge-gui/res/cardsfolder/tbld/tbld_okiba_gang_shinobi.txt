@@ -1,0 +1,8 @@
+Name:Okiba-Gang Shinobi
+ManaCost:3 B B
+Types:Creature Rat Rogue
+PT:4/2
+K:Ninjutsu:3 B
+T:Mode$ DamageDone | ValidSource$ Card.Self | ValidTarget$ Player | Execute$ TrigDiscard | CombatDamage$ True | TriggerDescription$ Whenever CARDNAME deals combat damage to a player, that player discards two cards.
+SVar:TrigDiscard:DB$ Discard | Defined$ TriggeredTarget | NumCards$ 2 | Mode$ TgtChoose
+Oracle:Ninjutsu 3B (3B, Return an unblocked attacker you control to hand: Put this into play from your hand tapped and attacking.)\nWhenever this deals combat damage to a player, they discard two cards.

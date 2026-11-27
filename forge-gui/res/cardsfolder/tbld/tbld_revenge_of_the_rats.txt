@@ -1,0 +1,7 @@
+Name:Revenge of the Rats
+ManaCost:2 B B
+Types:Sorcery
+K:Flashback:2 B B
+A:SP$ Token | TokenAmount$ X | TokenScript$ b_1_1_rat_noblock | TokenOwner$ You | SpellDescription$ Create a 1/1 black Rat token that can't block for each creature card in your graveyard.
+SVar:X:Count$ValidGraveyard Creature.YouOwn
+Oracle:Create a 1/1 black Rat token that can’t block for each creature card in your graveyard.\nFlashback 2BB

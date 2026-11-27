@@ -1,0 +1,7 @@
+Name:Dregscape Zombie
+ManaCost:1 B
+Types:Creature Zombie
+PT:2/1
+S:Mode$ CantBlock | ValidCard$ Card.Self | Description$ CARDNAME can't block.
+K:Encore:ExileFromGrave<1/Creature.Other/creature card>
+Oracle:This can't block.\nEncore-Exile a creature card from your graveyard. (Exile a creature card from your graveyard, Exile this from your graveyard: For each opponent, create a token copy with haste that attacks them this turn if able. Sacrifice them at the next end step. Can't be activated at flash speed.)

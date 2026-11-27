@@ -1,0 +1,8 @@
+Name:Tattered Apparition
+ManaCost:1 B
+Types:Creature Spirit
+PT:2/2
+K:Flying
+A:AB$ Pump | Cost$ X B | Defined$ Self | NumAtt$ +X | NumDef$ +X | SpellDescription$ CARDNAME gets +X/+X this turn.
+SVar:X:Count$xPaid
+Oracle:Flying\nXB: This gets +X/+X this turn.

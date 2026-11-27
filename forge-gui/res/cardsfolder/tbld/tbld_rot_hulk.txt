@@ -1,0 +1,10 @@
+Name:Rot Hulk
+ManaCost:5 B B
+Types:Creature Zombie
+PT:5/5
+K:Menace
+T:Mode$ ChangesZone | Origin$ Any | Destination$ Battlefield | ValidCard$ Card.Self | Execute$ TrigReturn | TriggerDescription$ When CARDNAME enters, return up to three target Zombie cards from your graveyard to play.
+SVar:TrigReturn:DB$ ChangeZone | ValidTgts$ Card.Zombie+YouCtrl | TargetMin$ 0 | TargetMax$ 3 | TgtPrompt$ Select up to three target Zombie cards | Origin$ Graveyard | Destination$ Battlefield
+R:Event$ Moved | ValidCard$ Card.Self | Origin$ Battlefield | Destination$ Graveyard | ReplaceWith$ DBExile | Description$ If CARDNAME would die, exile it instead.
+SVar:DBExile:DB$ ChangeZone | Defined$ ReplacedCard | Origin$ Battlefield | Destination$ Exile
+Oracle:Menace\nWhen this enters, return up to three target Zombie cards from your graveyard to play.\nIf this would die, exile it instead.

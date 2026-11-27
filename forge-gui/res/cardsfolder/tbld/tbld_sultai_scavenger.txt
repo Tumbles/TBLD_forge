@@ -1,0 +1,9 @@
+Name:Sultai Scavenger
+ManaCost:5 B
+Types:Creature Bird Warrior
+PT:3/3
+K:Delve
+K:Flying
+A:AB$ Pump | Cost$ B ExileFromGrave<3/Card> | Defined$ Self | KW$ Indestructible | SpellDescription$ CARDNAME gains indestructible this turn.
+DeckHints:Ability$Graveyard
+Oracle:Delve\nFlying\nB, Exile three cards from your graveyard: This gains indestructible this turn.

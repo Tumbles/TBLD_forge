@@ -1,0 +1,10 @@
+Name:Eye Collector
+ManaCost:B
+Types:Creature Faerie Rogue
+PT:1/1
+K:Flying
+S:Mode$ CantBlock | ValidCard$ Card.Self | Description$ CARDNAME can't block.
+T:Mode$ DamageDone | ValidSource$ Card.Self | ValidTarget$ Player | Execute$ TrigMill | TriggerZones$ Battlefield | TriggerDescription$ Whenever CARDNAME deals damage to a player, each player mills one card.
+SVar:TrigMill:DB$ Mill | NumCards$ 1 | Defined$ Player
+DeckHas:Ability$Graveyard
+Oracle:Flying\nThis can't block.\nWhenever this deals damage to a player, each player mills one card.

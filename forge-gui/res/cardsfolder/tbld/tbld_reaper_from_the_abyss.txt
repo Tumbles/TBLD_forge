@@ -1,0 +1,9 @@
+Name:Reaper from the Abyss
+ManaCost:1 B B B
+Types:Creature Demon
+PT:4/4
+K:Flying
+T:Mode$ Phase | Phase$ End of Turn | ValidPlayer$ You | CheckSVar$ Morbid | TriggerZones$ Battlefield | Execute$ TrigDestroy | TriggerDescription$ Morbid — At your end step, if a creature died this turn, destroy target non-Demon creature.
+SVar:TrigDestroy:DB$ Destroy | ValidTgts$ Creature.nonDemon | TgtPrompt$ Select target non-Demon creature
+SVar:Morbid:Count$Morbid.1.0
+Oracle:Flying\nMorbid — At your end step, if a creature died this turn, destroy target non-Demon creature.

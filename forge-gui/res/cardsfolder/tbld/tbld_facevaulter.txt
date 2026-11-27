@@ -1,0 +1,9 @@
+Name:Facevaulter
+ManaCost:B
+Types:Creature Goblin Warrior
+PT:1/1
+K:Haste
+A:AB$ Pump | Cost$ Sac<1/Goblin> | Defined$ Self | NumAtt$ +3 | NumDef$ +3 | KW$ Flying | ActivationLimit$ 1 | SpellDescription$ CARDNAME gets +3/+3 and gains flying this turn. Activate only once each turn.
+DeckHints:Type$Goblin
+DeckHas:Ability$Sacrifice
+Oracle:Haste\nSacrifice a Goblin: This gets +3/+3 and gains flying this turn. Activate only once each turn.

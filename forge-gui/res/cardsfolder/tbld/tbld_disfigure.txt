@@ -1,0 +1,7 @@
+Name:Disfigure
+ManaCost:B
+Types:Flash Sorcery
+K:Kicker:5 B
+A:SP$ Pump | ValidTgts$ Creature | NumAtt$ -X | NumDef$ -X | IsCurse$ True | SpellDescription$ Target creature gets -2/-2 this turn. If this was kicked, it gets -4/-4 this turn instead.
+SVar:X:Count$Kicked.4.2
+Oracle:Kicker 5B (You may pay an additional 5B as you cast this.)\nTarget creature gets -2/-2 this turn. If this was kicked, it gets -4/-4 this turn instead.
