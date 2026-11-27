@@ -1,0 +1,8 @@
+Name:Flamekin Brawler
+ManaCost:R
+Types:Creature Elemental Warrior
+PT:0/2
+K:Menace
+K:Haste
+A:AB$ Pump | Cost$ R | Defined$ Self | NumAtt$ +1 | SpellDescription$ CARDNAME gets +1/+0 this turn.
+Oracle:Menace, haste\nR: This gets +1/+0 this turn.

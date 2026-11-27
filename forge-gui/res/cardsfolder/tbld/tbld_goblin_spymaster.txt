@@ -1,0 +1,9 @@
+Name:Goblin Spymaster
+ManaCost:2 R
+Types:Creature Goblin Rogue
+PT:2/1
+K:First Strike
+T:Mode$ Phase | Phase$ Upkeep | ValidPlayer$ Opponent | TriggerZones$ Battlefield | Execute$ TrigToken | TriggerDescription$ At each opponent's upkeep, that player creates a 1/1 red Goblin Rogue token with haste and "Creatures you control attack each combat if able."
+SVar:TrigToken:DB$ Token | TokenScript$ tbld_r_1_1_goblin_rogue_haste_all_attack | TokenOwner$ TriggeredPlayer
+DeckHas:Ability$Token
+Oracle:First strike\nAt each opponent's upkeep, that player creates a 1/1 red Goblin Rogue token with haste and “Creatures you control attack each combat if able.”

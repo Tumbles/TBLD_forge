@@ -1,0 +1,7 @@
+Name:Skinbrand Goblin
+ManaCost:1 R
+Types:Creature Goblin Warrior
+PT:2/1
+K:First Strike
+A:AB$ Pump | Cost$ Return<1/Land> Discard<1/CARDNAME> | ActivationZone$ Hand | PrecostDesc$ Bloodrush — | ValidTgts$ Creature.attacking | TgtPrompt$ Select target attacking creature | NumAtt$ +2 | NumDef$ +1 | KW$ First Strike | SpellDescription$ Target attacking creature gets +2/+1 and gains first strike this turn.
+Oracle:First strike\nBloodrush — Return a land you control to its owner's hand, Discard this: Target attacking creature gets +2/+1 and gains first strike this turn.

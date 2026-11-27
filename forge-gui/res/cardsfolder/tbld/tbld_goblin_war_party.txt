@@ -1,0 +1,9 @@
+Name:Goblin War Party
+ManaCost:3 R
+Types:Sorcery
+K:Entwine:2 R
+A:SP$ Charm | Choices$ DBTokens,DBBuff
+SVar:DBTokens:DB$ Token | TokenAmount$ 3 | TokenScript$ tbld_r_1_1_goblin_alone | TokenOwner$ You | SpellDescription$ Create three 1/1 red Goblin tokens that can't attack or block alone.
+SVar:DBBuff:DB$ PumpAll | NumAtt$ +3 | ValidCards$ Creature.YouCtrl | KW$ Haste | SpellDescription$ Creatures you control get +3/+0 and gain haste this turn.
+DeckHas:Ability$Token
+Oracle:Choose one —\n• Create three 1/1 red Goblin tokens that can't attack or block alone.\n• Creatures you control get +3/+0 and gain haste this turn.\nEntwine 2R (Choose both if you pay the entwine cost.)

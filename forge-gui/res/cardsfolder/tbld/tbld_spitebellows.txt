@@ -1,0 +1,9 @@
+Name:Spitebellows
+ManaCost:5 R
+Types:Enchantment Creature Elemental
+PT:6/1
+K:Evoke:1 R R
+T:Mode$ ChangesZone | Origin$ Any | Destination$ Battlefield | ValidCard$ Card.Self | Execute$ TrigDamageCreature | TriggerDescription$ When CARDNAME enters, it deals 6 damage to target creature.
+SVar:TrigDamageCreature:DB$ DealDamage | ValidTgts$ Creature | NumDmg$ 6
+SVar:NeedsToPlayEvoked:Creature.OppCtrl+toughnessLE6
+Oracle:When this enters, it deals 6 damage to target creature.\nEvoke 1RR (You may cast this for its evoke cost. If you do, sacrifice it when it enters.)

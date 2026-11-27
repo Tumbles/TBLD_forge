@@ -1,0 +1,7 @@
+Name:Twinflame
+ManaCost:1 R
+Types:Sorcery
+K:Strive:1 R
+A:SP$ CopyPermanent | ValidTgts$ Creature.YouCtrl | TgtPrompt$ Select target creature you control | TargetMin$ 0 | TargetMax$ MaxTargets | AddKeywords$ Haste | AtEOT$ Exile | SpellDescription$ Choose any number of target creatures you control. For each, create a token with haste that's a copy of it. Exile those tokens at the next end step.
+SVar:MaxTargets:Count$Valid Creature.YouCtrl
+Oracle:Strive - This costs 1R more for each target beyond the first.\nChoose any number of target creatures you control. For each, create a token with haste that's a copy of it. Exile those tokens at the next end step.

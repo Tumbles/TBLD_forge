@@ -1,0 +1,8 @@
+Name:Slice and Dice
+ManaCost:2 R
+Types:Sorcery
+K:Cycling:2 R
+A:SP$ DamageAll | NumDmg$ 4 | ValidCards$ Creature | ValidDescription$ each creature. | SpellDescription$ CARDNAME deals 4 damage to each creature.
+T:Mode$ Discarded | ValidCard$ Card.Self | IsPresent$ Mountain.YouCtrl | Execute$ TrigDamageAll | TriggerDescription$ When you discard CARDNAME, if you control a Mountain, it deals 1 damage to each creature.
+SVar:TrigDamageAll:DB$ DamageAll | NumDmg$ 1 | ValidCards$ Creature | ValidDescription$ each creature.
+Oracle:This deals 4 damage to each creature.\nCycling 2R (2R, Discard this: Draw a card.)\nWhen you discard this, if you control a Mountain, it deals 1 damage to each creature.

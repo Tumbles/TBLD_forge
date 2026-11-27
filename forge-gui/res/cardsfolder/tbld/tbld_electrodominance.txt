@@ -1,0 +1,7 @@
+Name:Electrodominance
+ManaCost:X R R
+Types:Flash Sorcery
+A:SP$ DealDamage | ValidTgts$ Any | NumDmg$ X | SubAbility$ DBPlay | SpellDescription$ CARDNAME deals X damage to any target. You may cast up to two spells with mana value X or less from your hand without paying their mana costs.
+SVar:DBPlay:DB$ Play | Valid$ Card.nonLand+YouOwn | ValidSA$ Spell.cmcLEX | ValidZone$ Hand | WithoutManaCost$ True | Amount$ 2 | Controller$ You | Optional$ True
+SVar:X:Count$xPaid
+Oracle:This deals X damage to any target. You may cast up to two spells with mana value X or less from your hand without paying their mana costs.

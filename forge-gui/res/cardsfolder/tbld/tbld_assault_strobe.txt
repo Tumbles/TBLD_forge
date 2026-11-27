@@ -1,0 +1,7 @@
+Name:Assault Strobe
+ManaCost:R
+Types:Sorcery
+K:Strive:2 R
+A:SP$ Pump | ValidTgts$ Creature | KW$ Double Strike | TargetMin$ 0 | TargetMax$ MaxTargets | SpellDescription$ Any number of target creatures each gain double strike this turn.
+SVar:MaxTargets:Count$Valid Creature
+Oracle:Strive - This costs 2R more for each target beyond the first.\nAny number of target creatures each gain double strike this turn.

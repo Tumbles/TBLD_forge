@@ -1,0 +1,12 @@
+# Cards that can't be scripted yet: "Name | reason". The pool tool shows them as blocked and leaves them out of
+# its to-do lists. Remove a line once the reason is gone (the mechanic exists, or Brett fixed the card).
+Akki Rockspeaker | Spirited (TBLD mechanic, not in the engine yet)
+Blisterspit Gremlin | Spirited (TBLD mechanic, not in the engine yet)
+Mardu Heart-Piercer | Spirited (TBLD mechanic, not in the engine yet)
+Play with Fire | Scan (TBLD mechanic, not in the engine yet)
+Strafe | Scan (TBLD mechanic, not in the engine yet)
+Stomping Slabs | Needs a custom script: reveal seven in random order, draw otherwise, the card goes to the bottom
+Zada Hedron Grinder | Brett's data: type line "Legendary Creature - Goblin 4"
+Indebted Spirit | Brett's data: type "Enhantment"
+Eater of Virtue | Brett's data: type "Legnedary"
+Bludgeon | Brett's data: type "sorcery" in lower case

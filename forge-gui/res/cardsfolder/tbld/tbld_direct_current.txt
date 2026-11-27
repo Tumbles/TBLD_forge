@@ -1,0 +1,7 @@
+Name:Direct Current
+ManaCost:R R
+Types:Sorcery
+K:Jump-start
+A:SP$ DealDamage | ValidTgts$ Any | NumDmg$ 2 | ConditionDefined$ Self | ConditionPresent$ Card.wasCastFromGraveyard | ConditionCompare$ EQ0 | SubAbility$ DBDamage3 | SpellDescription$ CARDNAME deals 2 damage to any target. If you cast this from your graveyard, it deals 3 damage to that target instead.
+SVar:DBDamage3:DB$ DealDamage | Defined$ Targeted | NumDmg$ 3 | ConditionDefined$ Self | ConditionPresent$ Card.wasCastFromGraveyard | ConditionCompare$ GE1
+Oracle:This deals 2 damage to any target. If you cast this from your graveyard, it deals 3 damage to that target instead.\nJump-start (You may cast this from your graveyard by discarding a card in addition to paying its other costs. Then exile this.)

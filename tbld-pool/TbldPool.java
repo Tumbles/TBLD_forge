@@ -65,6 +65,7 @@ public class TbldPool {
     static final Path SCRIPTS = CARDSFOLDER.resolve("tbld");
     static final Path REFERENCE = TOOL.resolve("reference/cardsfolder");
     static final Path EDITION = RES.resolve("editions/TumbledMTG.txt");
+    static final Path BLOCKED = TOOL.resolve("blocked.txt");
 
     static final Pattern BASIC = Pattern.compile("(Plains|Island|Swamp|Mountain|Forest|Wastes)(\\d*)");
     static final Map<String, String> BASIC_LETTER = Map.of("Plains", "P", "Island", "I", "Swamp", "S", "Mountain", "M", "Forest", "F", "Wastes", "W");
@@ -109,7 +110,7 @@ public class TbldPool {
             java tbld-pool/TbldPool.java <command>
               import [--no-pics]   read the card XML, token XML and pictures named in tbld-pool/sources.properties
               status               counts of scripted, out-of-date and unscripted cards
-              list [filters]       filters: --todo --done --outdated --auto (todo, reference has the same text)
+              list [filters]       filters: --todo --done --outdated --blocked --auto (todo, reference has the same text)
                                    --ref (todo with a reference script) --noref --tag T --color C --type T
                                    --text REGEX --name REGEX --pics (has a picture) --single (one face)
               show NAME...         pool entry, script, reference script and their texts side by side
@@ -818,6 +819,27 @@ public class TbldPool {
         List<String> problems = List.of();
     }
 
+    static Map<String, String> blockedCards;
+
+    /**
+     * Cards that can't be scripted yet, with the reason (a TBLD mechanic the engine lacks, or a problem in
+     * Brett's card data): tbld-pool/blocked.txt, one "Name | reason" per line.
+     */
+    static Map<String, String> blocked() throws IOException {
+        if (blockedCards == null) {
+            blockedCards = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
+            if (Files.exists(BLOCKED)) {
+                for (final String l : Files.readAllLines(BLOCKED, StandardCharsets.UTF_8)) {
+                    final int bar = l.indexOf('|');
+                    if (!l.startsWith("#") && bar > 0) {
+                        blockedCards.put(l.substring(0, bar).trim(), l.substring(bar + 1).trim());
+                    }
+                }
+            }
+        }
+        return blockedCards;
+    }
+
     static List<Row> rows(final Map<String, Entry> cards, final Map<String, Entry> tokens, final boolean withRefs) throws IOException {
         final Map<String, Script> scripts = readScripts();
         final List<Row> out = new ArrayList<>();
@@ -833,7 +855,10 @@ public class TbldPool {
                     continue;
                 }
             }
-            if (s == null) {
+            if (s == null && blocked().containsKey(e.name)) {
+                r.state = "blocked";
+                r.problems = List.of(blocked().get(e.name));
+            } else if (s == null) {
                 r.state = "todo";
                 if (withRefs) {
                     r.ref = ref(e);
@@ -858,8 +883,10 @@ public class TbldPool {
         final long auto = nonBasic.stream().filter(r -> r.auto).count();
         final long ref = nonBasic.stream().filter(r -> r.state.equals("todo") && r.ref != null).count();
         System.out.printf("Cards in the pool (not counting basic land versions): %d%n", nonBasic.size());
+        final long blockedCount = nonBasic.stream().filter(r -> r.state.equals("blocked")).count();
         System.out.printf("  scripted and matching the pool: %d%n  scripted but out of date: %d%n  not scripted: %d"
-            + " (%d with an official reference script, %d of them with the same text)%n", done, out, todo, ref, auto);
+            + " (%d with an official reference script, %d of them with the same text)%n  blocked (tbld-pool/blocked.txt): %d%n",
+            done, out, todo, ref, auto, blockedCount);
         final Map<String, String> basics = new TreeMap<>();
         for (final Row r : rows) {
             if (r.e.isBasic()) {
@@ -881,7 +908,7 @@ public class TbldPool {
             }
             n++;
             System.out.printf("%-34s %-12s %-38s %-8s %s%n", r.e.name, r.e.get("cost"), r.e.get("type") + (r.e.get("pt").isEmpty() ? "" : " " + r.e.get("pt")),
-                r.state, r.ref == null ? "" : (r.auto ? "auto " : "ref ") + r.ref.name());
+                r.state, r.state.equals("blocked") ? r.problems.get(0) : r.ref == null ? "" : (r.auto ? "auto " : "ref ") + r.ref.name());
         }
         System.out.println(n + " card(s)");
     }
@@ -901,6 +928,7 @@ public class TbldPool {
             final String v = i + 1 < args.size() ? args.get(i + 1) : "";
             final boolean ok = switch (a) {
                 case "--todo" -> r.state.equals("todo");
+                case "--blocked" -> r.state.equals("blocked");
                 case "--done" -> r.state.equals("done");
                 case "--outdated" -> r.state.equals("outdated");
                 case "--auto" -> r.auto;

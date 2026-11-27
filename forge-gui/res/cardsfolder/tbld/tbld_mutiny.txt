@@ -1,0 +1,8 @@
+Name:Mutiny
+ManaCost:R
+Types:Flash Sorcery
+A:SP$ TargetOnly | ValidTgts$ Creature | TgtPrompt$ Choose target creature | RememberTargets$ True | SubAbility$ DBEachDamage | SpellDescription$ Choose target creature. Each other creature with the same controller deals damage equal to its power to the chosen creature.
+SVar:DBEachDamage:DB$ EachDamage | ValidCards$ Creature.!IsRemembered+ControlledBy TargetedController | NumDmg$ Count$CardPower | Defined$ Remembered | SubAbility$ DBCleanup | StackDescription$ None
+SVar:DBCleanup:DB$ Cleanup | ClearRemembered$ True
+AI:RemoveDeck:All
+Oracle:Choose target creature. Each other creature with the same controller deals damage equal to its power to the chosen creature.

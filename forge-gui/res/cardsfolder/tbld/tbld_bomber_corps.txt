@@ -1,0 +1,7 @@
+Name:Bomber Corps
+ManaCost:R
+Types:Creature Human Soldier
+PT:1/2
+T:Mode$ Attacks | ValidCard$ Card.Self | TriggerZones$ Battlefield | Execute$ TrigDmg | IsPresent$ Creature.attacking+Other | NoResolvingCheck$ True | PresentCompare$ GE2 | TriggerDescription$ Battalion — Whenever CARDNAME and at least two other creatures attack, CARDNAME deals 2 damage to any target.
+SVar:TrigDmg:DB$ DealDamage | ValidTgts$ Any | NumDmg$ 2
+Oracle:Battalion — Whenever this and at least two other creatures attack, this deals 2 damage to any target.

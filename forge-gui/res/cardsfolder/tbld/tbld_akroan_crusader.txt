@@ -1,0 +1,7 @@
+Name:Akroan Crusader
+ManaCost:R
+Types:Creature Human Soldier
+PT:1/1
+T:Mode$ SpellCast | ValidActivatingPlayer$ You | TargetsValid$ Card.Self | TriggerZones$ Battlefield | Execute$ TrigCopy | TriggerDescription$ Heroic — Whenever you cast a spell that targets CARDNAME, create a token that's a copy of CARDNAME. It gains haste this turn.
+SVar:TrigCopy:DB$ CopyPermanent | Defined$ Self | PumpKeywords$ Haste | PumpDuration$ EOT
+Oracle:Heroic — Whenever you cast a spell that targets this, create a token that’s a copy of this. It gains haste this turn.

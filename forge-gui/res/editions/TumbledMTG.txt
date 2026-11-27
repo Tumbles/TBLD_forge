@@ -467,6 +467,113 @@ Type=Custom_Set
 461 C Valorous Stance
 462 C Wail of War
 463 U Warren Pilferers
+465 U Akroan Crusader
+466 C Apocalypse
+467 U Arc Trail
+468 U Arena Athlete
+469 U Assault Strobe
+470 U Banners Raised
+471 U Barbed Lightning
+472 U Bearer of the Heavens
+473 R Blaze
+475 U Blood Aspirant
+476 U Bomber Corps
+477 C Breath of Fury
+478 U Brimstone Volley
+479 U Burning Anger
+480 U Captain Ripley Vance
+481 U Cathartic Pyre
+482 U Cathartic Reunion
+483 U Combust
+484 C Count on Luck
+485 U Crackling Cyclops
+486 C Craters Claws
+487 U Cyclops Electromancer
+488 U Demanding Dragon
+489 U Direct Current
+490 U Dragonlords Servant
+491 U Dynacharge
+492 U Electrodominance
+493 C Experimental Frenzy
+494 C Falkenrath Gorger
+495 U Falkenrath Marauders
+496 U Falkenrath Perforator
+497 U Fanatic of Mogis
+498 U Faultgrinder
+499 U Flame Jab
+500 U Flame Wave
+501 U Flamekin Brawler
+502 U Full Throttle
+503 U Gaze of Adamaro
+504 U Go for Blood
+505 C Goblin Arsonist
+506 U Goblin Banneret
+507 U Goblin Firebug
+508 R Goblin Fireslinger
+509 C Goblin Matron
+510 U Goblin Rally
+511 U Goblin Spymaster
+512 U Goblin Tomb Raider
+513 U Goblin War Party
+514 U Granulate
+515 U Hellspark Elemental
+516 U Hidetsugus Second Rite
+517 U Hijack
+518 U Hordeling Outburst
+519 U Howl of the Horde
+520 C Impact Tremors
+521 C Irencrag Feat
+522 U Irreverent Revelers
+523 U Krark-Clan Stoker
+524 U Krenko Tin Street Kingpin
+525 U Kuldotha Rebirth
+526 C Lava Coil
+527 C Magic Missile
+528 U Magma Spray
+530 U Mardu Scout
+531 U Markov Blademaster
+532 U Maximize Velocity
+533 U Minotaur Skullcleaver
+534 C Mirror March
+535 U Mudbutton Torchrunner
+536 R Mutiny
+537 U Nyxborn Rollicker
+538 U Ordeal of Purphoros
+539 U Outpost Siege
+540 C Pardic Dragon
+542 U Prophetic Flamespeaker
+543 U Raging Redcap
+544 U Rain of Riches
+545 U Renegade Tactics
+546 U Roast
+547 U Rush of Blood
+548 U Satyr Hoplite
+549 U Satyr Rambler
+550 U Searing Spear
+551 U Shocking Sharpshooter
+552 U Siege-Gang Commander
+553 U Silverclad Ferocidons
+554 U Skarrgan Firebird
+555 U Skinbrand Goblin
+556 U Slice and Dice
+557 U Slobad Iron Goblin
+558 U Sowing Salt
+559 U Spitebellows
+561 U Stone Rain
+563 U Survey the Wreckage
+564 U Thatcher Revolt
+565 U Thrill of Possibility
+566 U Thriving Grubs
+567 U Titans Strength
+568 R Total War
+569 U Touch of the Void
+570 U Twinflame
+571 U Underworld Rage-Hound
+572 C Unexpected Windfall
+573 U Viashino Fangtail
+574 C Wild Wasteland
+575 U Wish
+576 U World at War
 F1 L Forest
 F2 L Forest
 F3 L Forest

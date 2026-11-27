@@ -1,0 +1,8 @@
+Name:Goblin Firebug
+ManaCost:R
+Types:Creature Goblin Warrior
+PT:2/2
+K:Haste
+T:Mode$ ChangesZone | Origin$ Battlefield | Destination$ Graveyard | ValidCard$ Card.Self | Execute$ TrigSacrifice | TriggerDescription$ When CARDNAME dies, sacrifice a land.
+SVar:TrigSacrifice:DB$ Sacrifice | SacValid$ Land
+Oracle:Haste\nWhen this dies, sacrifice a land.

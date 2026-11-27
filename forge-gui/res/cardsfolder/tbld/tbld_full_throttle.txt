@@ -1,0 +1,8 @@
+Name:Full Throttle
+ManaCost:4 R R
+Types:Sorcery
+A:SP$ AddPhase | ExtraPhase$ Combat | NumPhases$ 3 | ConditionPhases$ Main1,Main2 | SubAbility$ DBEffect | SpellDescription$ After this main phase, there are three additional combat phases. At each beginning of combat step this turn, untap all creatures that attacked this turn.
+SVar:DBEffect:DB$ Effect | Triggers$ TrigPhase
+SVar:TrigPhase:Mode$ Phase | Phase$ BeginCombat | Execute$ TrigUntapAll | TriggerDescription$ At each beginning of combat step this turn, untap all creatures that attacked this turn.
+SVar:TrigUntapAll:DB$ UntapAll | ValidCards$ Creature.attackedThisTurn
+Oracle:After this main phase, there are three additional combat phases.\nAt each beginning of combat step this turn, untap all creatures that attacked this turn.

@@ -1,0 +1,7 @@
+Name:Rush of Blood
+ManaCost:1 R R
+Types:Flash Sorcery
+A:SP$ Pump | ValidTgts$ Creature | NumAtt$ +X | SpellDescription$ Triple target creature's power this turn.
+SVar:X:Targeted$CardPower/Times.2
+K:Madness:R
+Oracle:Triple target creature’s power this turn.\nMadness R (If you discard this, discard it into exile, then cast it for its madness cost or put it into your graveyard.)

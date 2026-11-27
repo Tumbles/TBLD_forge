@@ -1,0 +1,11 @@
+Name:Thrill of Possibility
+ManaCost:1 R
+Types:Flash Sorcery
+A:SP$ RollDice | Cost$ 1 R Discard<1/Card> | Sides$ 6 | ResultSubAbilities$ 1:DBLoot,2-5:DBDraw2,6:DBDraw3 | SpellDescription$ Roll a d6.
+SVar:DBLoot:DB$ Draw | NumCards$ 2 | SubAbility$ DBDiscard | SpellDescription$ On 1, draw two cards, then discard a card.
+SVar:DBDiscard:DB$ Discard | Defined$ You | NumCards$ 1 | Mode$ TgtChoose
+SVar:DBDraw2:DB$ Draw | NumCards$ 2 | SpellDescription$ On 2-5, draw two cards.
+SVar:DBDraw3:DB$ Draw | NumCards$ 3 | SpellDescription$ On 6, draw three cards.
+DeckHas:Ability$Discard
+DeckHints:Keyword$Madness & Ability$Delirium
+Oracle:As an additional cost to cast this, discard a card.\nRoll a d6 —\n1 | Draw two cards, then discard a card.\n2-5 | Draw two cards.\n6 | Draw three cards.

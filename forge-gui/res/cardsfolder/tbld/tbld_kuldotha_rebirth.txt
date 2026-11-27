@@ -1,0 +1,10 @@
+Name:Kuldotha Rebirth
+ManaCost:R
+Types:Sorcery
+A:SP$ Token | Cost$ R Sac<1/Artifact> | TokenAmount$ 3 | TokenOwner$ You | TokenScript$ tbld_r_1_1_goblin_cant_attack_block | SpellDescription$ Create three 1/1 red Goblin tokens that can't attack or block.
+SVar:AIPreference:SacCost$Artifact.token,Artifact.cmcEQ1
+AI:RemoveDeck:Random
+DeckHas:Ability$Token
+DeckHints:Type$Goblin
+DeckNeeds:Type$Artifact
+Oracle:As an additional cost to cast this, sacrifice an artifact.\nCreate three 1/1 red Goblin tokens that can't attack or block.

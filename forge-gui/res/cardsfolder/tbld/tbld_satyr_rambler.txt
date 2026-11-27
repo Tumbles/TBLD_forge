@@ -1,0 +1,7 @@
+Name:Satyr Rambler
+ManaCost:R
+Types:Creature Satyr Scout
+PT:2/1
+K:Trample
+K:CARDNAME can't block.
+Oracle:Trample\nThis can’t block.

@@ -1,0 +1,7 @@
+Name:Mardu Scout
+ManaCost:R R
+Types:Creature Goblin Scout
+PT:3/1
+S:Mode$ ReduceCost | ValidCard$ Card | ValidSpell$ Spell.Dash | Activator$ You | Amount$ 1 | Description$ Dash costs you pay cost 1 less (as long as this is in play).
+K:Dash:1 R
+Oracle:Dash costs you pay cost 1 less (as long as this is in play).\nDash 1R (You may cast this for its dash cost. If you do, it gains haste, and it's returned from play to its owner's hand at the next end step.)

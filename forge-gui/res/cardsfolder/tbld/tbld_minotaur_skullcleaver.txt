@@ -1,0 +1,9 @@
+Name:Minotaur Skullcleaver
+ManaCost:2 R
+Types:Creature Minotaur Berserker
+PT:2/3
+K:Haste
+T:Mode$ ChangesZone | Origin$ Any | Destination$ Battlefield | ValidCard$ Card.Self | Execute$ TrigPump | TriggerDescription$ Whenever CARDNAME enters or becomes blocked, it gets +2/+0 this turn.
+T:Mode$ AttackerBlocked | ValidCard$ Card.Self | Execute$ TrigPump | Secondary$ True | TriggerDescription$ Whenever CARDNAME enters or becomes blocked, it gets +2/+0 this turn.
+SVar:TrigPump:DB$ Pump | Defined$ Self | NumAtt$ +2
+Oracle:Haste\nWhenever this enters or becomes blocked, it gets +2/+0 this turn.

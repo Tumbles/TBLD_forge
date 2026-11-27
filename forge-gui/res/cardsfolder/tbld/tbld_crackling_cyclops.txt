@@ -1,0 +1,8 @@
+Name:Crackling Cyclops
+ManaCost:2 R
+Types:Creature Giant Wizard
+PT:0/4
+T:Mode$ SpellCast | ValidCard$ Card.nonCreature | ValidActivatingPlayer$ You | Execute$ TrigPump | TriggerZones$ Battlefield | TriggerDescription$ Whenever you cast a noncreature spell, target Giant gets +3/+0 this turn.
+SVar:TrigPump:DB$ Pump | ValidTgts$ Giant | TgtPrompt$ Select target Giant | NumAtt$ +3
+SVar:BuffedBy:Card.nonLand+nonCreature
+Oracle:Whenever you cast a noncreature spell, target Giant gets +3/+0 this turn.

@@ -1,0 +1,6 @@
+Name:Searing Spear
+ManaCost:1 R
+Types:Flash Sorcery
+A:SP$ DealDamage | ValidTgts$ Any | NumDmg$ 3 | SpellDescription$ CARDNAME deals 3 damage to any target.
+K:Cycling:1
+Oracle:This deals 3 damage to any target.\nCycling 1 (1, Discard this: Draw a card.)

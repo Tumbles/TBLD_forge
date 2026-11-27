@@ -1,0 +1,6 @@
+Name:Banners Raised
+ManaCost:R
+Types:Flash Sorcery
+A:SP$ PumpAll | ValidCards$ Creature.YouCtrl | NumAtt$ +1 | SpellDescription$ Creatures you control get +1/+0 this turn.
+K:Cycling:1
+Oracle:Creatures you control get +1/+0 this turn.\nCycling 1 (1, Discard this: Draw a card.)

@@ -1,0 +1,10 @@
+Name:Cathartic Pyre
+ManaCost:1 R
+Types:Flash Sorcery
+A:SP$ Charm | Choices$ DBDmg,DBDisc
+SVar:DBDmg:DB$ DealDamage | ValidTgts$ Creature | TgtPrompt$ Select target creature | NumDmg$ 3 | SpellDescription$ CARDNAME deals 3 damage to target creature.
+SVar:DBDisc:DB$ Discard | Mode$ TgtChoose | NumCards$ 3 | Optional$ True | RememberDiscarded$ True | SubAbility$ DBDraw | SpellDescription$ Discard up to three cards, then draw that many cards.
+SVar:DBDraw:DB$ Draw | NumCards$ X | SubAbility$ DBCleanup
+SVar:DBCleanup:DB$ Cleanup | ClearRemembered$ True
+SVar:X:Remembered$Amount
+Oracle:Choose one -\n• This deals 3 damage to target creature.\n• Discard up to three cards, then draw that many cards.

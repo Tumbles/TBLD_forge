@@ -1,0 +1,8 @@
+Name:Renegade Tactics
+ManaCost:R
+Types:Sorcery
+A:SP$ Charm | Choices$ DBCantBlock,DBPump
+SVar:DBCantBlock:DB$ Pump | ValidTgts$ Creature | KW$ HIDDEN CARDNAME can't block. | IsCurse$ True | SubAbility$ DBDraw | SpellDescription$ Target creature can't block this turn. Draw a card.
+SVar:DBPump:DB$ Pump | ValidTgts$ Creature | NumAtt$ +1 | SubAbility$ DBDraw | SpellDescription$ Target creature gets +1/+0 this turn. Draw a card.
+SVar:DBDraw:DB$ Draw
+Oracle:Choose one -\n• Target creature can't block this turn.\n• Target creature gets +1/+0 this turn.\nDraw a card.

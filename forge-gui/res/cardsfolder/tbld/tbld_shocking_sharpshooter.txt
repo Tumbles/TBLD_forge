@@ -1,0 +1,9 @@
+Name:Shocking Sharpshooter
+ManaCost:1 R
+Types:Creature Human Archer
+PT:1/3
+K:Reach
+T:Mode$ ChangesZone | Origin$ Any | Destination$ Battlefield | ValidCard$ Creature.Other+YouCtrl | TriggerZones$ Battlefield | Execute$ TrigDamage | TriggerDescription$ Whenever another creature you control enters, CARDNAME deals 1 damage to target opponent.
+SVar:TrigDamage:DB$ DealDamage | ValidTgts$ Opponent | NumDmg$ 1
+K:Dash:R
+Oracle:Reach\nWhenever another creature you control enters, this deals 1 damage to target opponent.\nDash R (You may cast this for its dash cost. If you do, it gains haste, and it’s returned from play to its owner’s hand at the next end step.)

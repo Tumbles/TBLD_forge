@@ -1,0 +1,8 @@
+Name:Combust
+ManaCost:1 R
+Types:Flash Sorcery
+K:Split second
+A:SP$ DealDamage | ValidTgts$ Creature | NumDmg$ 1 | ConditionDefined$ Targeted | ConditionPresent$ Card.White,Card.Blue | ConditionCompare$ EQ0 | SubAbility$ DBDamage5 | SpellDescription$ CARDNAME deals 1 damage to target creature. It deals 5 damage instead if that creature is white and/or blue.
+SVar:DBDamage5:DB$ DealDamage | Defined$ Targeted | NumDmg$ 5 | ConditionDefined$ Targeted | ConditionPresent$ Card.White,Card.Blue | ConditionCompare$ GE1
+AI:RemoveDeck:Random
+Oracle:Split second (Players can’t cast spells or activate abilities that aren’t mana abilities while this spell is on the stack.)\nThis deals 1 damage to target creature. It deals 5 damage instead if that creature is white and/or blue.

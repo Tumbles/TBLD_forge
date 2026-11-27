@@ -1,0 +1,8 @@
+Name:Cyclops Electromancer
+ManaCost:3 R R
+Types:Creature Giant Wizard
+PT:4/2
+T:Mode$ ChangesZone | Origin$ Any | Destination$ Battlefield | ValidCard$ Card.Self | Execute$ TrigDealDamage | OptionalDecider$ You | TriggerDescription$ When CARDNAME enters, you may have it deal X damage divided among any number of target creatures, where X is the number of sorcery cards in your graveyard.
+SVar:TrigDealDamage:DB$ DealDamage | ValidTgts$ Creature | TgtPrompt$ Select any number of target creatures | TargetMin$ 1 | TargetMax$ X | NumDmg$ X | DividedAsYouChoose$ X
+SVar:X:Count$ValidGraveyard Sorcery.YouOwn
+Oracle:When this enters, you may have it deal X damage divided among any number of target creatures, where X is the number of sorcery cards in your graveyard.

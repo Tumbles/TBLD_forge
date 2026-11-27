@@ -1,0 +1,7 @@
+Name:Raging Redcap
+ManaCost:1 R
+Types:Creature Goblin Knight
+PT:1/2
+K:Double Strike
+S:Mode$ Continuous | Affected$ Card.Self | AddKeyword$ Haste | IsPresent$ Creature.YouCtrl+Other | Description$ As long as you control another creature, CARDNAME has haste.
+Oracle:Double strike\nAs long as you control another creature, this has haste.

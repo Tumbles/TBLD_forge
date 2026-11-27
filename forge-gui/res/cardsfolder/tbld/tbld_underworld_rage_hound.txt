@@ -1,0 +1,10 @@
+Name:Underworld Rage-Hound
+ManaCost:1 R
+Types:Creature Devil Dog
+PT:3/1
+S:Mode$ MustAttack | ValidCreature$ Card.Self | Description$ CARDNAME attacks each combat if able.
+K:Escape:3 R ExileFromGrave<4/Card.Other/other>
+K:etbCounter:P1P1:1:ValidCard$ Card.Self+escaped:CARDNAME escapes with a +1/+1 counter and a haste counter.
+S:Mode$ Continuous | Affected$ Card.Self+escaped | AddKeyword$ Haste | Secondary$ True | Description$ It has haste if it escaped.
+DeckHas:Ability$Counters
+Oracle:This attacks each combat if able.\nEscape—3R, Exile four other cards from your graveyard. (You may cast this from your graveyard for its escape cost.)\nThis escapes with a +1/+1 counter and a haste counter.

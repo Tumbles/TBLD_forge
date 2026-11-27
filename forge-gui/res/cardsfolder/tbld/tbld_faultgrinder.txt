@@ -1,0 +1,10 @@
+Name:Faultgrinder
+ManaCost:5 R
+Types:Flash Enchantment Creature Elemental
+PT:4/4
+K:Trample
+K:Evoke:3 R
+T:Mode$ ChangesZone | Origin$ Any | Destination$ Battlefield | ValidCard$ Card.Self | Execute$ TrigDestroy | TriggerDescription$ When CARDNAME enters, destroy target land.
+SVar:TrigDestroy:DB$ Destroy | ValidTgts$ Land
+SVar:NeedsToPlayEvoked:Land.OppCtrl
+Oracle:Trample\nWhen this enters, destroy target land.\nEvoke 3R (You may cast this for its evoke cost. If you do, its sacrificed when it enters.)

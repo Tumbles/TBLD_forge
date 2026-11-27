@@ -1,0 +1,8 @@
+Name:Barbed Lightning
+ManaCost:1 R
+Types:Flash Sorcery
+K:Entwine:R
+A:SP$ Charm | Choices$ DBDmgC,DBDmgP
+SVar:DBDmgC:DB$ DealDamage | ValidTgts$ Creature | NumDmg$ 3 | SpellDescription$ CARDNAME deals 3 damage to target creature.
+SVar:DBDmgP:DB$ DealDamage | ValidTgts$ Player | TgtPrompt$ Select target player | NumDmg$ 3 | SpellDescription$ CARDNAME deals 3 damage to target player.
+Oracle:Choose one —\n• This deals 3 damage to target creature.\n• This deals 3 damage to target player.\nEntwine R (Choose both if you pay the entwine cost.)

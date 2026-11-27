@@ -1,0 +1,11 @@
+Name:Krenko Tin Street Kingpin
+ManaCost:2 R
+Types:Legendary Creature Goblin Rogue
+PT:1/2
+T:Mode$ Attacks | ValidCard$ Creature.Self | Execute$ TrigPut | TriggerDescription$ Whenever CARDNAME attacks, put a +1/+1 counter on it, then create X 1/1 red Goblin tokens that can't attack or block, where X is the number of +1/+1 counters on it.
+SVar:TrigPut:DB$ PutCounter | Defined$ Self | CounterType$ P1P1 | CounterNum$ 1 | SubAbility$ DBToken
+SVar:DBToken:DB$ Token | TokenScript$ tbld_r_1_1_goblin_cant_attack_block | TokenOwner$ You | TokenAmount$ X
+SVar:X:Count$CardCounters.P1P1
+SVar:HasAttackEffect:TRUE
+DeckHas:Ability$Token|Counters
+Oracle:Whenever this attacks, put a +1/+1 counter on it, then create X 1/1 red Goblin tokens that can't attack or block, where X is the number of +1/+1 counters this has.

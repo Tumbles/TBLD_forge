@@ -1,0 +1,6 @@
+Name:Gaze of Adamaro
+ManaCost:1 R R R
+Types:Flash Sorcery
+A:SP$ DealDamage | ValidTgts$ Player | NumDmg$ X | SpellDescription$ CARDNAME deals damage to target player equal to twice the number of cards in their hand.
+SVar:X:TargetedPlayer$CardsInHand/Times.2
+Oracle:This deals damage to target player equal to twice the number of cards in their hand.

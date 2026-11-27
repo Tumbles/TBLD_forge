@@ -1,0 +1,6 @@
+Name:Hijack
+ManaCost:2 R
+Types:Sorcery
+A:SP$ GainControl | ValidTgts$ Artifact,Creature | TgtPrompt$ Select target artifact or creature | LoseControl$ EOT | Untap$ True | AddKWs$ Haste | SubAbility$ DBAnimate | SpellDescription$ Untap target artifact or creature and gain control of it this turn. It gains haste this turn. If it's a Vehicle, it becomes a creature in addition to its other types this turn.
+SVar:DBAnimate:DB$ Animate | Defined$ Targeted | Types$ Creature | ConditionDefined$ Targeted | ConditionPresent$ Vehicle | ConditionCompare$ GE1
+Oracle:Untap target artifact or creature and gain control of it this turn. It gains haste this turn. If it’s a Vehicle, it becomes a creature in addition to its other types this turn.

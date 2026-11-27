@@ -1,0 +1,7 @@
+Name:Hidetsugus Second Rite
+ManaCost:3 R
+Types:Flash Sorcery
+R:Event$ Counter | ValidCard$ Card.Self | ValidSA$ Spell | Layer$ CantHappen | Description$ This spell can't be countered.
+A:SP$ DealDamage | ValidTgts$ Player | ConditionCheckSVar$ X | ConditionSVarCompare$ EQ10 | NumDmg$ 10 | AILogic$ OppAtTenLife | SpellDescription$ If target player has exactly 10 life, CARDNAME deals 10 damage to that player.
+SVar:X:TargetedPlayer$LifeTotal
+Oracle:This spell can’t be countered.\nIf target player has exactly 10 life, this deals 10 damage to that player.

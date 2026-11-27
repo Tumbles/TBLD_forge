@@ -1,0 +1,12 @@
+Name:Rain of Riches
+ManaCost:3 R R
+Types:Enchantment
+T:Mode$ ChangesZone | Origin$ Any | Destination$ Battlefield | ValidCard$ Card.Self | Execute$ TrigToken | TriggerDescription$ When CARDNAME enters, create two Treasure tokens.
+SVar:TrigToken:DB$ Token | TokenAmount$ 2 | TokenScript$ c_a_treasure_sac
+T:Mode$ SpellCast | ValidCard$ Card.YouCtrl+CastSa Spell.ManaFromTreasure | ValidActivatingPlayer$ You | TriggerZones$ Battlefield | CheckSVar$ Y | SVarCompare$ EQ1 | Execute$ TrigDiscover | TriggerDescription$ The first time each turn you cast a spell that mana from a Treasure was spent to cast, discover X, where X is that spell's mana value.
+SVar:TrigDiscover:DB$ Discover | Num$ X
+SVar:X:TriggeredCard$CardManaCost
+SVar:Y:Count$ThisTurnCast_Card.YouCtrl+CastSa Spell.ManaFromTreasure
+DeckHas:Ability$Token|Sacrifice
+DeckHints:Type$Treasure
+Oracle:When this enters, create two Treasure tokens.\nThe first time each turn you cast a spell that mana from a Treasure was spent to cast, discover X, where X is that spell’s mana value. (Exile cards from the top of your library until you exile a nonland card with mana value X or less. Cast it without paying its mana cost or put it into your hand. Put the rest on the bottom in a random order.)

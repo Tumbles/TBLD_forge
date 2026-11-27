@@ -1,0 +1,6 @@
+Name:Brimstone Volley
+ManaCost:2 R
+Types:Flash Sorcery
+A:SP$ DealDamage | ValidTgts$ Any | NumDmg$ X | SpellDescription$ CARDNAME deals 3 damage to any target. Morbid — CARDNAME deals 6 damage to that target instead if a creature died this turn.
+SVar:X:Count$Morbid.6.3
+Oracle:This deals 3 damage to any target.\nMorbid — This deals 6 damage to that target instead if a creature died this turn.

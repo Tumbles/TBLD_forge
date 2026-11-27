@@ -1,0 +1,8 @@
+Name:Goblin Rogue Token
+ManaCost:no cost
+Colors:red
+Types:Creature Goblin Rogue
+PT:1/1
+K:Haste
+S:Mode$ MustAttack | ValidCreature$ Creature.YouCtrl | Description$ Creatures you control attack each combat if able.
+Oracle:Haste\nCreatures you control attack each combat if able.

@@ -1,0 +1,6 @@
+Name:Thatcher Revolt
+ManaCost:1 R
+Types:Sorcery
+A:SP$ Token | TokenAmount$ 3 | TokenScript$ tbld_w_1_1_peasant | TokenOwner$ You | PumpKeywords$ Haste | PumpDuration$ EOT | AtEOT$ Sacrifice | SpellDescription$ Create three 1/1 white Peasant tokens. They gain haste this turn. Sacrifice them at the next end step.
+SVar:PlayMain1:TRUE
+Oracle:Create three 1/1 white Peasant tokens. They gain haste this turn. Sacrifice them at the next end step.

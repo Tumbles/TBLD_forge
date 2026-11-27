@@ -1,0 +1,9 @@
+Name:Touch of the Void
+ManaCost:2 R
+Types:Sorcery
+K:Devoid
+A:SP$ DealDamage | ValidTgts$ Any | NumDmg$ 4 | RememberDamaged$ True | ReplaceDyingDefined$ Remembered.Creature | SubAbility$ DBDebuff | SpellDescription$ CARDNAME deals 4 damage to any target. If it's a creature, it loses indestructible this turn and can't be regenerated. If a creature dealt damage this way would die this turn, exile it instead.
+SVar:DBDebuff:DB$ Debuff | Defined$ Targeted | Keywords$ Indestructible | ConditionDefined$ Targeted | ConditionPresent$ Creature | ConditionCompare$ GE1 | SubAbility$ DBNoRegen
+SVar:DBNoRegen:DB$ Pump | Defined$ Targeted | KW$ HIDDEN CARDNAME can't be regenerated. | ConditionDefined$ Targeted | ConditionPresent$ Creature | ConditionCompare$ GE1 | SubAbility$ DBCleanup
+SVar:DBCleanup:DB$ Cleanup | ClearRemembered$ True
+Oracle:Devoid (This card has no color.)\nThis deals 4 damage to any target. If it’s a creature, it loses indestructible this turn and can’t be regenerated. If a creature dealt damage this way would die this turn, exile it instead.

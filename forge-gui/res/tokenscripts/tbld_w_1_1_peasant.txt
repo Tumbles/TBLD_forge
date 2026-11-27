@@ -1,0 +1,6 @@
+Name:Peasant Token
+ManaCost:no cost
+Colors:white
+Types:Creature Peasant
+PT:1/1
+Oracle:

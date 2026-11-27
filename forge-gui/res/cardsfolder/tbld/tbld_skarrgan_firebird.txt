@@ -1,0 +1,9 @@
+Name:Skarrgan Firebird
+ManaCost:2 R R R
+Types:Creature Elemental Bird
+PT:3/3
+K:Bloodthirst:3
+K:Flying
+A:AB$ ChangeZone | Cost$ R | Origin$ Graveyard | Destination$ Hand | ActivationZone$ Graveyard | CheckSVar$ OppDamaged | SpellDescription$ Return CARDNAME from your graveyard to your hand. Activate only if an opponent was dealt damage this turn.
+SVar:OppDamaged:PlayerCountRegisteredOpponents$HasPropertywasDealtDamageThisTurn
+Oracle:Bloodthirst 3 (If an opponent was dealt damage this turn, this enters with three +1/+1 counters.)\nFlying\nR: Return this from your graveyard to your hand. Activate only if an opponent was dealt damage this turn.

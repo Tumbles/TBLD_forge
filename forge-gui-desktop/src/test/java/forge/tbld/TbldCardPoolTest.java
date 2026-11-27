@@ -1,6 +1,9 @@
 package forge.tbld;
 
 import forge.StaticData;
+import forge.game.Game;
+import forge.game.card.Card;
+import forge.game.player.Player;
 import forge.ai.AITest;
 import forge.gui.card.CardScriptLinter;
 import forge.gui.card.CardScriptLinter.Finding;
@@ -80,5 +83,38 @@ public class TbldCardPoolTest extends AITest {
             }
         }
         AssertJUnit.assertTrue("not TBLD cards in the card database: " + missing, missing.isEmpty());
+    }
+
+    /** Every TBLD card and every TBLD token script ("tbld_" in tokenscripts) can be made into a game object. */
+    @Test
+    public void everyTbldCardAndTokenCanBeMade() throws IOException {
+        final Game game = initAndCreateGame();
+        final Player p = game.getPlayers().get(0);
+        final List<String> failed = new ArrayList<>();
+        for (final PaperCard pc : StaticData.instance().getCommonCards().getAllCards()) {
+            if (!"TBLD".equals(pc.getEdition())) {
+                continue;
+            }
+            try {
+                if (Card.fromPaperCard(pc, p) == null) {
+                    failed.add(pc.getName());
+                }
+            } catch (final RuntimeException e) {
+                failed.add(pc.getName() + " (" + e + ")");
+            }
+        }
+        try (Stream<Path> s = Files.list(root().resolve("forge-gui/res/tokenscripts"))) {
+            for (final Path f : s.filter(x -> x.getFileName().toString().startsWith("tbld_")).toList()) {
+                final String name = f.getFileName().toString().replaceFirst("\\.txt$", "");
+                try {
+                    if (createToken(name, p) == null) {
+                        failed.add("token " + name);
+                    }
+                } catch (final RuntimeException e) {
+                    failed.add("token " + name + " (" + e + ")");
+                }
+            }
+        }
+        AssertJUnit.assertTrue("could not be made: " + failed, failed.isEmpty());
     }
 }

@@ -1,0 +1,7 @@
+Name:Blaze
+ManaCost:X R
+Types:Flash Sorcery
+A:SP$ DealDamage | ValidTgts$ Any | NumDmg$ X | SpellDescription$ CARDNAME deals X damage to any target.
+SVar:X:Count$xPaid
+K:Cycling:1
+Oracle:This deals X damage to any target.\nCycling 1 (1, Discard this: Draw a card.)

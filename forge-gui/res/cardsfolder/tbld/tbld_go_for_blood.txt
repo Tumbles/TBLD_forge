@@ -1,0 +1,8 @@
+Name:Go for Blood
+ManaCost:1 R
+Types:Sorcery
+A:SP$ TargetOnly | ValidTgts$ Creature.YouCtrl | AILogic$ PowerDmg | TgtPrompt$ Select target creature you control | SubAbility$ DBDamage | StackDescription$ None | SpellDescription$ Target creature you control deals damage equal to its power to target creature you don't control.
+SVar:DBDamage:DB$ DealDamage | ValidTgts$ Creature.YouDontCtrl | AILogic$ PowerDmg | TgtPrompt$ Select target creature you don't control | NumDmg$ X | DamageSource$ ParentTarget
+SVar:X:ParentTargeted$CardPower
+K:Cycling:1
+Oracle:Target creature you control deals damage equal to its power to target creature you don't control.\nCycling 1 (1, Discard this: Draw a card.)

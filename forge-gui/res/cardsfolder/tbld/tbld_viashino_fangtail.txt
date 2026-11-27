@@ -1,0 +1,9 @@
+Name:Viashino Fangtail
+ManaCost:1 R R
+Types:Creature Lizard Warrior
+PT:2/2
+K:Riot
+A:AB$ DealDamage | Cost$ T | ValidTgts$ Any | NumDmg$ X | SpellDescription$ CARDNAME deals 1 damage to any target. If CARDNAME has a +1/+1 counter, it deals 2 damage instead.
+SVar:X:Count$Compare Y GE1.2.1
+SVar:Y:Count$CardCounters.P1P1
+Oracle:Riot (This enters with your choice of a +1/+1 counter or haste.)\nT: This deals 1 damage to any target. If this has a +1/+1 counter, it deals 2 damage instead.

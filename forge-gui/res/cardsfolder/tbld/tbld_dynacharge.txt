@@ -1,0 +1,6 @@
+Name:Dynacharge
+ManaCost:R
+Types:Flash Sorcery
+A:SP$ Pump | ValidTgts$ Creature.YouCtrl | TgtPrompt$ Select target creature you control. | NumAtt$ +3 | SpellDescription$ Target creature you control gets +3/+0 this turn.
+K:Overload:2 R R
+Oracle:Target creature you control gets +3/+0 this turn.\nOverload 2RR (You may cast this for its overload cost. If you do, change its text by replacing all instances of "target" with "each".)

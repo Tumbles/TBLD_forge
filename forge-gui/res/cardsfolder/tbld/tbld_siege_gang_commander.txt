@@ -1,0 +1,11 @@
+Name:Siege-Gang Commander
+ManaCost:3 R R
+Types:Creature Goblin Warrior
+PT:2/2
+A:AB$ DealDamage | Cost$ 1 R Sac<1/Goblin> | ValidTgts$ Any | NumDmg$ 2 | SpellDescription$ CARDNAME deals 2 damage to any target.
+T:Mode$ ChangesZone | Origin$ Any | Destination$ Battlefield | ValidCard$ Card.Self | Execute$ TrigToken | TriggerDescription$ When CARDNAME enters, create three 1/1 red Goblin tokens that can't attack or block alone.
+SVar:TrigToken:DB$ Token | TokenAmount$ 3 | TokenScript$ tbld_r_1_1_goblin_alone | TokenOwner$ You
+SVar:AIPreference:SacCost$Creature.Goblin+token,Creature.Goblin+cmcLE1
+DeckHas:Ability$Token
+DeckHints:Type$Goblin
+Oracle:When this enters, create three 1/1 red Goblin tokens that can’t attack or block alone.\n1R, Sacrifice a Goblin: This deals 2 damage to any target.

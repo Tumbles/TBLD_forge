@@ -1,0 +1,6 @@
+Name:Hordeling Outburst
+ManaCost:1 R R
+Types:Flash Sorcery
+A:SP$ Token | TokenAmount$ 3 | TokenScript$ tbld_r_1_1_goblin_alone | TokenOwner$ You | SpellDescription$ Create three 1/1 red Goblin tokens that can't attack or block alone.
+DeckHas:Ability$Token
+Oracle:Create three 1/1 red Goblin tokens that can't attack or block alone.

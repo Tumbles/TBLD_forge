@@ -1,0 +1,7 @@
+Name:Cathartic Reunion
+ManaCost:1 R
+Types:Sorcery
+A:SP$ Draw | NumCards$ 3 | UnlessCost$ Discard<2/Card> | UnlessPayer$ You | UnlessSwitched$ True | SpellDescription$ You may discard two cards. If you do, draw three cards.
+DeckHas:Ability$Discard
+DeckHints:Keyword$Madness & Ability$Delirium
+Oracle:You may discard two cards. If you do, draw three cards.

@@ -1,0 +1,7 @@
+Name:Granulate
+ManaCost:2 R R
+Types:Sorcery
+A:SP$ ChooseNumber | Max$ 20 | ListTitle$ Choose a number | SubAbility$ DBDestroyAll | StackDescription$ SpellDescription | SpellDescription$ Choose a number. Destroy each nonland artifact with mana value less than the chosen number.
+SVar:DBDestroyAll:DB$ DestroyAll | ValidCards$ Artifact.nonLand+cmcLTX
+SVar:X:Count$ChosenNumber
+Oracle:Choose a number. Destroy each nonland artifact with mana value less than the chosen number.

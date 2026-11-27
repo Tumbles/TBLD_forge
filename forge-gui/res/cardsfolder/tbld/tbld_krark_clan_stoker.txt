@@ -1,0 +1,9 @@
+Name:Krark-Clan Stoker
+ManaCost:R
+Types:Creature Goblin Shaman
+PT:1/1
+K:Haste
+S:Mode$ Continuous | Affected$ Goblin.YouCtrl | AddAbility$ ABMana | Description$ Goblins you control have "T, Sacrifice an artifact: Add RR."
+SVar:ABMana:AB$ Mana | Cost$ T Sac<1/Artifact> | Produced$ R | Amount$ 2 | SpellDescription$ Add {R}{R}.
+AI:RemoveDeck:All
+Oracle:Haste\nGoblins you control have “T, Sacrifice an artifact: Add RR.”

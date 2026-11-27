@@ -1,0 +1,9 @@
+Name:Wish
+ManaCost:2 R
+Types:Flash Sorcery
+A:SP$ ChangeZone | Origin$ Sideboard | Destination$ Exile | ChangeType$ Card.YouOwn | ChangeNum$ 1 | Hidden$ True | Mandatory$ True | RememberChanged$ True | SubAbility$ DBEffect | SpellDescription$ Exile a card from your sideboard. You may cast it. If it's a land card, you may play it this turn.
+SVar:DBEffect:DB$ Effect | RememberObjects$ Remembered | StaticAbilities$ STPlay | ForgetOnMoved$ Exile | SubAbility$ DBCleanup
+SVar:STPlay:Mode$ Continuous | Affected$ Card.IsRemembered | MayPlay$ True | AffectedZone$ Exile | Description$ You may play the exiled card this turn.
+SVar:DBCleanup:DB$ Cleanup | ClearRemembered$ True
+AI:RemoveDeck:All
+Oracle:Exile a card from your sideboard. You may cast it. If it’s a land card, you may play it this turn.

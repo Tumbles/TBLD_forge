@@ -1,0 +1,10 @@
+Name:Goblin Tomb Raider
+ManaCost:R
+Types:Creature Goblin Rogue
+PT:1/2
+S:Mode$ Continuous | AffectedDefined$ Self | AddPower$ 1 | IsPresent$ Artifact.YouCtrl | AddKeyword$ Haste | Description$ As long as you control an artifact, CARDNAME gets +1/+0 and has haste.
+T:Mode$ ChangesZone | Origin$ Battlefield | Destination$ Graveyard | ValidCard$ Card.Self | Execute$ TrigTreasure | TriggerDescription$ When CARDNAME dies, create a Treasure token.
+SVar:TrigTreasure:DB$ Token | TokenScript$ c_a_treasure_sac | TokenOwner$ You
+DeckHints:Type$Artifact
+DeckHas:Ability$Token
+Oracle:As long as you control an artifact, this gets +1/+0 and has haste.\nWhen this dies, create a Treasure token.

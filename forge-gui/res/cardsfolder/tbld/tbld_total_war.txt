@@ -1,0 +1,7 @@
+Name:Total War
+ManaCost:2 R
+Types:Enchantment
+A:AB$ UntapAll | Cost$ R Discard<1/Card> | ValidCards$ Creature.attackedThisTurn | SorcerySpeed$ True | SubAbility$ DBAddCombat | SpellDescription$ Untap each creature that attacked this turn. After this main phase, there is an additional combat phase followed by an additional main phase. Can't be activated at flash speed.
+SVar:DBAddCombat:DB$ AddPhase | ExtraPhase$ Combat | FollowedBy$ Main2 | ConditionPhases$ Main1,Main2
+AI:RemoveDeck:All
+Oracle:R, Discard a card: Untap each creature that attacked this turn. After this main phase, there is an additional combat phase followed by an additional main phase. Can't be activated at flash speed.

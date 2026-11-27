@@ -1,0 +1,8 @@
+Name:Demanding Dragon
+ManaCost:2 R R
+Types:Creature Dragon
+PT:4/4
+K:Flying
+K:Haste
+A:AB$ Tap | Cost$ Sac<1/Creature> | Defined$ Self | IsPresent$ Card.Self+untapped | Activator$ Player | SpellDescription$ Tap CARDNAME. Activate only if CARDNAME is untapped. Any player may activate this ability.
+Oracle:Flying, haste\nSacrifice a creature: Tap this. Activate only if this is untapped. Any player may activate this ability.

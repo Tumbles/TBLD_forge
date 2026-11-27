@@ -1,0 +1,8 @@
+Name:Goblin Rally
+ManaCost:X R
+Types:Sorcery
+A:SP$ Token | TokenAmount$ X | TokenScript$ tbld_r_1_1_goblin_alone | TokenOwner$ You | SpellDescription$ Create X 1/1 red Goblin tokens that can't attack or block alone.
+SVar:X:Count$xPaid
+K:Flashback:X R R R
+DeckHas:Ability$Token
+Oracle:Create X 1/1 red Goblin tokens that can’t attack or block alone.\nFlashback XRRR (You may cast this card from your graveyard for its flashback cost. Then exile it.)
