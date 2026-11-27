@@ -56,7 +56,7 @@ public class TbldWebServerTest extends AITest {
                     if (c.has("name") && "Mountain".equals(c.get("name").getAsString())) {
                         mountains++;
                         AssertJUnit.assertEquals("TBLD", c.get("set").getAsString());
-                        AssertJUnit.assertEquals("/pics/TBLD%20Mountain69.png", c.has("img") ? c.get("img").getAsString() : "");
+                        AssertJUnit.assertEquals("/pics/TBLD%20Mountain69.jpg", c.has("img") ? c.get("img").getAsString() : "");
                     }
                 }
             }
@@ -75,7 +75,7 @@ public class TbldWebServerTest extends AITest {
                 AssertJUnit.assertFalse("an effect's name shows a card id: " + name, name.matches(".*\\(\\d+\\).*"));
             }
             final JsonObject one = bot1.commandCards.get("Player One");
-            AssertJUnit.assertEquals("/pics/TBLD%20Player%20One.png", one.has("img") ? one.get("img").getAsString() : "");
+            AssertJUnit.assertEquals("/pics/TBLD%20Player%20One.jpg", one.has("img") ? one.get("img").getAsString() : "");
             AssertJUnit.assertEquals("Emblem — Book of Lore", one.get("type").getAsString());
             AssertJUnit.assertTrue(one.get("text").getAsString().startsWith("You skip your first draw step."));
             AssertJUnit.assertTrue("no emblem shown during the mulligan" + report, bot2.sawCommandBeforeKeep);

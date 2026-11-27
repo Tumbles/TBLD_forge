@@ -92,7 +92,7 @@ public class TbldPriorityAndPaymentTest extends AITest {
             final JsonObject effect = bot1.commandCards.get("Searing Touch's Effect");
             AssertJUnit.assertNotNull("seat 1 never saw Searing Touch's effect; command zone: " + bot1.commandCards.keySet() + report, effect);
             AssertJUnit.assertTrue("the effect is not marked as one: " + effect, effect.has("effect") && effect.get("effect").getAsBoolean());
-            AssertJUnit.assertEquals("/pics/TBLD%20Searing%20Touch.png", effect.has("img") ? effect.get("img").getAsString() : "");
+            AssertJUnit.assertEquals("/pics/TBLD%20Searing%20Touch.jpg", effect.has("img") ? effect.get("img").getAsString() : "");
         } finally {
             if (bot1 != null) {
                 bot1.close();

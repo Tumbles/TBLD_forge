@@ -1,0 +1,1921 @@
+# TBLD tokens, emblems and back faces, written by "java tbld-pool/TbldPool.java import" from Brett's Cockatrice export.
+# Do not edit: change the cards in Brett's files and import again.
+
+[Adorned Pouncer Token]
+type=Token Creature - Zombie Cat
+pt=4/4
+text=Double Strike
+color=W
+related=Adorned Pouncer
+
+[Angel]
+type=Token Creature - Angel
+pt=3/3
+text=Flying, vigilance
+color=W
+related=Justicars Sentence
+
+[Angel2]
+type=Token Creature - Angel
+pt=3/3
+text=Flying, vigilance
+color=W
+related=Pious Invocation
+
+[Angel3]
+type=Token Creature - Angel
+pt=3/3
+text=Flying, vigilance
+color=W
+related=Rampage of the Valkyries
+
+[Angel4]
+type=Token Creature - Angel
+pt=3/3
+text=Flying, vigilance
+color=W
+related=Conrads Command|Conrad the First Light
+
+[Assembly-Worker]
+type=Token Artifact Creature - Assembly-Worker
+pt=2/2
+text=1, T: Another target Assembly-Worker gets +1/+1 this turn.
+related=Urzas Factory
+
+[Backyard Resurrection]
+type=Sorcery
+text=Return target creature card from your graveyard to play.
+color=B
+backface=1
+
+[Bear]
+type=Token Creature - Bear
+pt=4/4
+color=G
+related=Highland Tracker
+
+[Beast]
+type=Token Creature - Beast
+pt=3/3
+color=G
+related=Rumblethrag
+
+[Beast2]
+type=Token Creature - Beast
+pt=3/3
+color=G
+related=Garruk Savage Hunter
+
+[Beast3]
+type=Token Creature - Beast
+pt=3/3
+color=G
+related=Stalking Predators
+
+[Beast4]
+type=Token Creature - Beast
+pt=3/3
+color=G
+related=Denmother Beast
+
+[Bird]
+type=Token Creature - Bird
+pt=1/2
+text=Flying
+color=W
+related=Unity_Strength|Battle Screech
+
+[Bird2]
+type=Token Creature - Bird
+pt=1/2
+text=Flying
+color=W
+related=Court Huntsman
+
+[Bird3]
+type=Token Creature - Bird
+pt=1/2
+text=Flying, vigilance
+color=W
+related=Majesty Charm
+
+[Bird4]
+type=Token Creature - Bird
+pt=1/1
+text=Flying
+color=U
+related=Hat Trick
+
+[Blight]
+type=Token Enchantment - Blight
+text=At your end step, lose 1 life.\n2: Exile this.
+related=Sootwing Phoenix|Ashmaw Tyrant
+
+[Blight2]
+type=Token Enchantment - Blight
+text=At your end step, lose 1 life.\n2: Exile this.
+related=Altar of Compleation|Plaguepiercer
+
+[Blight3]
+type=Token Enchantment - Blight
+text=At your end step, lose 1 life.\n2: Exile this.
+related=Leech Seed
+
+[Blood]
+type=Token Artifact - Blood
+text=1, Discard a card, Sacrifice this: Draw a card. Can’t be activated at flash speed.
+related=Tithe Drinker|Vampires Kiss|Bloodtithe Harvester|Voldaren Epicure|Blood Fountain
+
+[Blooming Titan]
+type=Creature - Dinosaur Plant
+pt=2/6
+text=Untap all creatures and lands you control during each other player’s untap step.
+color=G
+backface=1
+
+[Boar]
+type=Token Creature - Boar
+pt=2/2
+text=Trample
+color=G
+related=Stampede Surfer
+
+[Brazen Poltergeist]
+type=Creature - Spirit
+pt=1/7
+text=Menace\nIf this would deal damage to a player, that player discards a card instead.\nWhenever an opponent discards a card, they lose 3 life
+color=B
+backface=1
+
+[Bristling Dunerunner]
+type=Creature - Rat
+pt=5/3
+text=First strike\nWhenever an opponent attacks with two or more creatures, untap this.
+color=W
+backface=1
+
+[Cat Warrior]
+type=Token Creature - Cat Warrior
+pt=2/1
+color=W
+related=Swiftclaw Commando
+
+[Centaur]
+type=Token Creature - Centaur
+pt=3/2
+text=Trample
+color=G
+related=Conclaves Call
+
+[Centaur2]
+type=Token Creature - Centaur
+pt=3/2
+text=Trample
+color=G
+related=Sanctuary Guildmage
+
+[Chapel Shieldgeist]
+type=Creature - Spirit Cleric
+pt=2/1
+text=Flying, first strike\nEach creature you control has ward 1. (Whenever this becomes the target of a spell or ability an opponent controls, counter it unless that player pays 1.)\nIf this would be put into a graveyard from anywhere, exile it instead.
+color=W
+backface=1
+
+[Citys Blessing]
+type=Token
+related=TBLD
+
+[Cleric]
+type=Token Creature - Cleric
+pt=1/1
+text=Lifelink
+color=W
+related=Magus of the Dawn
+
+[Clue]
+type=Token Enchantment - Clue
+related=Confirm Suspicions|Sleuthing Woodsman
+
+[Clue10]
+type=Token Enchantment - Clue
+related=Uncanny Observer
+
+[Clue11]
+type=Token Enchantment - Clue
+related=Churned Waves
+
+[Clue12]
+type=Token Enchantment - Clue
+related=No Witnesses|Lazav Wearer of Faces
+
+[Clue13]
+type=Token Enchantment - Clue
+related=Busy Boughs
+
+[Clue2]
+type=Token Enchantment - Clue
+related=Midnight Errand
+
+[Clue3]
+type=Token Enchantment - Clue
+related=Curious Inquiry
+
+[Clue4]
+type=Token Enchantment - Clue
+related=Root Out
+
+[Clue5]
+type=Token Enchantment - Clue
+related=Syndicate Heavy|Follow the Bodies
+
+[Clue6]
+type=Token Enchantment - Clue
+related=Inquisitive Mermaid|Gillys Command
+
+[Clue7]
+type=Token Enchantment - Clue
+related=Mysterious Disappearance
+
+[Clue8]
+type=Token Enchantment - Clue
+related=Scrape By
+
+[Clue9]
+type=Token Enchantment - Clue
+related=Hard Evidence
+
+[Command Seal]
+type=Emblem - Command Seal
+text=2, Exile this: Choose a card in exile, card in your graveyard, card in your command zone, or creature you control. If it’s your captain, return it to your hand. This ability can’t be countered.
+
+[Commune with Nature]
+type=Sorcery
+text=Look at the top five cards of your library. You may reveal a creature card from among them and put it into your hand. Put the rest on the bottom of your library in a random order.
+color=G
+backface=1
+
+[Construct]
+type=Token Artifact Creature - Construct
+pt=0/0
+text=This gets +1/+1 for each artifact you control.
+related=Grim Foundry
+
+[Contradict]
+type=Flash Sorcery
+text=Counter target spell.\nScry 2, then draw a card.
+color=U
+backface=1
+
+[Corpseyard Howler]
+type=Creature - Werewolf
+pt=3/2
+text=G, Exile two creature cards from your graveyard: Creatures you control get +1/+1 this turn.\nAt each upkeep, if a player cast two or more spells last turn, transform this.
+color=G
+backface=1
+
+[Crab]
+type=Token Creature - Crab
+pt=0/3
+color=U
+related=Hard Evidence
+
+[Crab2]
+type=Token Creature - Crab
+pt=0/3
+color=U
+related=Negumas Creativity
+
+[Crab3]
+type=Token Creature - Crab
+pt=0/3
+color=U
+related=Auroras Invitation
+
+[Damnable Pact]
+type=Flash Sorcery
+text=Target player draws X cards and loses X life.
+color=B
+backface=1
+
+[Day Token]
+type=Token
+related=Night Token|Vadrik Astral Archmage|Sleuthing Woodsman|Reckless Waif|Kessig Forgemaster|Gatstaf Grave Digger
+
+[Deathbonnet Hulk]
+type=Creature - Fungus Horror
+pt=3/3
+text=At your upkeep, you may exile a card from a graveyard. If a creature card was exiled this way, put a +1/+1 counter on this.
+color=G
+backface=1
+
+[Demon]
+type=Token Creature - Demon
+pt=5/5
+text=Flying
+related=Skirsdag High Priest
+
+[Demon2]
+type=Token Creature - Demon
+pt=5/5
+text=Flying
+related=Priest of the Blood Rite
+
+[Demon3]
+type=Token Creature - Demon
+pt=5/5
+text=Flying
+related=Infernal Feast
+
+[Demon4]
+type=Token Creature - Demon
+pt=5/5
+text=Flying
+related=Wicked Lair
+
+[Devil]
+type=Token Creature - Devil
+pt=1/1
+text=When this dies, it deals 1 damage to any target.
+color=R
+related=Tibalt Sadistic Reprobate|Tibalts Command
+
+[Dictum of the Scalelords]
+type=Sorcery
+text=Destroy target artifact or enchantment.\nDraw a card.
+color=W
+backface=1
+
+[Dog]
+type=Token Creature - Dog
+pt=1/1
+text=This can’t attack unless you control a nontoken creature.
+color=W
+related=Court Huntsman
+
+[Dragon]
+type=Token Creature - Dragon
+pt=4/4
+text=Flying\n1R: This gets +1/+0 this turn.
+color=R
+related=Krosh the Terrible
+
+[Earthshaker Hulk]
+type=Creature - Dinosaur
+pt=6/5
+text=Trample\nWhen this transforms into Earthshaker Hulk, creatures without flying can’t block this turn.
+color=R
+backface=1
+
+[Eldrazi]
+type=Token Creature - Eldrazi
+pt=10/10
+related=Desolation Twin
+
+[Eldrazi Spawn]
+type=Token Creature - Eldrazi Spawn
+pt=1/1
+text=Sacrifice this: Add C.
+related=Sifter of Skulls|Emrakuls Birther
+
+[Eldrazi Spawn10]
+type=Token Creature - Eldrazi Spawn
+pt=1/1
+text=Sacrifice this: Add C.
+related=Drowner of Hope
+
+[Eldrazi Spawn11]
+type=Token Creature - Eldrazi Spawn
+pt=1/1
+text=Sacrifice this: Add C.
+related=Void Attendant
+
+[Eldrazi Spawn2]
+type=Token Creature - Eldrazi Spawn
+pt=1/1
+text=Sacrifice this: Add C.
+related=Blisterpod|Writhing Chrysalis|Skittering Infestor
+
+[Eldrazi Spawn3]
+type=Token Creature - Eldrazi Spawn
+pt=1/1
+text=Sacrifice this: Add C.
+related=Birthing Hulk
+
+[Eldrazi Spawn4]
+type=Token Creature - Eldrazi Spawn
+pt=1/1
+text=Sacrifice this: Add C.
+related=Skittering Invasion
+
+[Eldrazi Spawn5]
+type=Token Creature - Eldrazi Spawn
+pt=1/1
+text=Sacrifice this: Add C.
+related=From Beyond|Eldrazi Skyspawner|Vessel Drone
+
+[Eldrazi Spawn6]
+type=Token Creature - Eldrazi Spawn
+pt=1/1
+text=Sacrifice this: Add C.
+related=Scion Summoner|Kozilek Cosmic Distortion
+
+[Eldrazi Spawn7]
+type=Token Creature - Eldrazi Spawn
+pt=1/1
+text=Sacrifice this: Add C.
+related=Otherworldly Incursion
+
+[Eldrazi Spawn8]
+type=Token Creature - Eldrazi Spawn
+pt=1/1
+text=Sacrifice this: Add C.
+related=Brood Monitor
+
+[Eldrazi Spawn9]
+type=Token Creature - Eldrazi Spawn
+pt=1/1
+text=Sacrifice this: Add C.
+related=Culling Drone
+
+[Eldrazi2]
+type=Token Creature - Eldrazi
+pt=10/10
+related=Idol of Oblivion
+
+[Elemental]
+type=Token Creature - Elemental
+pt=*/*
+text=This creature’s power and toughness are each equal to the number of creatures you control.
+color=MGW
+related=Vernal Sovereign|Conclave Guardian Grove|Worldsoul Evangel
+
+[Elemental2]
+type=Token Creature - Elemental
+pt=*/*
+text=This creature’s power and toughness are each equal to the number of creatures you control.
+color=R
+related=Purphoross Intervention
+
+[Elemental3]
+type=Token Creature - Elemental
+pt=1/1
+text=Flying
+color=U
+related=Arizoa Tender
+
+[Elemental4]
+type=Token Creature - Elemental
+pt=2/1
+text=Flying, prowess
+color=U
+related=Winter Charm
+
+[Elephant]
+type=Token Creature - Elephant
+pt=3/3
+text=Trample
+color=G
+related=Trumpeting Herd|Generous Gift
+
+[Elf Knight]
+type=Token Creature - Elf Knight
+pt=2/2
+text=Vigilance
+color=W
+related=Chorus Summoner|Gentle Hierophant
+
+[Elf Warrior]
+type=Token Creature - Elf Warrior
+pt=1/1
+color=G
+related=Lys Alana Huntmaster
+
+[Elf Warrior2]
+type=Token Creature - Elf Warrior
+pt=1/1
+color=G
+related=Harbinger of the Perfect
+
+[Elf Warrior3]
+type=Token Creature - Elf Warrior
+pt=1/1
+color=G
+related=Return Upon the Tide
+
+[Elf Warrior4]
+type=Token Creature - Elf Warrior
+pt=1/1
+color=G
+related=Gilt-Leaf Curator
+
+[Energy Counters]
+type=Token
+related=Greenbelt Rampager|Amped Canine|Primal Prayers|Aether Hub|Aetherflux Conduit|Aetherflux Engineer|En Passant|Recursive Firebird|Servant of the Conduit|Surf the Web|Forum Moderator|Short Circuit|Positronic Ritual|Torrent Seed|Myr Reprocessors|Scrappy Myr|Myr Dabblers|Shimmer Myr|Consulate Turret|Riddle Gate Gargoyle|Electrostatic Pummeler|Aetherwrought Bauble|Mox Amethyst|Synaptic Overload|Live Fast_Die Young|Ardent Ritual|Jolted Awake|Cyclops Superconductor|Conduit Goblin|Minister of Inquiries|Highspire Infusion|Roil Cartographer|Thriving Grubs|Thriving Rats|Electrosiphon|Glint-Sleeve Siphoner|Blood Pet|Conversion Module|Elvish Visionary|Aetheric Factory|Laboratory Guildmage|Rebel Anthem|Aethertorch Renegade|Peema Aether-Seer|Longtusk Cub|Lightning Runner|Full Speed Ahead|Lathnu Hellion|Harvest Aether|Attuned Necromancer|Over the Brink|Protean Mauler|Arborback Stomper|Auroras Invitation|District Explorers
+
+[Extra Turn]
+type=Token
+related=Wishing Well|Retire_Restart|Strange Utopia|Negumas Creativity|Exciting Opportunity|Stolen Time|Stitch in Time|Alrunds Epiphany|Time Dilation|Leap Through Time|Chronoboost|Timestream Navigator|Riddlespeaker|Sage of Hours|Master the Cosmos
+
+[Faerie Rogue]
+type=Token Creature - Faerie Rogue
+pt=1/1
+text=Flying
+color=B
+related=Magus of the Blossom
+
+[Faerie Rogue2]
+type=Token Creature - Faerie Rogue
+pt=1/1
+text=Flying
+color=B
+related=Oona Mother of all Fae
+
+[Faerie Soldier]
+type=Token Creature - Faerie Soldier
+pt=1/1
+text=Flying
+color=U
+related=Glen Elendra Commando
+
+[Fan]
+type=Token Creature - Fan
+pt=3/2
+color=R
+related=Rock On
+
+[Fated Sovereign]
+type=Creature - Human Noble Knight
+pt=2/2
+text=Vigilance\nRenown 2 (When this deals combat damage to a player or planeswalker, if it isn’t renowned, put two +1/+1 counters on it and it becomes renowned.)\nWhen this becomes renowned, you become the monarch.
+color=W
+related=The Monarch
+backface=1
+
+[Fiery Brute]
+type=Creature - Beast
+pt=3/3
+text=Menace\n3R: This gets +3/+0 this turn.\nWhenever this untaps, it deals 3 damage to any target.
+color=R
+backface=1
+
+[Flameheart Werewolf]
+type=Creature - Werewolf
+pt=4/2
+text=Whenever this blocks or becomes blocked by a creature, this deals 2 damage to that creature.\nAt each upkeep, if a player cast two or more spells last turn, transform this.
+color=R
+backface=1
+
+[Flummox]
+type=Flash Sorcery
+text=Counter target spell unless its controller pays 1.
+color=U
+backface=1
+
+[Food]
+type=Token Artifact - Food
+text=2, T, Sacrifice this: Gain 3 life.
+related=Gilded Goose
+
+[Food2]
+type=Token Artifact - Food
+text=2, T, Sacrifice this: Gain 3 life.
+related=Regal Comfort
+
+[Food3]
+type=Token Artifact - Food
+text=2, T, Sacrifice this: Gain 3 life.
+related=Butchers Due|Cannibals Supper
+
+[Food4]
+type=Token Artifact - Food
+text=2, T, Sacrifice this: Gain 3 life.
+related=Gather for the Feast
+
+[Food5]
+type=Token Artifact - Food
+text=2, T, Sacrifice this: Gain 3 life.
+related=Busy Boughs
+
+[Food6]
+type=Token Artifact - Food
+text=2, T, Sacrifice this: Gain 3 life.
+related=Meaty Hog
+
+[Food7]
+type=Token Artifact - Food
+text=2, T, Sacrifice this: Gain 3 life.
+related=Hand_Mouth
+
+[Food8]
+type=Token Artifact - Food
+text=2, T, Sacrifice this: Gain 3 life.
+related=Honeypot Spider
+
+[Food9]
+type=Token Artifact - Food
+text=2, T, Sacrifice this: Gain 3 life.
+related=Witchs Oven
+
+[Foretell Cards]
+type=Token
+related=Angel of Finality|Warhorn Blast|Depart the Realm|Shared Summons|Poison the Cup|Radioactive Decay|Called Shot|Cosmic Intervention|Occlude|Unload|Crackling Burst|Mammoth Growth|Mox Crystal|Wits End|Mystic Reflection|Prophesied Calamity|Augury Raven|Dream Devourer|Gaze of Adamaro|Return Upon the Tide|Flying Crane Technique|Bestial Uprising
+
+[Gather for the Feast]
+type=Sorcery
+text=Search your library for up to two basic-typed land cards and put them into play tapped.\nCreate a Food token. (It’s an artifact with “2, T, Sacrifice this: Gain 3 life.”)
+color=G
+backface=1
+
+[Gelatinous Hydra Token]
+type=Token Creature - Hydra Ooze
+pt=0/0
+color=G
+related=Gelatinous Hydra Token|Gelatinous Hydra
+
+[Gleeful Predator]
+type=Creature - Werewolf
+pt=4/4
+text=Whenever you sacrifice a Clue, this fights up to one other target creature.\nNightbound (If a player casts at least two spells during their own turn, it becomes day next turn.)
+color=G
+backface=1
+
+[Glyph Keeper Token]
+type=Token Creature - Zombie Sphinx
+pt=5/3
+text=Flying\nWhenever this becomes the target of a spell or ability for the first time each turn, counter that spell or ability.
+color=W
+related=Glyph Keeper
+
+[Goat]
+type=Token Creature - Goat
+pt=0/1
+color=W
+related=Discordant Piper
+
+[Goblin]
+type=Token Creature - Goblin
+pt=1/1
+text=This can’t attack or block alone.
+color=R
+related=Furnace Fodder
+
+[Goblin Rogue]
+type=Token Creature - Goblin Rogue
+pt=1/1
+text=Creatures you control attack each combat if able.
+color=R
+related=Goblin Spymaster
+
+[Goblin Warrior]
+type=Token Creature - Goblin Warrior
+pt=1/1
+text=Menace
+color=B
+related=Mardu Ascendancy|Ponyback Brigade
+
+[Goblin Warrior2]
+type=Token Creature - Goblin Warrior
+pt=1/1
+text=Menace
+color=B
+related=Beetleback Chief
+
+[Goblin Warrior3]
+type=Token Creature - Goblin Warrior
+pt=1/1
+text=Menace
+color=B
+related=Greenskin Charger
+
+[Goblin10]
+type=Token Creature - Goblin
+pt=1/1
+text=This can’t attack or block alone.
+color=R
+related=Goblin Reunion
+
+[Goblin11]
+type=Token Creature - Goblin
+pt=1/1
+text=This can’t attack or block alone.
+color=R
+related=Krenko Tin Street Kingpin
+
+[Goblin12]
+type=Token Creature - Goblin
+pt=1/1
+text=This can’t attack or block alone.
+color=R
+related=Goblin War Party
+
+[Goblin2]
+type=Token Creature - Goblin
+pt=1/1
+text=This can’t attack or block alone.
+color=R
+related=Hordeling Outburst
+
+[Goblin3]
+type=Token Creature - Goblin
+pt=1/1
+text=This can’t attack or block alone.
+color=R
+related=Goblin Rally
+
+[Goblin4]
+type=Token Creature - Goblin
+pt=1/1
+text=This can’t attack or block alone.
+color=R
+related=Battle Cry Goblin
+
+[Goblin5]
+type=Token Creature - Goblin
+pt=1/1
+text=This can’t attack or block alone.
+color=R
+related=Kuldotha Rebirth
+
+[Goblin6]
+type=Token Creature - Goblin
+pt=1/1
+text=This can’t attack or block alone.
+color=R
+related=Jund Ascendancy
+
+[Goblin7]
+type=Token Creature - Goblin
+pt=1/1
+text=This can’t attack or block alone.
+color=R
+related=Survey the Wreckage
+
+[Goblin8]
+type=Token Creature - Goblin
+pt=1/1
+text=This can’t attack or block alone.
+color=R
+related=Rabblerouse_Rubbleraise
+
+[Goblin9]
+type=Token Creature - Goblin
+pt=1/1
+text=This can’t attack or block alone.
+color=R
+related=Stone-Sling Squad
+
+[Golem]
+type=Token Artifact Creature - Golem
+pt=3/3
+related=Phyrexian Ironworks|Wing Splicer|Master Splicer|Sensor Splicer|Maul Splicer
+
+[Hardy Renewal]
+type=Sorcery
+text=Return up to two target cards in graveyards to their owner’s hand.\nExile this.
+color=G
+backface=1
+
+[Harvester of Souls]
+type=Creature - Demon
+pt=5/5
+text=Deathtouch\nWhenever another nontoken creature dies, draw a card.
+color=B
+backface=1
+
+[Heir to the Night]
+type=Creature - Vampire Berserker
+pt=3/2
+text=Flying
+color=B
+backface=1
+
+[Hissing Caretaker]
+type=Creature - Snake
+pt=3/4
+text=Deathtouch\nWhen this transforms into Hissing Caretaker, untap it.\n3G: Regenerate this. (The next time this would be destroyed this turn, remove all damage from it instead.)
+color=G
+backface=1
+
+[Homunculus]
+type=Token Creature - Homunculus
+pt=2/2
+color=U
+related=Stitchers Apprentice
+
+[Honored Hydra Token]
+type=Token Creature - Zombie Snake Hydra
+pt=6/6
+text=Trample
+color=W
+related=Honored Hydra
+
+[Human Knight]
+type=Token Creature - Knight
+pt=2/2
+text=Exalted (Whenever a creature you control attacks alone, it gets +1/+1 this turn.)
+color=W
+related=Call of Duty
+
+[Human Knight2]
+type=Token Creature - Knight
+pt=2/2
+text=Exalted (Whenever a creature you control attacks alone, it gets +1/+1 this turn.)
+color=W
+related=Gallant Charge
+
+[Human Knight3]
+type=Token Creature - Knight
+pt=2/2
+text=Exalted (Whenever a creature you control attacks alone, it gets +1/+1 this turn.)
+color=W
+related=Doom Foretold
+
+[Impulsive Action]
+type=Flash Sorcery
+text=Exile cards from the top of your library until you exile two nonland cards. You may cast one of them. (You still need to pay its costs.)
+color=R
+backface=1
+
+[Inscrutable Magistrate Token]
+type=Token Enchantment
+text=During your turn, your opponents can’t cast spells.
+color=W
+related=Inscrutable Magistrate
+
+[Insect]
+type=Token Creature - Insect
+pt=1/1
+color=G
+related=Queen of the Hive
+
+[Insect2]
+type=Token Creature - Insect
+pt=1/1
+color=G
+related=Patient Cocoon
+
+[Journeyed Cards]
+type=Token
+related=Watering Hole|One on One|Last of Us|Pilgrims Ward|Jadelight Voyager|The Road Ahead|Dustpaw Trader|Keeper of Antiquities|Sactums Light|Bar the Way
+
+[Jovial Gadabout]
+type=Creature - Treefolk
+pt=4/4
+text=T: Add GG.\nAt your end step, put a +1/+1 counter on each other creature you control.
+color=G
+backface=1
+
+[Kithkin Soldier]
+type=Token Creature - Kithkin Soldier
+pt=1/1
+text=Vigilance
+color=W
+related=Prairie Lodge
+
+[Kor Ally]
+type=Token Creature - Kor Ally
+pt=1/1
+color=W
+related=Captains Claws
+
+[Lanterns Lift]
+type=Token Enchantment
+text=Enchant creature\nEnchanted creature gets +1/+1 and has flying.\nIf this would be put into a graveyard from anywhere, exile it instead.
+color=U
+related=Lantern Bearer
+
+[Lord of Lineage]
+type=Creature - Vampire Noble
+pt=5/5
+text=Flying\nOther Vampires you control get +2/+2.\nT: Create a 2/2 black Vampire token with flying.
+color=B
+backface=1
+
+[Luminous Phantom]
+type=Creature - Spirit Cleric
+pt=2/1
+text=Flying\nWhenever another creature you control leaves play, gain 1 life.\nIf this would be put into a graveyard from anywhere, exile it instead.
+color=W
+backface=1
+
+[Mana Rite]
+type=Flash Sorcery
+text=Add RR.
+color=R
+backface=1
+
+[Manifest Token]
+type=Creature
+pt=1/2
+related=TBLD
+
+[Map]
+type=Token Artifact - Map
+text=1, T, Sacrifice this: Target creature you control explores. Can’t be activated at flash speed.
+related=Spyglass Siren
+
+[Memorial]
+type=Token Enchantment
+text=Creatures you control get +1/+1.
+color=W
+related=Memorialize|Monumental Tragedy
+
+[Merciless Killer]
+type=Creature - Werewolf
+pt=4/2
+text=At each upkeep, if a player cast two or more spells last turn, transform this.
+color=R
+backface=1
+
+[Merfolk]
+type=Token Creature - Merfolk
+pt=1/1
+text=Hexproof
+color=U
+
+[Merfolk2]
+type=Token Creature - Merfolk
+pt=1/1
+text=Hexproof
+color=U
+related=Gillys Command
+
+[Merfolk3]
+type=Token Creature - Merfolk
+pt=1/1
+text=Hexproof
+color=U
+related=Deeproot Waters
+
+[Merfolk4]
+type=Token Creature - Merfolk
+pt=1/1
+text=Hexproof
+color=U
+related=Jungleborn Pioneer
+
+[Merfolk5]
+type=Token Creature - Merfolk
+pt=1/1
+text=Hexproof
+color=U
+related=Summon the School
+
+[Merfolk6]
+type=Token Creature - Merfolk
+pt=1/1
+text=Hexproof
+color=U
+related=Lullmage Mentor
+
+[Monk]
+type=Token Creature - Monk
+pt=1/1
+text=Prowess
+color=W
+related=Flurry of Fists
+
+[Monk2]
+type=Token Creature - Monk
+pt=1/1
+text=Prowess
+color=W
+related=Focus Charm
+
+[Monk3]
+type=Token Creature - Monk
+pt=1/1
+text=Prowess
+color=W
+related=Auroras Invitation
+
+[Myr]
+type=Token Artifact Creature - Myr
+pt=1/1
+related=Masters Call
+
+[Myr2]
+type=Token Artifact Creature - Myr
+pt=1/1
+related=Urtet Remnant of Memnarch
+
+[Myr3]
+type=Token Artifact Creature - Myr
+pt=1/1
+related=Myr Sire
+
+[Myr4]
+type=Token Artifact Creature - Myr
+pt=1/1
+related=Sen Fist of the Five Suns
+
+[Nacatl Prowler]
+type=Creature - Cat Warrior
+pt=1/1
+text=Hexproof\nWhenever this attacks, untap up to one target creature defending player controls. It blocks this creature this turn if able.
+color=G
+backface=1
+
+[Night Token]
+type=Token
+related=Day Token|Unnatural Moonrise
+
+[On An Adventure]
+type=Token
+related=Giant Killer|Hypnotic Sprite|Shepherd of the Flock|Merchant of the Vale|Armament Angel|Blightsqueaker|Inkfathom Angler|Plucky Weed|Mecha Vengeant|Ondu Knotmaster|Moon of the Day|Servant of Vraska|Seasong Muse|Questing Druid
+
+[Ooze]
+type=Token Creature - Ooze
+pt=0/0
+color=G
+related=Gelatinous Genesis
+
+[Ooze2]
+type=Token Creature - Ooze
+pt=0/0
+color=G
+related=Slime Molding|Sticky Situation
+
+[Ooze3]
+type=Token Creature - Ooze
+pt=0/0
+color=G
+related=Miming Slime
+
+[Path to Redemption]
+type=Sorcery
+text=Exile target creature. Its controller searches their library for a basic-typed land card and puts it into play tapped.
+color=W
+backface=1
+
+[Peasant]
+type=Token Creature - Peasant
+pt=1/1
+color=W
+related=Magnanimous Count
+
+[Peasant2]
+type=Token Creature - Peasant
+pt=1/1
+color=W
+related=Thatcher Revolt
+
+[Peasant3]
+type=Token Creature - Peasant
+pt=1/1
+color=W
+related=Increasing Devotion
+
+[Pesky Cave-Bat Token]
+type=Token Creature - Bat
+pt=1/1
+text=Flying, lifelink\nExperience (Whenever this attacks, if it has less than three +1/+1 counters, put a +1/+1 counter on it.)
+color=B
+related=Pesky Cave-Bat
+
+[Pest]
+type=Token Creature - Pest
+pt=1/1
+text=When this dies, gain 1 life.
+color=HBG
+related=Callous Bloodmage
+
+[Phyrexian Germ]
+type=Token Creature - Phyrexian Germ
+pt=0/0
+color=B
+
+[Pilot]
+type=Token Creature - Pilot
+pt=1/1
+text=This gets +1/+0 as long as it’s not attacking or blocking.
+color=C
+related=Mecha Vengeant
+
+[Plant]
+type=Token Creature - Plant
+pt=0/1
+color=G
+related=Vastwood Awakening
+
+[Plant2]
+type=Token Creature - Plant
+pt=0/1
+text=Defender\nT: Add G.
+color=G
+
+[Plant3]
+type=Token Creature - Plant
+pt=0/1
+color=G
+related=Avenger of Zendikar
+
+[Plant4]
+type=Token Creature - Plant
+pt=0/1
+color=G
+related=Stank Weed
+
+[Player Five]
+type=Emblem
+text=You go fifth.
+related=Command Seal
+
+[Player Four]
+type=Emblem
+text=You go fourth.
+related=!Player Three Emblem|!Player Five Emblem|Command Seal
+
+[Player One]
+type=Emblem
+related=!Player Two Emblem|!Player Three Emblem|!Player Four Emblem|!Player Five Emblem|Command Seal
+
+[Player Three]
+type=Emblem
+text=You go third.
+related=!Player Four Emblem|!Player Five Emblem|Command Seal
+
+[Player Two]
+type=Emblem
+text=You go second.
+related=!Player One Emblem|!Player Three Emblem|!Player Four Emblem|!Player Five Emblem|Command Seal
+
+[Plotted Cards]
+type=Token
+related=Lock and Load|Wish Upon a Star|Mayael Young Anima|Pyretic Charge|Cynical Tutor|Hang|Highay Robbery|Luoji the Sword Holder|Pitiless Carnage|Butchers Due
+
+[Powerstone]
+type=Token Artifact - Powerstone
+text=T: Add C. This mana can’t be spent to cast nonartifact spells.
+related=Rite of Thawing|Terisiares Devastation|Hall of Tagsin|Grim Foundry
+
+[Quicken]
+type=Flash Sorcery
+text=The next spell you cast this turn may be cast at flash speed.\nDraw a card.
+color=U
+backface=1
+
+[Rabbit]
+type=Token Creature - Rabbit
+pt=4/3
+color=U
+related=Hat Trick
+
+[Rat]
+type=Token Creature - Rat
+pt=1/1
+color=B
+related=Mischief Steward
+
+[Rat2]
+type=Token Creature - Rat
+pt=1/1
+color=B
+related=Tangled Colony|Voracious Vermin|Ravenous Rats|Piper of the Swarm
+
+[Rat3]
+type=Token Creature - Rat
+pt=1/1
+color=B
+related=Enchanted Carriage
+
+[Rebounding Cards]
+type=Token
+related=Crush of Wurms|Grip of Desolation|Profound Journey|Dutiful Return|Unyielding Formation|Sink into Oblivion|World at War|Cast Through Time|Rabid Frenzy|Skittering Invasion|Purge the Profane|Gallant Charge|Staggershock|Terrifying Visage|Double Cleave|Strength of the Pack|Artful Maneuver|Trumpeting Herd
+
+[Rhino]
+type=Token Creature - Rhino
+pt=4/4
+text=Trample
+color=G
+related=Chorus Summoner
+
+[Rogue]
+type=Token Creature - Rogue
+pt=2/2
+color=B
+related=Assassin Squad Ambush
+
+[Sacred Cat Token]
+type=Token Creature - Zombie Cat
+pt=1/1
+text=Lifelink
+color=W
+related=Sacred Cat
+
+[Saproling]
+type=Token Creature - Saproling
+pt=1/1
+color=G
+related=Bog Rebirth|Bayou Revival
+
+[Saproling10]
+type=Token Creature - Saproling
+pt=1/1
+color=G
+related=Sporescatter Mycoid
+
+[Saproling11]
+type=Token Creature - Saproling
+pt=1/1
+color=G
+related=Grazing Musksnuffler
+
+[Saproling2]
+type=Token Creature - Saproling
+pt=1/1
+color=G
+related=Unsettling Embrace
+
+[Saproling3]
+type=Token Creature - Saproling
+pt=1/1
+color=G
+related=Woopip Scrounger
+
+[Saproling4]
+type=Token Creature - Saproling
+pt=1/1
+color=G
+related=Snapjaw Polyp|Fungal Infection
+
+[Saproling5]
+type=Token Creature - Saproling
+pt=1/1
+color=G
+related=Burgeoning Weedbeast
+
+[Saproling6]
+type=Token Creature - Saproling
+pt=1/1
+color=G
+related=Fists of Ironwood
+
+[Saproling7]
+type=Token Creature - Saproling
+pt=1/1
+color=G
+related=Fresh Molder
+
+[Saproling8]
+type=Token Creature - Saproling
+pt=1/1
+color=G
+related=Woopip Sage
+
+[Saproling9]
+type=Token Creature - Saproling
+pt=1/1
+color=G
+related=Scatter the Seeds
+
+[Scour from Existence]
+type=Flash Sorcery
+text=Exile target permanent.
+color=C
+backface=1
+
+[Screaming Amalgam]
+type=Creature - Zombie Golem
+pt=3/1
+text=When this enters, create a 2/2 black Zombie token with decayed.\nWhenever this attacks, each player discards card.\nB, Sacrifice a creature: Regenerate this.
+color=B
+backface=1
+
+[Servo]
+type=Token Artifact Creature - Servo
+pt=1/1
+related=Servo Exhibition
+
+[Shapeshifter]
+type=Token Creature - Shapeshifter
+pt=2/2
+text=Changeling
+related=Uncanny Observer
+
+[Shield-Sigil Patron]
+type=Flash Creature - Angel
+pt=2/2
+text=Flying\nExalted (Whenever a creature you control attacks alone, it gets +1/+1 this turn.)\nWhen this enters, you may exile target non-Angel creature you control, then return it to play under your control. That creature gains ward 2.
+color=W
+backface=1
+
+[Shift Token]
+type=Creature
+pt=1/2
+related=Nightblade Stalker|Sylvan Guide|Greencover Rangers|Minotaur Savant|Stag of the Deep Wilds
+
+[Shrewd Sphinx]
+type=Artifact Creature - Sphinx
+pt=4/2
+text=This spell can’t be countered.\nFlying\nAt your end step, draw a card, then discard a card.\nDiscard a card with mana value X: Counter target spell with mana value X.
+color=U
+backface=1
+
+[Soldier]
+type=Token Creature - Soldier
+pt=1/1
+color=W
+related=Raise the Alarm
+
+[Soldier2]
+type=Token Creature - Soldier
+pt=1/1
+color=W
+related=Heroic Reinforcements|Muster the Legion
+
+[Soldier3]
+type=Token Creature - Soldier
+pt=1/1
+text=Haste
+color=R
+related=Garrison Guildmage
+
+[Soldier4]
+type=Token Creature - Soldier
+pt=1/1
+color=W
+related=Akroan Crusader
+
+[Soldier5]
+type=Token Creature - Soldier
+pt=1/1
+color=W
+related=Elspeth Selfless Paladin
+
+[Soldier6]
+type=Token Creature - Soldier
+pt=1/1
+color=W
+related=Thraben Standard Bearer
+
+[Soldier7]
+type=Token Creature - Soldier
+pt=1/1
+color=W
+related=Imperial Footsoldier
+
+[Spark Elemental Token]
+type=Token Creature - Elemental
+pt=3/1
+text=Haste, trample\nAt the end step, sacrifice this.
+color=R
+related=Spark Summoning
+
+[Sphinx]
+type=Token Creature - Sphinx
+pt=4/3
+text=Flying\nWard 3
+color=U
+related=Sophists Perch
+
+[Sphinx2]
+type=Token Creature - Sphinx
+pt=4/3
+text=Flying\nWard 3
+color=U
+related=Warrant_Warden
+
+[Spider]
+type=Token Creature - Spider
+pt=1/2
+text=Reach
+color=G
+related=Spider Hatching
+
+[Spider2]
+type=Token Creature - Spider
+pt=1/2
+text=Reach
+color=G
+related=Rotwidow Pack
+
+[Spider3]
+type=Token Creature - Spider
+pt=1/2
+text=Reach
+color=G
+related=Mage-Eater Spider
+
+[Spirit]
+type=Token Creature - Spirit
+pt=1/1
+text=Flying
+color=W
+related=Nearheath Chaplain
+
+[Spirit10]
+type=Token Creature - Spirit
+pt=1/1
+text=Flying
+color=W
+related=Haunted Dead
+
+[Spirit2]
+type=Token Creature - Spirit
+pt=1/1
+text=Flying
+color=W
+related=Indebted Spirit
+
+[Spirit3]
+type=Token Creature - Spirit
+pt=1/1
+text=Flying
+color=W
+related=Tithe Taker|Teysa Syndicate Usurper|Hollowed Confessor|Orzhov Enforcer|Syndicate Treasury|Gift of Orzhova|Ministrant of Obligation
+
+[Spirit4]
+type=Token Creature - Spirit
+pt=1/1
+text=Flying
+color=W
+related=Triplicate Spirits
+
+[Spirit5]
+type=Token Creature - Spirit
+pt=1/1
+text=Flying
+color=W
+related=Unwelcome Visitation
+
+[Spirit6]
+type=Token Creature - Spirit
+pt=1/1
+text=Flying
+color=W
+related=Auroras Invitation
+
+[Spirit7]
+type=Token Creature - Spirit
+pt=1/1
+text=Flying
+color=W
+related=Abzan Ascendancy
+
+[Spirit8]
+type=Token Creature - Spirit
+pt=1/1
+color=C
+related=Release to Memory
+
+[Spirit9]
+type=Token Creature - Spirit
+pt=1/1
+text=Flying
+color=C
+related=Valor of the Worthy
+
+[Squirrel]
+type=Token Creature - Squirrel
+pt=1/1
+color=G
+related=Busy Boughs
+
+[Stitch in Time Emblem]
+type=Emblem
+text=If you would begin a turn that isn’t an extra turn, flip a coin. If you win the flip, take that turn. If you lose the flip, skip that turn.
+related=Stitch in Time
+
+[Stormfront Hellkite Token]
+type=Token Enchantment
+text=If a sorcery spell you control would deal damage to a permanent or player, it deals twice that much damage instead.
+color=R
+related=Stormfront Hellkite
+
+[Stream of Lightning]
+type=Sorcery
+text=This deals 4 damage divided as you choose among any number of targets.
+color=R
+backface=1
+
+[Tentacled Kraken]
+type=Creature - Leviathan
+pt=4/5
+text=When this transforms into Tentacled Kraken, return all other nonland, non-Leviathan permanents to their owner’s hand.
+color=U
+backface=1
+
+[The Monarch]
+type=Token
+text=At your end step, draw a card.\nWhenever a creature deals combat damage to you, its controller becomes the monarch.
+
+[Timeless Witness Token]
+type=Token Creature - Zombie Human Shaman
+pt=4/4
+text=When this enters, return target card from your graveyard to your hand.
+color=B
+related=Timeless Witness
+
+[Trawl for Trash]
+type=Sorcery
+text=Search your library or a card and put it on top.
+color=B
+backface=1
+
+[Treasure]
+type=Token Artifact - Treasure
+related=Curse of Tithes
+
+[Treasure10]
+type=Token Artifact - Treasure
+related=Wash Ashore|Sailor of Means
+
+[Treasure11]
+type=Token Artifact - Treasure
+related=Villainous Wealth|Oust from the Vault
+
+[Treasure12]
+type=Token Artifact - Treasure
+related=Lucky Tomcat
+
+[Treasure13]
+type=Token Artifact - Treasure
+related=Pickpocket|Rickety Tracks
+
+[Treasure14]
+type=Token Artifact - Treasure
+related=Dack Greatest Thief in the Multiverse|Solar Charm|Careening Mine Cart
+
+[Treasure15]
+type=Token Artifact - Treasure
+related=Kinsey Heart Wide Open
+
+[Treasure16]
+type=Token Artifact - Treasure
+related=Bile Charm
+
+[Treasure17]
+type=Token Artifact - Treasure
+related=Judgement Charm|Prosperous Thief
+
+[Treasure18]
+type=Token Artifact - Treasure
+related=Render_Dust
+
+[Treasure19]
+type=Token Artifact - Treasure
+related=Official Bribe
+
+[Treasure2]
+type=Token Artifact - Treasure
+related=Wade Through|Lost in Admiration|Lords Voyage
+
+[Treasure20]
+type=Token Artifact - Treasure
+related=Dwarf Fortress|Strip the Earth|Goldvein Pick|Mine Corp Muscle
+
+[Treasure21]
+type=Token Artifact - Treasure
+related=Timeworn Valley|Dusty Oasis|Classy Theater|Icy Cave|Vibrant Seabed|Cemetery Hillock|Fungus Gorge|Arbor Loft|Spoiled Pasture|Expansive Tundra
+
+[Treasure22]
+type=Token Artifact - Treasure
+related=Negumas Creativity
+
+[Treasure23]
+type=Token Artifact - Treasure
+related=Labast Empire Baron|Pious Duke
+
+[Treasure24]
+type=Token Artifact - Treasure
+related=Warren Soultrader|Clubs_Spades
+
+[Treasure25]
+type=Token Artifact - Treasure
+related=Busy Boughs
+
+[Treasure3]
+type=Token Artifact - Treasure
+related=Jetsam Trove|Seize the Spoils
+
+[Treasure4]
+type=Token Artifact - Treasure
+related=Wealthy Prelate|Basilica Guildmage|Teysa Syndicate Usurper|Syndicate Treasury
+
+[Treasure5]
+type=Token Artifact - Treasure
+related=Treasured Find|Servant of Vraska
+
+[Treasure6]
+type=Token Artifact - Treasure
+related=Easy Score|Wrecking Ball|Goblin Monarch|Bazaar of Urshad|Unexpected Windfall
+
+[Treasure7]
+type=Token Artifact - Treasure
+related=Fertile Ground
+
+[Treasure8]
+type=Token Artifact - Treasure
+related=Myr Reprocessors
+
+[Treasure9]
+type=Token Artifact - Treasure
+related=E-Commerce|Scoundrels Wager
+
+[Tribunal Hierarch Exile]
+type=Token
+related=Tribunal Hierarch
+
+[Turbulent Grappler]
+type=Creature - Lizard
+pt=3/6
+text=This can’t be blocked by more than one creature.\nWhenever this transforms into Turbulent Grappler, attacks, or blocks, you may switch this creature’s power and toughness this turn.
+color=U
+backface=1
+
+[Unbounded Inquiry]
+type=Sorcery
+text=Scry 5, then upload the top card of your library. (Exile it. Pay 2 during your turn to put an uploaded card into your hand.)
+color=W
+backface=1
+
+[Unthinkable Experiment]
+type=Sorcery
+text=As an additional cost to cast this, sacrifice a creature.\nSearch your library for two creature cards with mana value equal to one less than the the sacrificed creature’s mana value and put them into play.
+color=G
+backface=1
+
+[Uploaded Cards]
+type=Token
+related=E-Commerce|Hired Hit|Forum Moderator|Surf the Web|Cyber-Intelligence Operative|Positronic Ritual|Deep Net|Ancestral Research|District Explorers|Darkzone Courier|Virtual Reality|Flow of Information|Torrent Feed|Short Circuit|Mindnet Sentinel|Hack the Planet|Mandatory Upgrades|Re-Spec|Neural Integrator|Silverskin Armor|Digital Witness|Neosteel Stealth Unit|Street Hacker|Debug_Unplug|Shimmering Strip|Hardware Recovery|Complex Sprawl|Unbounded Inquiry|Synaptic Integration|Recursive Firebird|Warpspeed|En Passant|Disorderly Conduct|Static Cyclone|Zelvika the Neuromancer|Jesse Digital Outlaw
+
+[Vampire]
+type=Token Creature - Vampire
+pt=2/2
+text=Flying
+color=B
+related=Bloodline Keeper|Lord of Lineage
+
+[Vampire Soldier]
+type=Token Creature - Vampire Soldier
+pt=1/1
+text=Lifelink
+color=W
+related=Martyr of Dusk
+
+[Vampire Soldier2]
+type=Token Creature - Vampire Soldier
+pt=1/1
+text=Lifelink
+color=W
+related=Preacher of the Schism
+
+[Vampire2]
+type=Token Creature - Vampire
+pt=2/2
+text=Flying
+color=B
+related=Kirishikis Command
+
+[Vampirism marker]
+type=Token
+related=Vampire of the Dire Moon
+
+[Vial]
+type=Token Artifact - Vial
+related=Vial Courier
+
+[Vial2]
+type=Token Artifact - Vial
+related=Busy Boughs
+
+[Vicious Overlord]
+type=Creature - Dragon
+pt=5/5
+text=Flying\nR: This gets +1/+0 this turn.\nWhen this enters, each player sacrifices two lands.
+color=R
+backface=1
+
+[Viziers Honor Guard Token]
+type=Token Creature - Zombie Human Warrior
+pt=1/1
+text=First strike\nAt each beginning of combat, target Zombie you control gets +1/+0 this turn.
+color=W
+related=Viziers Honor Guard
+
+[Wall]
+type=Token Artifact Creature - Wall
+pt=0/4
+related=The Birth of Meletis
+
+[Wall2]
+type=Token Artifact Creature - Wall
+pt=0/4
+color=W
+related=Patience Charm
+
+[Warrior]
+type=Token Creature - Warrior
+pt=1/2
+color=W
+related=Bloodshiv
+
+[Weapon]
+type=Token Artifact - Equipment
+text=Equipped creature gets +1/+1.\nEquip 2
+related=Steelarm Outfitter|Mine Corp Muscle
+
+[Weapon2]
+type=Token Artifact - Equipment
+text=Equipped creature gets +1/+1.\nEquip 2
+related=Back in Action
+
+[Weapon3]
+type=Token Artifact - Equipment
+text=Equipped creature gets +1/+1.\nEquip 2
+related=Subtown Enforcer|Showmatch
+
+[Weapon4]
+type=Token Artifact - Equipment
+text=Equipped creature gets +1/+1.\nEquip 2
+related=Dual Wield
+
+[Weapon5]
+type=Token Artifact - Equipment
+text=Equipped creature gets +1/+1.\nEquip 2
+related=Conrads Command
+
+[Weapon6]
+type=Token Artifact - Equipment
+text=Equipped creature gets +1/+1.\nEquip 2
+related=Koth Unbroken
+
+[Weapon7]
+type=Token Artifact - Equipment
+text=Equipped creature gets +1/+1.\nEquip 2
+related=Carapace Forger
+
+[Weapon8]
+type=Token Artifact - Equipment
+text=Equipped creature gets +1/+1.\nEquip 2
+related=Warmongers Cathedral|Imperial Footsoldier
+
+[Weapon9]
+type=Token Artifact - Equipment
+text=Equipped creature gets +1/+1.\nEquip 2
+related=Muster the Legion
+
+[Wolf]
+type=Token Creature - Wolf
+pt=2/1
+color=G
+related=Garruks Command
+
+[Wolf2]
+type=Token Creature - Wolf
+pt=2/1
+color=G
+related=Feed the Pack
+
+[Wolf3]
+type=Token Creature - Wolf
+pt=2/1
+color=G
+related=Bestial Uprising
+
+[Worm]
+type=Token Creature - Wurm
+pt=1/1
+text=At your upkeep, put a +1/+1 counter on this.
+color=G
+related=Savagery Charm
+
+[Wurm]
+type=Token Creature - Wurm
+pt=5/5
+text=This can’t be blocked by creatures with power 2 or less.
+color=G
+related=Crush of Wurms
+
+[Wurm2]
+type=Token Creature - Wurm
+pt=5/5
+text=This can’t be blocked by creatures with power 2 or less.
+color=G
+related=Hammer of MatSelesnya
+
+[Zombie]
+type=Token Creature - Zombie
+pt=2/2
+text=Decayed
+color=B
+related=Victor Obsessive Stitcher
+
+[Zombie Horror]
+type=Token Creature - Zombie Horror
+pt=3/4
+color=U
+related=Victor Obsessive Stitcher
+
+[Zombie10]
+type=Token Creature - Zombie
+pt=2/2
+text=Decayed
+color=B
+related=Bone Miser
+
+[Zombie11]
+type=Token Creature - Zombie
+pt=2/2
+text=Decayed
+color=B
+related=Diregraf Monstrosity
+
+[Zombie12]
+type=Token Creature - Zombie
+pt=2/2
+text=Decayed
+color=B
+related=Never_Return|Beelzus Plaguetouched Maestro
+
+[Zombie13]
+type=Token Creature - Zombie
+pt=2/2
+text=Decayed
+color=B
+related=Lilianas Mastery
+
+[Zombie14]
+type=Token Creature - Zombie
+pt=2/2
+text=Decayed
+color=B
+related=Bloodthrone Vampire
+
+[Zombie15]
+type=Token Creature - Zombie
+pt=2/2
+text=Decayed
+color=B
+related=Unholy Corruption
+
+[Zombie16]
+type=Token Creature - Zombie
+pt=2/2
+text=Decayed
+color=B
+related=Sidisi, Brood Tyrant
+
+[Zombie17]
+type=Token Creature - Zombie
+pt=2/2
+text=Decayed
+color=B
+related=Skull Skaab
+
+[Zombie2]
+type=Token Creature - Zombie
+pt=2/2
+text=Decayed
+color=B
+related=Marching Returned
+
+[Zombie3]
+type=Token Creature - Zombie
+pt=2/2
+text=Decayed
+color=B
+related=Army of the Damned
+
+[Zombie4]
+type=Token Creature - Zombie
+pt=2/2
+text=Decayed
+color=B
+related=Screaming Amalgam
+
+[Zombie5]
+type=Token Creature - Zombie
+pt=2/2
+text=Decayed
+color=B
+related=Endless Ranks of the Dead
+
+[Zombie6]
+type=Token Creature - Zombie
+pt=2/2
+text=Decayed
+color=B
+related=Soil Charm
+
+[Zombie7]
+type=Token Creature - Zombie
+pt=2/2
+text=Decayed
+color=B
+related=Seagraf Skallywag|Stitch Cadaver
+
+[Zombie8]
+type=Token Creature - Zombie
+pt=2/2
+text=Decayed
+color=B
+related=Rank Officer
+
+[Zombie9]
+type=Token Creature - Zombie
+pt=2/2
+text=Decayed
+color=B
+related=Prolific Necromancer

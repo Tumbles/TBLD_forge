@@ -108,3 +108,6 @@ forge-gui-ios/robovm.properties
 # iOS pipeline work dirs and JvmDowngrader cache
 /tmp/
 /.jvmdg/
+
+# TBLD pool tool: local paths of Brett's card files
+tbld-pool/sources.properties

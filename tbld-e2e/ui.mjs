@@ -27,7 +27,7 @@ await page.route("https://api.scryfall.com/**", route => route.fulfill({ content
 // TBLD pictures come from the repository's picture folder, as the server serves them
 await page.route("http://tbld.test/pics/**", route => {
   const file = path.join(here, "../forge-gui/res/tbld/pics", decodeURIComponent(new URL(route.request().url()).pathname.slice("/pics/".length)));
-  return fs.existsSync(file) ? route.fulfill({ contentType: "image/png", body: fs.readFileSync(file) }) : route.fulfill({ status: 404, body: "" });
+  return fs.existsSync(file) ? route.fulfill({ contentType: file.endsWith(".png") ? "image/png" : "image/jpeg", body: fs.readFileSync(file) }) : route.fulfill({ status: 404, body: "" });
 });
 await page.routeWebSocket("ws://tbld.test/ws?seat=1", ws => {
   server = ws;
@@ -61,7 +61,7 @@ const creature = (id, name, p, t, extra = {}) => card(id, name, "Creature - Gian
 const ref = c => ({ card: c.id, ...c });
 const searing = card(22, "Searing Touch", "Flash Sorcery", { cost: "{R}", colors: "R", set: "TBLD", text: "Searing Touch deals 3 damage to any target.", img: undefined });
 const shockCard = card(50, "Shock", "Instant", { cost: "{R}", colors: "R", text: "Shock deals 2 damage to any target." });
-const emblem = (id, name, sub, text) => card(id, name, "Emblem — " + sub, { set: "TBLD", text, img: "/pics/" + encodeURIComponent("TBLD " + name + ".png") });
+const emblem = (id, name, sub, text) => card(id, name, "Emblem — " + sub, { set: "TBLD", text, img: "/pics/" + encodeURIComponent("TBLD " + name + ".jpg") });
 
 function makeState(over = {}) {
   return {
@@ -178,7 +178,7 @@ await settle(300);
 // an effect is shown as the art of the card that made it, and hovering it shows what it does
 const withEffect = makeState();
 withEffect.players[1].command = [...withEffect.players[1].command, card(65, "Searing Touch's Effect", "", { set: "TBLD", effect: true,
-  img: "/pics/" + encodeURIComponent("TBLD Searing Touch.png"), text: "A player dealt damage this way can't gain life this turn." })];
+  img: "/pics/" + encodeURIComponent("TBLD Searing Touch.jpg"), text: "A player dealt damage this way can't gain life this turn." })];
 send({ t: "state", state: withEffect });
 await settle(400);
 const fx = page.locator('#half-opp .command[data-zone="Effects"] .effect[data-name="Searing Touch\'s Effect"]');

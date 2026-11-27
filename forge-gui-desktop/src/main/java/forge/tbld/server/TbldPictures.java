@@ -15,10 +15,11 @@ import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Pictures of TBLD cards, which the web server serves at {@code /pics/<file name>} from
- * {@code res/tbld/pics}. Files are named as in Brett's card files: "TBLD Searing Touch.png". A
- * card with several versions in the TBLD set (each basic land has 80) has one file per version,
- * numbered by its art index: "TBLD Mountain69.png". The server looks a file up once and remembers
- * the result, so it must be restarted after pictures are added.
+ * {@code res/tbld/pics}, where the pool tool ({@code tbld-pool/TbldPool.java import}) puts them as
+ * JPEG files. Files are named as in Brett's card files: "TBLD Searing Touch.jpg", and a split card
+ * "Fire // Ice" is "TBLD Fire_Ice.jpg". A card with several versions in the TBLD set (each basic land
+ * has 80) has one file per version, numbered by its art index: "TBLD Mountain69.jpg". The server
+ * looks a file up once and remembers the result, so it must be restarted after pictures are added.
  */
 public final class TbldPictures {
 
@@ -38,7 +39,8 @@ public final class TbldPictures {
      * otherwise the card's file without a number. Null if there is neither.
      */
     public static String urlFor(final String name, final int artIndex) {
-        final List<String> bases = artIndex > 0 ? List.of("TBLD " + name + artIndex, "TBLD " + name) : List.of("TBLD " + name);
+        final String base0 = "TBLD " + name.replace(" // ", "_");
+        final List<String> bases = artIndex > 0 ? List.of(base0 + artIndex, base0) : List.of(base0);
         for (final String base : bases) {
             for (final String ext : EXTENSIONS) {
                 final String fileName = base + ext;
