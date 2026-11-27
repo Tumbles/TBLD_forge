@@ -54,6 +54,28 @@ public class TbldCardPoolTest extends AITest {
         AssertJUnit.assertEquals("TbldPool check failed:\n" + out, 0, p.exitValue());
     }
 
+    /**
+     * tbld-pool/verified.txt, the cards "TbldPool verify" counts as implemented, lists exactly the
+     * cards whose abilities TbldTestDecksTest plays, and each is a scripted card matching the pool.
+     */
+    @Test
+    public void verifiedCardsAreTheOnesTheTestsPlay() throws Exception {
+        final List<String> listed = new ArrayList<>();
+        for (final String l : Files.readAllLines(root().resolve("tbld-pool/verified.txt"), StandardCharsets.UTF_8)) {
+            if (!l.isBlank() && !l.startsWith("#")) {
+                listed.add(l.trim());
+            }
+        }
+        AssertJUnit.assertEquals("tbld-pool/verified.txt and TbldTestDecksTest.VERIFIED differ",
+                new java.util.TreeSet<>(TbldTestDecksTest.VERIFIED), new java.util.TreeSet<>(listed));
+        final String java = Paths.get(System.getProperty("java.home"), "bin", "java").toString();
+        final Process p = new ProcessBuilder(java, "tbld-pool/TbldPool.java", "verify").directory(root().toFile()).redirectErrorStream(true).start();
+        final String out = new String(p.getInputStream().readAllBytes(), StandardCharsets.UTF_8);
+        AssertJUnit.assertTrue("the pool verify did not finish", p.waitFor(5, TimeUnit.MINUTES));
+        System.out.println(out);
+        AssertJUnit.assertEquals("TbldPool verify failed:\n" + out, 0, p.exitValue());
+    }
+
     @Test
     public void scriptsHaveNoLintErrors() throws IOException {
         final CardScriptLinter linter = new CardScriptLinter();

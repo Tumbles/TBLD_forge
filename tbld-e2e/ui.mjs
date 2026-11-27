@@ -127,7 +127,8 @@ check(ogre && ogre.width > ogre.height, "a tapped attacker is sideways too");
 check(await count('#half-me .card[data-id="10"].sick .badge.sick') === 1, "a summoning-sick creature is marked");
 check(await count('#half-opp .card[data-id="41"].sick') === 0, "a creature that isn't sick is not marked");
 check((await page.locator('#half-opp .card[data-id="41"] .tags').textContent()).includes("blocking"), "a blocker is tagged as blocking");
-check((await page.locator('#half-opp .card[data-id="41"] .badge.pt').textContent()) === "3/1", "a damaged creature shows its remaining toughness");
+check((await page.locator('#half-opp .card[data-id="41"] .badge.pt').textContent()) === "3/3", "a damaged creature shows its toughness unchanged");
+check((await page.locator('#half-opp .card[data-id="41"] .badge.dmg').textContent()) === "2 dmg", "a damaged creature shows its damage");
 check(await page.locator("#half-me").evaluate(e => e.classList.contains("active")) && !(await page.locator("#half-opp").evaluate(e => e.classList.contains("active"))),
   "the active player's half is highlighted");
 check((await page.locator("#turnwho").textContent()) === "Your turn", "the phase bar says whose turn it is");
@@ -144,13 +145,14 @@ check(await centered('#half-opp [data-row="back"]'), "a lone land is centered to
 // pictures
 const mountainImg = await page.locator('#half-me .card[data-id="1"] img.art').evaluate(i => i.complete && i.naturalWidth > 0).catch(() => false);
 check(mountainImg, "an official card shows its picture");
-check(await count('#half-me .hand .card[data-id="22"] img') === 0 && (await page.locator('#half-me .hand .card[data-id="22"] .fr-name').textContent()) === "Searing Touch",
-  "a TBLD card without a picture is drawn as a card frame");
+check(await count('#half-me .hand .card[data-id="22"] img') === 0 && (await page.locator('#half-me .hand .card[data-id="22"] .np-name').textContent()) === "Searing Touch"
+  && await count('#half-me .hand .card[data-id="22"] .fr-text, #half-me .hand .card[data-id="22"] .frame') === 0,
+  "a TBLD card without a picture is a plain placeholder with its name, not a drawn card");
 
 // hover preview
 await page.hover('#half-me .card[data-id="10"]');
 check(await visible("#preview"), "hovering a card shows the large preview at once");
-check((await page.locator("#preview .fr-name").textContent()) === "Raging Goblin", "the preview shows the hovered card");
+check((await page.locator("#preview .np-name").textContent()) === "Raging Goblin", "the preview shows the hovered card");
 check((await page.locator("#preview .pv-info").textContent()).includes("Summoning sick"), "the preview lists the card's state");
 await page.mouse.move(700, 495);
 check(!(await visible("#preview")), "the preview hides when the pointer leaves the card");

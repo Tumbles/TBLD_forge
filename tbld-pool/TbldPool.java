@@ -100,6 +100,7 @@ public class TbldPool {
             case "show" -> show(rest);
             case "draft" -> draft(rest);
             case "check" -> System.exit(check() ? 0 : 1);
+            case "verify" -> System.exit(verify(rest) ? 0 : 1);
             case "edition" -> writeEdition(true);
             default -> usage();
         }
@@ -116,6 +117,8 @@ public class TbldPool {
               show NAME...         pool entry, script, reference script and their texts side by side
               draft NAME...        write scripts from reference scripts (--auto: every --auto card; --limit N)
               check                every TBLD script matches its pool entry; exit code 1 if not
+              verify [--list KIND] counts implemented, scripted-but-untested, placeholder and blocked cards
+                                   (KIND: implemented, scripted, placeholder, blocked, or a sub-kind it prints)
               edition              rewrite forge-gui/res/editions/TumbledMTG.txt from the scripts""");
     }
 
@@ -1092,6 +1095,135 @@ public class TbldPool {
             }
         }
         return out;
+    }
+
+    // ------------------------------------------------------------------------------------------------
+    // verify: implemented, scripted but untested, or placeholder
+
+    static final Path VERIFIED = TOOL.resolve("verified.txt");
+
+    /** Cards whose abilities an automated in-game test plays (tbld-pool/verified.txt, one name per line). */
+    static Set<String> verified() throws IOException {
+        final Set<String> out = new TreeSet<>(String.CASE_INSENSITIVE_ORDER);
+        if (Files.exists(VERIFIED)) {
+            for (final String l : Files.readAllLines(VERIFIED, StandardCharsets.UTF_8)) {
+                if (!l.isBlank() && !l.startsWith("#")) {
+                    out.add(l.trim());
+                }
+            }
+        }
+        return out;
+    }
+
+    /** The paragraphs of a card's text that need an ability: reminder text, mode bullets and blank lines left out. */
+    static int abilityParagraphs(final String text) {
+        int n = 0;
+        for (final String p : text.split("\n")) {
+            final String t = p.replaceAll("\\([^)]*\\)", "").trim();
+            if (!t.isEmpty() && !t.startsWith("•") && !t.startsWith("- ")) {
+                n++;
+            }
+        }
+        return n;
+    }
+
+    /** The script's ability lines (A:, T:, S:, R: and K:) on all its faces. */
+    static int abilityLines(final Script s) {
+        int n = 0;
+        for (final List<String> face : s.lines()) {
+            for (final String l : face) {
+                if (l.matches("^[ATSRK]:.*")) {
+                    n++;
+                }
+            }
+        }
+        return n;
+    }
+
+    /**
+     * Sorts every non-basic pool card into one of these, and prints the counts (and with --list KIND
+     * the names):
+     * implemented - its abilities are played by an automated in-game test (verified.txt), or it has no
+     *               abilities at all (a vanilla card: name, cost, type and stats, which check compares);
+     * scripted    - a script matching the pool, with ability lines for its text, that no test plays yet
+     *               ("same-text": copied from the official card with the same text; "adapted": edited by
+     *               hand; "fewer-lines": fewer ability lines than paragraphs of text, worth a look);
+     * placeholder - no working abilities: no script, an out-of-date script, or a script with no ability lines;
+     * blocked     - waits for a TBLD mechanic or a fix in Brett's data (blocked.txt).
+     */
+    static boolean verify(final List<String> args) throws IOException {
+        final Map<String, Entry> cards = readPool(CARDS_FILE), tokens = readPool(TOKENS_FILE);
+        final Map<String, Script> scripts = readScripts();
+        final Set<String> verified = verified();
+        final Map<String, List<String>> kinds = new LinkedHashMap<>();
+        for (final String k : List.of("implemented-tested", "implemented-vanilla", "scripted-same-text", "scripted-adapted",
+                "scripted-fewer-lines", "placeholder-no-script", "placeholder-outdated", "placeholder-no-abilities", "blocked")) {
+            kinds.put(k, new ArrayList<>());
+        }
+        boolean ok = true;
+        for (final Row r : rows(cards, tokens, false)) {
+            if (r.e.isBasic()) {
+                continue;
+            }
+            final String name = r.e.name;
+            final String kind;
+            if (r.state.equals("blocked")) {
+                kind = "blocked";
+            } else if (r.state.equals("todo")) {
+                kind = "placeholder-no-script";
+            } else if (r.state.equals("outdated")) {
+                kind = "placeholder-outdated";
+            } else {
+                final Script s = scripts.get(name);
+                // An instant or sorcery is usually one spell ability whose sub-abilities do each sentence
+                final boolean spell = r.e.get("type").matches("(?i).*\\b(instant|sorcery)\\b.*");
+                final int paragraphs = spell ? Math.min(1, abilityParagraphs(r.e.get("text"))) : abilityParagraphs(r.e.get("text"));
+                final int lines = abilityLines(s);
+                if (paragraphs > 0 && lines == 0) {
+                    kind = "placeholder-no-abilities";
+                } else if (verified.contains(name)) {
+                    kind = "implemented-tested";
+                } else if (paragraphs == 0) {
+                    kind = "implemented-vanilla";
+                } else if (lines < paragraphs) {
+                    kind = "scripted-fewer-lines";
+                } else {
+                    final Ref ref = ref(r.e);
+                    kind = ref != null && sameText(r.e, ref) ? "scripted-same-text" : "scripted-adapted";
+                }
+            }
+            kinds.get(kind).add(name);
+        }
+        for (final String v : verified) {
+            if (!kinds.get("implemented-tested").contains(v)) {
+                System.out.println("verified.txt names " + v + ", which is not a scripted card matching the pool");
+                ok = false;
+            }
+        }
+        final int total = kinds.values().stream().mapToInt(List::size).sum();
+        final int implemented = kinds.get("implemented-tested").size() + kinds.get("implemented-vanilla").size();
+        final int scripted = kinds.get("scripted-same-text").size() + kinds.get("scripted-adapted").size() + kinds.get("scripted-fewer-lines").size();
+        final int placeholder = kinds.get("placeholder-no-script").size() + kinds.get("placeholder-outdated").size()
+                + kinds.get("placeholder-no-abilities").size();
+        System.out.printf("Cards in the pool (not counting basic land versions): %d%n", total);
+        System.out.printf("  implemented: %d (%d with abilities played by an in-game test, %d with no abilities)%n",
+                implemented, kinds.get("implemented-tested").size(), kinds.get("implemented-vanilla").size());
+        System.out.printf("  scripted, not yet tested in game: %d (%d copied from the official card with the same text, %d adapted by hand,"
+                + " %d possibly incomplete: fewer ability lines than paragraphs of text)%n", scripted, kinds.get("scripted-same-text").size(),
+                kinds.get("scripted-adapted").size(), kinds.get("scripted-fewer-lines").size());
+        System.out.printf("  placeholder: %d (%d with no script, %d out of date, %d with a script but no abilities)%n", placeholder,
+                kinds.get("placeholder-no-script").size(), kinds.get("placeholder-outdated").size(), kinds.get("placeholder-no-abilities").size());
+        System.out.printf("  blocked: %d%n", kinds.get("blocked").size());
+        final int at = args.indexOf("--list");
+        if (at >= 0 && at + 1 < args.size()) {
+            final String want = args.get(at + 1);
+            kinds.forEach((k, names) -> {
+                if (k.startsWith(want)) {
+                    names.forEach(n -> System.out.println(k + "\t" + n));
+                }
+            });
+        }
+        return ok;
     }
 
     // ------------------------------------------------------------------------------------------------

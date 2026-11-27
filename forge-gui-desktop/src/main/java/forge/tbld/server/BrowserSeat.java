@@ -200,14 +200,20 @@ public final class BrowserSeat implements IRemote {
         }
         GuiGameEvent g = original;
         if (g.getMethod() == ProtocolMethod.getAbilityToPlay) {
-            // As in Forge's desktop client: a single playable ability is used without asking,
-            // and only playable abilities are offered.
+            // As in Forge's desktop client (CMatchUI.getAbilityToPlay). Without a click (a[2] is null)
+            // the engine is putting an ability on the stack itself, such as a triggered ability, which
+            // never counts as playable: a single ability is used as it is. For a click, a single
+            // playable ability is used without asking, and only playable abilities are offered.
             final Object[] a = g.getObjects();
+            final boolean clicked = a[2] != null;
             final List<SpellAbilityView> playable = new ArrayList<>();
             for (final Object o : asList(a[1])) {
-                if (o instanceof SpellAbilityView sav && sav.canPlay()) {
+                if (o instanceof SpellAbilityView sav && (!clicked || sav.canPlay())) {
                     playable.add(sav);
                 }
+            }
+            if (!clicked && playable.size() == 1) {
+                return playable.get(0);
             }
             if (playable.isEmpty()) {
                 return null;
@@ -794,11 +800,18 @@ public final class BrowserSeat implements IRemote {
     /**
      * Where the browser loads the card's picture from, or null to have the browser draw the card.
      * TBLD cards come from this server ({@link TbldPictures}), for the card's version; official
-     * cards from Scryfall by name. Tokens and face-down cards have no picture.
+     * cards from Scryfall by name. Tokens get the picture of Brett's token of the same name and
+     * colors ({@link TbldPictures#tokenUrlFor}). Face-down cards have no picture.
      */
     static String imageUrl(final CardView cv, final CardStateView s) {
+        if (cv.isFaceDown()) {
+            return null;
+        }
+        if (cv.isToken()) {
+            return TbldPictures.tokenUrlFor(s.getName(), s.isCreature() ? s.getPower() + "/" + s.getToughness() : null, colors(s));
+        }
         final String set = s.getSetCode();
-        if (cv.isFaceDown() || cv.isToken() || set == null || set.isEmpty()) {
+        if (set == null || set.isEmpty()) {
             return null;
         }
         if ("TBLD".equalsIgnoreCase(set)) {

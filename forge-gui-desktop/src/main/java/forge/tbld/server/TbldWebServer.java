@@ -263,14 +263,14 @@ public final class TbldWebServer {
     }
 
     /** The red TBLD test deck (40 cards, as the earlier test deck). Its Mountains are TBLD Mountain version 69. */
-    static Deck testDeck() {
+    public static Deck testDeck() {
         final Deck d = new Deck("TBLD red test deck");
         d.getMain().add("Mountain|TBLD|69", 17);
         d.getMain().add("Rigging Runner", 2);
         d.getMain().add("Goblin Wardriver", 3);
         d.getMain().add("Voldaren Epicure", 2);
         d.getMain().add("Harsh Mentor", 2);
-        d.getMain().add("Rodeo Pyromancers", 2);
+        d.getMain().add("Crackling Cyclops", 2);
         d.getMain().add("Hound of Griselbrand", 2);
         d.getMain().add("Volley Veteran", 1);
         d.getMain().add("Searing Touch", 3);
@@ -281,7 +281,7 @@ public final class TbldWebServer {
     }
 
     /** The green TBLD test deck (40 cards). Its Forests are TBLD Forest version 11. */
-    static Deck greenTestDeck() {
+    public static Deck greenTestDeck() {
         final Deck d = new Deck("TBLD green test deck");
         d.getMain().add("Forest|TBLD|11", 17);
         d.getMain().add("Young Wolf", 3);
@@ -289,7 +289,7 @@ public final class TbldWebServer {
         d.getMain().add("Servant of the Conduit", 2);
         d.getMain().add("Sacred Wolf", 3);
         d.getMain().add("Jungleborn Pioneer", 2);
-        d.getMain().add("Thrashing Brontodon", 2);
+        d.getMain().add("Greenweaver Druid", 2);
         d.getMain().add("Ironscale Hydra", 2);
         d.getMain().add("Stingerfling Spider", 1);
         d.getMain().add("Blanchwood Armor", 2);

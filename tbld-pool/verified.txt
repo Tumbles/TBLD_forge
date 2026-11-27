@@ -1,0 +1,26 @@
+# Cards whose abilities an automated in-game test plays (forge.tbld.TbldTestDecksTest.VERIFIED).
+# "java tbld-pool/TbldPool.java verify" counts only these, and cards with no abilities, as implemented.
+# TbldCardPoolTest fails unless this list and the test's list are the same.
+Blanchwood Armor
+Crackling Cyclops
+Deeproot Champion
+Feed the Clan
+Firebolt
+Galvanic Blast
+Goblin Wardriver
+Greenweaver Druid
+Harsh Mentor
+Hound of Griselbrand
+Hunger of the Howlpack
+Ironscale Hydra
+Jungleborn Pioneer
+Rigging Runner
+Sacred Wolf
+Searing Blood
+Searing Touch
+Servant of the Conduit
+Stand Together
+Stingerfling Spider
+Voldaren Epicure
+Volley Veteran
+Young Wolf

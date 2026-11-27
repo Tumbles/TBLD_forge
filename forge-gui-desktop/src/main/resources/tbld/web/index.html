@@ -123,7 +123,6 @@
   .badge { position: absolute; font-size: 11px; font-weight: 700; line-height: 1; padding: 3px 5px; border-radius: 6px;
     background: rgba(10, 12, 16, .88); border: 1px solid #444b5c; white-space: nowrap; }
   .badge.pt { right: -3px; bottom: -3px; font-size: 12px; }
-  .badge.pt.hurt { color: var(--danger); border-color: var(--danger); }
   .badge.dmg { right: -3px; bottom: 18px; background: #7a1f1f; border-color: #c44; }
   .badge.sick { left: -3px; top: -3px; color: #b8c4ff; border-color: #5b6aa8; font-style: italic; }
   .badge.cnt { left: -3px; bottom: -3px; background: #20402c; border-color: #3f9b62; }
@@ -137,26 +136,11 @@
   .tag.blocking, .tag.blocked { background: var(--block); color: #07121e; }
   .tag.tapped-tag { display: none; }
 
-  /* drawn card frame, used until a picture loads and for cards without one */
-  .frame { position: absolute; inset: 0; display: flex; flex-direction: column; padding: 4.5cqw; gap: 2.5cqw;
-    background: linear-gradient(160deg, var(--fc1), var(--fc2)); color: #f2f3f6; }
-  .frame .fr-top, .frame .fr-type { display: flex; align-items: center; gap: 2cqw; background: rgba(0, 0, 0, .38); border-radius: 2.5cqw; padding: 1.5cqw 3cqw; }
-  .frame .fr-name { flex: 1; font-weight: 700; font-size: max(8px, 7.5cqw); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-  .frame .fr-cost { display: flex; gap: 1cqw; }
-  .frame .fr-cost .ms { width: max(8px, 7cqw); height: max(8px, 7cqw); font-size: max(6px, 5cqw); }
-  .frame .fr-art { flex: 1 1 38%; border-radius: 2cqw; display: grid; place-items: center; background:
-    radial-gradient(circle at 30% 25%, rgba(255, 255, 255, .22), transparent 55%), rgba(0, 0, 0, .25);
-    font-size: 22cqw; font-weight: 800; color: rgba(255, 255, 255, .16); letter-spacing: -.04em; }
-  .frame .fr-type { font-size: max(7px, 5.6cqw); font-weight: 600; white-space: nowrap; overflow: hidden; }
-  .frame .fr-text { flex: 1 1 34%; font-size: 5.2cqw; line-height: 1.25; background: rgba(240, 236, 226, .92); color: #1c1c1c;
-    border-radius: 2cqw; padding: 2.5cqw 3cqw; overflow: hidden; white-space: pre-wrap; }
-  .frame .fr-pt { position: absolute; right: 3cqw; bottom: 3cqw; font-weight: 800; font-size: 7.5cqw; background: rgba(0, 0, 0, .7);
-    border-radius: 2.5cqw; padding: .5cqw 3cqw; }
-  .frame .fr-set { position: absolute; left: 4cqw; bottom: 2.5cqw; font-size: 4cqw; color: rgba(0, 0, 0, .55); font-weight: 700; }
-  .fc-W { --fc1: #d9d3bd; --fc2: #9f9781; } .fc-U { --fc1: #3c78c0; --fc2: #1d3d66; } .fc-B { --fc1: #4c4450; --fc2: #1e1a21; }
-  .fc-R { --fc1: #c9573e; --fc2: #6c2316; } .fc-G { --fc1: #3f8c56; --fc2: #1c4227; } .fc-M { --fc1: #cfa94a; --fc2: #7a5d1d; }
-  .fc-C { --fc1: #8e98a6; --fc2: #4c5461; } .fc-L { --fc1: #8b7756; --fc2: #4a3c27; }
-  .fc-W .fr-top, .fc-W .fr-type { color: #1d1b16; background: rgba(255, 255, 255, .45); }
+  /* a card without a picture (or while its picture loads): a plain placeholder with the name, not a drawn card */
+  .nopic { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4cqw;
+    padding: 8cqw; text-align: center; background: #262a33; color: #c9ced8; border: 1px dashed #4a5060; border-radius: inherit; }
+  .nopic .np-name { font-weight: 700; font-size: max(8px, 9cqw); line-height: 1.15; overflow-wrap: anywhere; }
+  .nopic .np-note { font-size: max(7px, 6cqw); color: #7d8596; }
   .back-face { position: absolute; inset: 0; background:
     repeating-linear-gradient(45deg, rgba(255, 255, 255, .05) 0 6px, transparent 6px 12px),
     radial-gradient(circle at 50% 50%, #2f3d63 0%, #161c2e 70%); border: 2px solid #0b0e16; border-radius: inherit; }
@@ -422,54 +406,25 @@ function selectableCardIds() { return new Set(selection ? [...(selection.cards |
 function targetIds(kind) { return new Set(((selection && selection.targets) || []).filter(o => o && o[kind] !== undefined).map(o => o[kind])); }
 function playerName(id) { const p = state && state.players && state.players.find(x => x.id === id); return p ? p.name : ""; }
 
-/** Mana symbols for a cost like "{2}{R}{R}" or "2 R R". */
-function manaSymbols(cost) {
-  const box = el("span", "fr-cost");
-  if (!cost || cost === "no cost") return box;
-  let parts = [...cost.matchAll(/\{([^}]+)\}/g)].map(m => m[1]);
-  if (!parts.length) parts = cost.trim().split(/\s+/);
-  for (const p of parts) {
-    const k = p.toUpperCase().replace("/", "");
-    const cls = /^[WUBRG]$/.test(k) ? k : (k === "C" ? "C" : "N");
-    box.append(el("span", "ms ms-" + cls, k));
-  }
-  return box;
-}
-
-function frameClass(c) {
-  const t = c.type || "";
-  const colors = c.colors || "";
-  if (colors.length > 1) return "fc-M";
-  if (colors.length === 1) return "fc-" + colors;
-  if (/\bLand\b/.test(t)) return "fc-L";
-  return "fc-C";
-}
-
-/** The card drawn as a frame: name, cost, type, text and power/toughness. */
-function frame(c) {
-  const f = el("div", "frame " + frameClass(c));
-  const top = el("div", "fr-top");
-  top.append(el("span", "fr-name", c.name || ""), manaSymbols(c.cost));
-  const initials = (c.name || "").split(/[\s,-]+/).filter(w => w).slice(0, 2).map(w => w[0]).join("");
-  f.append(top, el("div", "fr-art", initials), el("div", "fr-type", c.type || ""));
-  if (c.text) f.append(el("div", "fr-text", c.text));
-  if (c.power !== undefined) f.append(el("div", "fr-pt", c.power + "/" + c.toughness));
-  if (c.set) f.append(el("div", "fr-set", c.set));
+/** A card without a picture, or whose picture is still loading: its name on a plain placeholder. */
+function noPicture(c) {
+  const f = el("div", "nopic");
+  f.append(el("div", "np-name", c.name || ""), el("div", "np-note", c.img ? "" : "no picture"));
   return f;
 }
 
-/** The card's face: the drawn frame, covered by its picture once that loads. */
+/** The card's face: its picture, over a plain placeholder with its name until the picture loads. */
 function face(c) {
   const f = el("div", "face");
   if (c.hidden) { f.append(el("div", "back-face")); return f; }
-  f.append(frame(c));
+  f.append(noPicture(c));
   if (c.img) {
     const im = new Image();
     im.className = "art";
     im.alt = c.name || "";
     im.referrerPolicy = "no-referrer";
     im.draggable = false;
-    im.onerror = () => im.remove();
+    im.onerror = () => { im.remove(); const n = f.querySelector(".np-note"); if (n) n.textContent = "no picture"; };
     im.src = c.img;
     f.append(im);
   }
@@ -522,7 +477,7 @@ function cardEl(c, ctx, extra = {}) {
   if (!c.hidden && (ctx === "bf" || ctx === "chosen")) {
     const b = el("div", "badges");
     if (isCreature) {
-      const pt = el("div", "badge pt" + (c.damage ? " hurt" : ""), c.power + "/" + (c.toughness - (c.damage || 0)));
+      const pt = el("div", "badge pt", c.power + "/" + c.toughness);
       if (c.damage) pt.title = c.damage + " damage";
       b.append(pt);
     }
@@ -580,6 +535,8 @@ function showPreview(c, e) {
   big.append(face(c));
   const info = el("div", "pv-info");
   const lines = [];
+  // A card without a picture: what it says
+  if (!c.img) for (const t of [c.type, c.power !== undefined ? c.power + "/" + c.toughness : "", c.text]) if (t) lines.push(t);
   if (c.damage) lines.push(c.damage + " damage marked");
   if (c.sick && c.power !== undefined && c.tapped !== undefined) lines.push("Summoning sick");
   if (c.tapped) lines.push("Tapped");

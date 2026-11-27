@@ -29,10 +29,11 @@ public class TbldPicturesTest extends AITest {
 
     @Test
     public void picturesAreFoundByVersionAndServed() throws Exception {
-        // A version with its own picture; a version without one; a card with one picture for every
+        // Versions with their own pictures; a version without one (all 80 Mountains have pictures); a card with one picture for every
         // version; a split card (its file is named "Clubs_Spades"); a card with none
         AssertJUnit.assertEquals("/pics/TBLD%20Mountain69.jpg", TbldPictures.urlFor("Mountain", 69));
-        AssertJUnit.assertNull(TbldPictures.urlFor("Mountain", 1));
+        AssertJUnit.assertEquals("/pics/TBLD%20Mountain1.jpg", TbldPictures.urlFor("Mountain", 1));
+        AssertJUnit.assertNull("every version has its own picture, and there is no unnumbered one", TbldPictures.urlFor("Mountain", 81));
         AssertJUnit.assertEquals("/pics/TBLD%20Searing%20Touch.jpg", TbldPictures.urlFor("Searing Touch", 1));
         AssertJUnit.assertEquals("/pics/TBLD%20Clubs_Spades.jpg", TbldPictures.urlFor("Clubs // Spades", 1));
         AssertJUnit.assertNull(TbldPictures.urlFor("No Such Card", 1));
