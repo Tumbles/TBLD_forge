@@ -1,0 +1,8 @@
+Name:Fleetfeather Sandals
+ManaCost:1
+Types:Artifact Equipment
+K:Equip:1
+S:Mode$ Continuous | AffectedDefined$ Equipped | Affected$ Creature | AddKeyword$ Ward:1 & Haste | Description$ Equipped creature has ward 1 and haste.
+A:AB$ Animate | Cost$ 2 | Defined$ Self | staticAbilities$ FlyST | SpellDescription$ This turn, CARDNAME gains "Equipped creature has flying."
+SVar:FlyST:Mode$ Continuous | AffectedDefined$ Equipped | Affected$ Creature | AddKeyword$ Flying | Description$ Equipped creature has flying.
+Oracle:Equipped creature has ward 1 and haste.\n2: This turn, this gains “Equipped creature has flying.”\nEquip 1 (1: Attach to target creature you control. Can’t be activated at flash speed.)

@@ -1,0 +1,7 @@
+Name:Alchemists Vial
+ManaCost:2
+Types:Artifact
+T:Mode$ ChangesZone | Origin$ Any | Destination$ Battlefield | ValidCard$ Card.Self | Execute$ TrigDraw | TriggerDescription$ When CARDNAME enters, draw a card.
+SVar:TrigDraw:DB$ Draw | Defined$ You | NumCards$ 1
+A:AB$ Tap | Cost$ 1 T Sac<1/CARDNAME> | ValidTgts$ Permanent | TgtPrompt$ Select target permanent | SpellDescription$ Tap target permanent.
+Oracle:When this enters, draw a card.\n1, T, Sacrifice this: Tap target permanent.

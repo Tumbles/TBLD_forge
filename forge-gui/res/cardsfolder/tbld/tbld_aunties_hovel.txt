@@ -1,0 +1,7 @@
+Name:Aunties Hovel
+ManaCost:no cost
+Types:Land
+A:AB$ Mana | Cost$ T | Produced$ Combo B R | SpellDescription$ Add {B} or {R}.
+R:Event$ Moved | ValidCard$ Card.Self | Destination$ Battlefield | ReplaceWith$ DBTap | ReplacementResult$ Updated | Description$ As CARDNAME enters, you may behold a Goblin. If you don't, CARDNAME enters tapped.
+SVar:DBTap:DB$ Tap | ETB$ True | Defined$ Self | UnlessCost$ Behold<1/Goblin> | UnlessPayer$ You | StackDescription$ enters tapped.
+Oracle:As this enters, you may behold a Goblin. If you don’t, this enters tapped. (To behold a Goblin, choose a Goblin you control or reveal a Goblin card from your hand.)\nT: Add B or R.

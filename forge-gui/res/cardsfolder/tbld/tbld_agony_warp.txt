@@ -1,0 +1,8 @@
+Name:Agony Warp
+ManaCost:U B
+Types:Flash Sorcery
+A:SP$ Pump | ValidTgts$ Creature | TgtPrompt$ Select target creature to get -2/-0 | NumAtt$ -2 | IsCurse$ True | SubAbility$ DBPump | SpellDescription$ Target creature gets -2/-0 this turn. Target creature gets -0/-2 this turn. Investigate.
+SVar:DBPump:DB$ Pump | ValidTgts$ Creature | TgtPrompt$ Select target creature to get -0/-2 | NumDef$ -2 | IsCurse$ True | SubAbility$ DBInvestigate
+SVar:DBInvestigate:DB$ Token | TokenScript$ tbld_c_e_clue_scan | TokenOwner$ You
+DeckHas:Ability$Token
+Oracle:Target creature gets -2/-0 this turn.\nTarget creature gets -0/-2 this turn.\nInvestigate (Create a Clue enchantment token with “2, Sacrifice this: Scan, then draw a card.”)

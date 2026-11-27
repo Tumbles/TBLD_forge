@@ -1,0 +1,7 @@
+Name:Deathless Behemoth
+ManaCost:6
+Types:Creature Eldrazi
+PT:6/6
+K:Vigilance
+A:AB$ ChangeZone | Cost$ Sac<2/Eldrazi/Eldrazi> | Origin$ Graveyard | Destination$ Hand | ActivationZone$ Graveyard | SorcerySpeed$ True | SpellDescription$ Return CARDNAME from your graveyard to your hand. Can't be activated at flash speed.
+Oracle:Vigilance\nSacrifice two Eldrazi: Return this from your graveyard to your hand. Can't be activated at flash speed.

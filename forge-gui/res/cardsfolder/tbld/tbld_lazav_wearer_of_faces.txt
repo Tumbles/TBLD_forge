@@ -1,0 +1,12 @@
+Name:Lazav Wearer of Faces
+ManaCost:U B
+Types:Legendary Creature Shapeshifter
+PT:2/3
+T:Mode$ Attacks | ValidCard$ Card.Self | Execute$ TrigExile | TriggerDescription$ Whenever CARDNAME attacks, exile target card from a graveyard, then investigate.
+SVar:TrigExile:DB$ ChangeZone | Origin$ Graveyard | Destination$ Exile | ValidTgts$ Card | SubAbility$ DBInvestigate
+SVar:DBInvestigate:DB$ Token | TokenScript$ tbld_c_e_clue_scan | TokenOwner$ You
+T:Mode$ Sacrificed | ValidPlayer$ You | ValidCard$ Clue.YouCtrl | Execute$ TrigClone | TriggerZones$ Battlefield | TriggerDescription$ Whenever you sacrifice a Clue, this turn, you may have CARDNAME become a copy of a creature card exiled by it, except it's a Shapeshifter in addition to its other types.
+SVar:TrigClone:DB$ Clone | Choices$ Creature.ExiledWithSource | ChoiceZone$ Exile | Optional$ True | AddTypes$ Shapeshifter | Duration$ UntilEndOfTurn
+SVar:HasAttackEffect:TRUE
+DeckHas:Ability$Token|Graveyard
+Oracle:Whenever this attacks, exile target card from a graveyard, then investigate.\nWhenever you sacrifice a Clue, this turn, you may have this become a copy of a creature card exiled by this, except it’s a Shapeshifter in addition to its other types.

@@ -1,0 +1,10 @@
+Name:Fungal Reaches
+ManaCost:no cost
+Types:Land
+A:AB$ Mana | Cost$ T | Produced$ C | SpellDescription$ Add {C}.
+A:AB$ PutCounter | Cost$ 1 T | CounterType$ STORAGE | CounterNum$ 1 | SpellDescription$ Put a storage counter on CARDNAME.
+A:AB$ Mana | Cost$ T SubCounter<X/STORAGE> | Produced$ Combo R G | Amount$ X | CostDesc$ T, Remove X storage counters from CARDNAME: | SpellDescription$ Add X mana in any combination of R and/or G.
+SVar:X:Count$xPaid
+K:Cycling:2
+AI:RemoveDeck:All
+Oracle:T: Add C.\n1, T: Put a storage counter on this.\nT, Remove X storage counters from this: Add X mana in any combination of R and/or G.\nCycling 2

@@ -1,0 +1,8 @@
+Name:Boltwing Marauder
+ManaCost:2 B R
+Types:Creature Dragon
+PT:2/4
+K:Flying
+T:Mode$ ChangesZone | Origin$ Any | Destination$ Battlefield | ValidCard$ Creature.Other+YouCtrl | Execute$ TrigPump | TriggerZones$ Battlefield | TriggerDescription$ Whenever another creature enters under your control, target creature gets +3/+0 this turn.
+SVar:TrigPump:DB$ Pump | ValidTgts$ Creature | NumAtt$ +3
+Oracle:Flying\nWhenever another creature enters under your control, target creature gets +3/+0 this turn.

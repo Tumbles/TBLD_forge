@@ -1,0 +1,7 @@
+Name:Hexplate Golem
+ManaCost:13
+Types:Artifact Creature Golem
+PT:8/8
+K:Affinity:Artifact
+K:TypeCycling:Land.Artifact:2:artifact land
+Oracle:Affinity for artifacts (This costs 1 less for each artifact you control.)\nArtifact landcycling 2

@@ -1,0 +1,11 @@
+Name:Chimeric Mass
+ManaCost:X
+Types:Artifact
+K:etbCounter:CHARGE:X
+SVar:X:Count$xPaid
+A:AB$ PutCounter | Cost$ 3 | Defined$ Self | CounterType$ CHARGE | CounterNum$ 1 | IsPresent$ Card.Self+nonCreature | SpellDescription$ Put a charge counter on CARDNAME. Can't be activated if this is a creature.
+A:AB$ Animate | Cost$ 1 | Defined$ Self | Types$ Artifact,Creature,Construct | RemoveCreatureTypes$ True | staticAbilities$ Static | SpellDescription$ This turn, CARDNAME becomes a Construct artifact creature with "This creature's power and toughness are each equal to the number of charge counters on it."
+SVar:Static:Mode$ Continuous | AffectedDefined$ Self | EffectZone$ Battlefield | SetPower$ Y | SetToughness$ Y | Description$ This creature's power and toughness are each equal to the number of charge counters on it.
+SVar:Y:Count$CardCounters.CHARGE
+AI:RemoveDeck:Random
+Oracle:This enters with X charge counters.\n3: Put a charge counter on this. Can’t be activated if this is a creature.\n1: This turn, this becomes a Construct artifact creature with “This creature’s power and toughness are each equal to the number of charge counters on it.”

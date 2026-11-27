@@ -1,0 +1,6 @@
+Name:Infernal Tribute
+ManaCost:B R
+Types:Sorcery
+K:AlternateAdditionalCost:Discard<1/Card>:PayLife<3>
+A:SP$ Draw | NumCards$ 2 | SpellDescription$ Draw two cards.
+Oracle:As an additional cost to cast this, discard a card or pay 3 life.\nDraw two cards.

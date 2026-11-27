@@ -1,0 +1,8 @@
+Name:Drown in Filth
+ManaCost:B G
+Types:Sorcery
+A:SP$ Mill | NumCards$ 5 | Defined$ You | SubAbility$ DBPump | SpellDescription$ Choose target creature. Mill five cards, then that creature gets -1/-1 this turn for each land card in your graveyard.
+SVar:DBPump:DB$ Pump | ValidTgts$ Creature | NumAtt$ -X | NumDef$ -X | IsCurse$ True
+SVar:X:Count$ValidGraveyard Land.YouOwn
+AI:RemoveDeck:All
+Oracle:Choose target creature. Mill five cards, then that creature gets -1/-1 this turn for each land card in your graveyard.

@@ -1,0 +1,6 @@
+Name:Lightning Helix
+ManaCost:R W
+Types:Flash Sorcery
+K:Lifelink
+A:SP$ DealDamage | ValidTgts$ Any | NumDmg$ 3 | SpellDescription$ CARDNAME deals 3 damage to any target.
+Oracle:Lifelink (Damage dealt by this also causes you to gain that much life.)\nThis deals 3 damage to any target.

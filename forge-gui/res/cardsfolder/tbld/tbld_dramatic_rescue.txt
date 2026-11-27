@@ -1,0 +1,6 @@
+Name:Dramatic Rescue
+ManaCost:W U
+Types:Flash Sorcery
+A:SP$ ChangeZone | ValidTgts$ Creature.YouCtrl | TgtPrompt$ Select target creature you control | Origin$ Battlefield | Destination$ Hand | SubAbility$ DBGainLife | SpellDescription$ Return target creature you control to its owner's hand. Gain 8 life.
+SVar:DBGainLife:DB$ GainLife | LifeAmount$ 8
+Oracle:Return target creature you control to its owner's hand. Gain 8 life.

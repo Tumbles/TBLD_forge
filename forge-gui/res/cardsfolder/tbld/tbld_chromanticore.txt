@@ -1,0 +1,13 @@
+Name:Chromanticore
+ManaCost:W U B R G
+Types:Enchantment Creature Manticore
+PT:4/4
+K:Bestow:2 W U B R G
+K:Flying
+K:Double Strike
+K:Prowess
+K:Vigilance
+K:Trample
+K:Lifelink
+S:Mode$ Continuous | AffectedDefined$ Enchanted | AddPower$ 4 | AddToughness$ 4 | AddKeyword$ Flying & Double Strike & Prowess & Vigilance & Trample & Lifelink | Description$ Enchanted creature gets +4/+4 and has flying, double strike, prowess, vigilance, trample, and lifelink.
+Oracle:Bestow 2WUBRG\nFlying, double strike, prowess, vigilance, trample, lifelink\nEnchanted creature gets +4/+4 and has flying, double strike, prowess, vigilance, trample, and lifelink.

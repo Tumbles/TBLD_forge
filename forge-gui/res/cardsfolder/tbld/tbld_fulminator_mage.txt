@@ -1,0 +1,6 @@
+Name:Fulminator Mage
+ManaCost:1 BR BR
+Types:Creature Elemental Shaman
+PT:2/2
+A:AB$ Destroy | Cost$ Sac<1/CARDNAME> | ValidTgts$ Land.!hasABasicLandType | TgtPrompt$ Select target non-basic-typed land | SpellDescription$ Destroy target non-basic-typed land.
+Oracle:Sacrifice this: Destroy target non-basic-typed land.

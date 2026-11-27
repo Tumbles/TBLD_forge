@@ -1,0 +1,7 @@
+Name:Knowledge is Power
+ManaCost:2 W U
+Types:Enchantment
+S:Mode$ Continuous | Affected$ Creature.YouCtrl | AddPower$ X | AddToughness$ X | Description$ Creatures you control get +X/+X, where X is the number of cards you've drawn this turn.
+SVar:X:Count$YouDrewThisTurn
+K:Cycling:1
+Oracle:Creatures you control get +X/+X, where X is the number of cards you’ve drawn this turn.\nCycling 1 (1, Discard this: Draw a card.)

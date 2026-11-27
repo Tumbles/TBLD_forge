@@ -1,0 +1,11 @@
+Name:Epic Experiment
+ManaCost:X U R
+Types:Sorcery
+R:Event$ Counter | ValidCard$ Card.Self | ValidSA$ Spell | Layer$ CantHappen | Description$ This spell can't be countered.
+A:SP$ Dig | Defined$ You | DigNum$ X | ChangeNum$ All | DestinationZone$ Exile | RememberChanged$ True | SubAbility$ DBPlay | SpellDescription$ Exile the top X cards of your library. You may cast sorcery spells with mana value X or less from among them without paying their mana costs. Then put all cards exiled this way that weren't cast into your graveyard.
+SVar:DBPlay:DB$ Play | Valid$ Card.IsRemembered+YouOwn | ValidZone$ Exile | ValidSA$ Sorcery.cmcLEX | Controller$ You | WithoutManaCost$ True | Optional$ True | Amount$ All | SubAbility$ DBGrave
+SVar:DBGrave:DB$ ChangeZoneAll | Origin$ Exile | Destination$ Graveyard | ChangeType$ Card.IsRemembered+YouOwn | SubAbility$ DBCleanup
+SVar:DBCleanup:DB$ Cleanup | ClearRemembered$ True
+SVar:X:Count$xPaid
+AI:RemoveDeck:All
+Oracle:This spell can’t be countered.\nExile the top X cards of your library. You may cast sorcery spells with mana value X or less from among them without paying their mana costs. Then put all cards exiled this way that weren’t cast into your graveyard.

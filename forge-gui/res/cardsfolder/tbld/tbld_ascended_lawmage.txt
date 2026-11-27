@@ -1,0 +1,9 @@
+Name:Ascended Lawmage
+ManaCost:W W U U
+Types:Creature Vedalken Wizard
+PT:3/2
+R:Event$ Counter | ValidCard$ Card.Self | ValidSA$ Spell | Layer$ CantHappen | Description$ This spell can't be countered.
+K:Flying
+K:Hexproof
+A:AB$ Counter | Cost$ WU WU Sac<1/CARDNAME> | TargetType$ Spell | ValidTgts$ Card.nonCreature | TgtPrompt$ Select target noncreature spell | UnlessCost$ 2 | SpellDescription$ Counter target noncreature spell unless its controller pays 2.
+Oracle:This spell can’t be countered.\nFlying, hexproof\nW/UW/U, Sacrifice this: Counter target noncreature spell unless its controller pays 2.

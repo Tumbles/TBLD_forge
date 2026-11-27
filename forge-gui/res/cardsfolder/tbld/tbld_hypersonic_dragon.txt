@@ -1,0 +1,10 @@
+Name:Hypersonic Dragon
+ManaCost:3 U R
+Types:Creature Dragon
+PT:4/4
+K:Flying
+K:Haste
+S:Mode$ CastWithFlash | ValidCard$ Sorcery | ValidSA$ Spell | Caster$ You | Description$ You may cast sorcery spells at flash speed.
+T:Mode$ SpellCast | ValidCard$ Sorcery | ValidActivatingPlayer$ You | TriggerZones$ Battlefield | Execute$ TrigMana | TriggerDescription$ Whenever you cast a sorcery spell, add U or R.
+SVar:TrigMana:DB$ Mana | Produced$ Combo U R
+Oracle:Flying, haste\nYou may cast sorcery spells at flash speed.\nWhenever you cast a sorcery spell, add U or R.

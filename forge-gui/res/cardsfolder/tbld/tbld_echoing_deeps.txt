@@ -1,0 +1,8 @@
+Name:Echoing Deeps
+ManaCost:no cost
+Types:Land
+K:ETBReplacement:Copy:DBCopy:Optional
+SVar:DBCopy:DB$ Clone | Choices$ Land.Other | ChoiceZone$ Graveyard | SpellDescription$ You may have CARDNAME enter as a copy of any land card in a graveyard.
+A:AB$ Mana | Cost$ T | Produced$ C | SpellDescription$ Add {C}.
+DeckHints:Ability$Graveyard|Mill
+Oracle:You may have this enter as a copy of any land card in a graveyard.\nT: Add C.

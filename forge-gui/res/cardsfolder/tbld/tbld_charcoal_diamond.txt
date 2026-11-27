@@ -1,0 +1,10 @@
+Name:Charcoal Diamond
+ManaCost:2
+Types:Artifact
+R:Event$ Moved | ValidCard$ Card.Self | Destination$ Battlefield | ReplacementResult$ Updated | ReplaceWith$ ETBTapped | Description$ CARDNAME enters tapped.
+SVar:ETBTapped:DB$ Tap | Defined$ Self | ETB$ True
+K:Indestructible
+T:Mode$ ChangesZone | Origin$ Any | Destination$ Battlefield | ValidCard$ Card.Self | Execute$ TrigSacLand | TriggerDescription$ When CARDNAME enters, sacrifice a land.
+SVar:TrigSacLand:DB$ Sacrifice | SacValid$ Land
+A:AB$ Mana | Cost$ T | Produced$ B | Amount$ 2 | SpellDescription$ Add {B}{B}.
+Oracle:This enters tapped.\nIndestructible\nWhen this enters, sacrifice a land.\nT: Add BB.

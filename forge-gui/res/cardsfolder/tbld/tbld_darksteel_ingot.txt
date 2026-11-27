@@ -1,0 +1,7 @@
+Name:Darksteel Ingot
+ManaCost:3
+Types:Artifact
+S:Mode$ ReduceCost | ValidCard$ Card.Self | Type$ Spell | Amount$ 1 | EffectZone$ All | Condition$ Metalcraft | Description$ Metalcraft — This costs 1 less if you control three or more artifacts.
+K:Indestructible
+A:AB$ Mana | Cost$ T | Produced$ Any | SpellDescription$ Add one mana of any color.
+Oracle:Metalcraft — This costs 1 less if you control three or more artifacts.\nIndestructible\nT: Add one mana of any color.

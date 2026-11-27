@@ -1,0 +1,6 @@
+Name:Blightning
+ManaCost:1 B R
+Types:Sorcery
+A:SP$ DealDamage | ValidTgts$ Player | TgtPrompt$ Select target player | NumDmg$ 3 | SubAbility$ DBDiscard | SpellDescription$ CARDNAME deals 3 damage to target player. That player discards two cards.
+SVar:DBDiscard:DB$ Discard | Defined$ TargetedPlayer | NumCards$ 2 | Mode$ TgtChoose
+Oracle:This deals 3 damage to target player. That player discards two cards.

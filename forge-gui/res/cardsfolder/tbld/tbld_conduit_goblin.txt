@@ -1,0 +1,9 @@
+Name:Conduit Goblin
+ManaCost:R W
+Types:Creature Goblin Warrior
+PT:2/2
+T:Mode$ ChangesZone | Origin$ Any | Destination$ Battlefield | ValidCard$ Card.Self | Execute$ TrigEnergy | TriggerDescription$ When CARDNAME enters, you get EE (two energy counters).
+SVar:TrigEnergy:DB$ PutCounter | Defined$ You | CounterType$ ENERGY | CounterNum$ 2
+T:Mode$ Phase | Phase$ BeginCombat | ValidPlayer$ You | Execute$ TrigPump | TriggerZones$ Battlefield | TriggerDescription$ At your beginning of combat step, you may pay E. If you do, another target creature gets +1/+0 and gains haste this turn.
+SVar:TrigPump:AB$ Pump | Cost$ PayEnergy<1> | ValidTgts$ Creature.Other | TgtPrompt$ Select another target creature | NumAtt$ +1 | KW$ Haste
+Oracle:When this enters, you get EE (two energy counters).\nAt your beginning of combat step, you may pay E. If you do, another target creature gets +1/+0 and gains haste this turn.

@@ -1,0 +1,7 @@
+Name:Human Knight Token
+ManaCost:no cost
+Colors:white
+Types:Creature Human Knight
+PT:2/2
+K:Exalted
+Oracle:Exalted

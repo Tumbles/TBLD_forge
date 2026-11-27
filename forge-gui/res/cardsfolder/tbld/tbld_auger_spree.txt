@@ -1,0 +1,5 @@
+Name:Auger Spree
+ManaCost:B R
+Types:Flash Sorcery
+A:SP$ Pump | ValidTgts$ Creature | NumAtt$ +7 | NumDef$ -4 | IsCurse$ True | SpellDescription$ Target creature gets +7/-4 this turn.
+Oracle:Target creature gets +7/-4 this turn.

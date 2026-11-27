@@ -1,0 +1,9 @@
+Name:Death Frenzy
+ManaCost:X B G
+Types:Sorcery
+A:SP$ PumpAll | ValidCards$ Creature | NumAtt$ -X | NumDef$ -X | IsCurse$ True | SubAbility$ DBEffect | SpellDescription$ All creatures get -X/-X this turn. Whenever a creature dies this turn, gain 1 life.
+SVar:X:Count$xPaid
+SVar:DBEffect:DB$ Effect | Triggers$ TrigDies
+SVar:TrigDies:Mode$ ChangesZone | Origin$ Battlefield | Destination$ Graveyard | ValidCard$ Creature | Execute$ TrigGainLife | TriggerDescription$ Whenever a creature dies this turn, gain 1 life.
+SVar:TrigGainLife:DB$ GainLife | LifeAmount$ 1
+Oracle:All creatures get -X/-X this turn.\nWhenever a creature dies this turn, gain 1 life.

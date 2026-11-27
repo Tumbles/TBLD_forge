@@ -1,0 +1,9 @@
+Name:Frontier Bivouac
+ManaCost:no cost
+Types:Land
+R:Event$ Moved | ValidCard$ Card.Self | Destination$ Battlefield | ReplacementResult$ Updated | ReplaceWith$ ETBTapped | Description$ CARDNAME enters tapped.
+SVar:ETBTapped:DB$ Tap | Defined$ Self | ETB$ True
+A:AB$ Mana | Cost$ T | Produced$ Combo U R G | SpellDescription$ Add {U}, {R}, or {G}.
+T:Mode$ ChangesZone | Origin$ Any | Destination$ Battlefield | ValidCard$ Card.Self | Execute$ TrigScan | TriggerDescription$ When CARDNAME enters, scan.
+SVar:TrigScan:DB$ Dig | DigNum$ 2 | ChangeNum$ 1 | DestinationZone$ Exile | DestinationZone2$ Library | LibraryPosition2$ 0
+Oracle:This enters tapped.\nT: Add U, R, or G.\nWhen this enters, scan. (Look at the top two cards of your library and exile one of them.)

@@ -1,0 +1,7 @@
+Name:Ghoulcallers Bell
+ManaCost:1
+Types:Artifact
+A:AB$ Mill | Cost$ T | NumCards$ 1 | Defined$ Player | SpellDescription$ Each player mills a card.
+A:AB$ ChangeZone | Cost$ 1 T Sac<1/CARDNAME> | Origin$ Graveyard | Destination$ Hand | DefinedPlayer$ Player | ChangeType$ Creature | ChangeNum$ 1 | Hidden$ True | SpellDescription$ Each player may return a creature card from their graveyard to their hand.
+AI:RemoveDeck:Random
+Oracle:T: Each player mills a card.\n1, T, Sacrifice this: Each player may return a creature card from their graveyard to their hand.

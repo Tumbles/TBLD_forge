@@ -1,0 +1,6 @@
+Name:Double Cleave
+ManaCost:1 RW
+Types:Flash Sorcery
+A:SP$ Pump | ValidTgts$ Creature | KW$ Double Strike | SpellDescription$ Target creature gains double strike this turn.
+K:Rebound
+Oracle:Target creature gains double strike this turn.\nRebound (If you cast this from your hand, exile it as it resolves. At your next upkeep, you may cast this from exile without paying its mana cost.)

@@ -1,0 +1,10 @@
+Name:Gleam of Battle
+ManaCost:2 R W
+Types:Enchantment
+T:Mode$ Attacks | ValidCard$ Creature.YouCtrl | TriggerZones$ Battlefield | Execute$ TrigPut | TriggerDescription$ Whenever a creature you control attacks or blocks, put a +1/+1 counter on it.
+SVar:TrigPut:DB$ PutCounter | Defined$ TriggeredAttackerLKICopy | CounterType$ P1P1 | CounterNum$ 1
+T:Mode$ Blocks | ValidCard$ Creature.YouCtrl | TriggerZones$ Battlefield | Execute$ TrigPutBlocker | Secondary$ True | TriggerDescription$ Whenever a creature you control attacks or blocks, put a +1/+1 counter on it.
+SVar:TrigPutBlocker:DB$ PutCounter | Defined$ TriggeredBlockerLKICopy | CounterType$ P1P1 | CounterNum$ 1
+SVar:PlayMain1:TRUE
+DeckHas:Ability$Counters
+Oracle:Whenever a creature you control attacks or blocks, put a +1/+1 counter on it.

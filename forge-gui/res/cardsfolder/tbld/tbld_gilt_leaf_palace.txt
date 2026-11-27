@@ -1,0 +1,8 @@
+Name:Gilt-Leaf Palace
+ManaCost:no cost
+Types:Land
+A:AB$ Mana | Cost$ T | Produced$ Combo B G | SpellDescription$ Add {B} or {G}.
+R:Event$ Moved | ValidCard$ Card.Self | Destination$ Battlefield | ReplaceWith$ DBTap | ReplacementResult$ Updated | Description$ As CARDNAME enters, you may behold an Elf. If you don't, CARDNAME enters tapped.
+SVar:DBTap:DB$ Tap | ETB$ True | Defined$ Self | UnlessCost$ Behold<1/Elf> | UnlessPayer$ You | StackDescription$ enters tapped.
+AI:RemoveDeck:Random
+Oracle:As this enters, you may behold an Elf. If you don’t, this enters tapped. (Choose an Elf you control or reveal an Elf card from your hand.)\nT: Add B or G.

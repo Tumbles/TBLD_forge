@@ -1,0 +1,7 @@
+Name:Hussar Patrol
+ManaCost:W U
+Types:Flash Creature Human Knight
+PT:2/4
+K:Vigilance
+A:AB$ Counter | Cost$ WU WU Sac<1/CARDNAME> | TargetType$ Spell | ValidTgts$ Card.nonCreature | TgtPrompt$ Select target noncreature spell | UnlessCost$ 2 | SpellDescription$ Counter target noncreature spell unless its controller pays 2.
+Oracle:Vigilance\nW/UW/U, Sacrifice this: Counter target noncreature spell unless its controller pays 2.

@@ -1085,6 +1085,103 @@ Type=Custom_Set
 1111 U Whisper Blood Liturgist
 1112 C Wishclaw Talisman
 1113 U Wits End
+1114 R Agony Warp
+1115 U Alchemists Vial
+1116 U Alloy Myr
+1117 U Alpha Myr
+1118 U Altar of the Brood
+1119 C Anafenza the Foremost
+1120 U Anax and Cymede
+1121 U Arcane Sanctum
+1122 U Arcbound Bruiser
+1123 U Ascended Lawmage
+1124 U Astral Cornucopia
+1125 U Auger Spree
+1126 U Aunties Hovel
+1127 U Azorius Skyguard
+1128 U Azors Elocutors
+1129 C Basilica Bell-Haunt
+1130 U Beamsplitter Mage
+1131 U Beetleback Chief
+1132 U Biovisionary
+1133 C Blightning
+1134 U Blinkmoth Well
+1135 C Blood Spatter Analysis
+1136 U Boltwing Marauder
+1137 U Boros Challenger
+1138 C Boros Garrison
+1139 U Bountiful Promenade
+1140 U Calciform Pools
+1141 U Careening Mine Cart
+1142 C Casualties of War
+1143 U Charcoal Diamond
+1144 U Chimeric Mass
+1145 U Chromanticore
+1146 C Conduit Goblin
+1147 U Copper Myr
+1148 U Corrupted Crossroads
+1149 C Cruel Celebrant
+1150 U Crumbling Necropolis
+1151 U Cryptborn Horror
+1152 U Darksteel Forge
+1153 U Darksteel Ingot
+1154 U Darksteel Reactor
+1155 U Death Frenzy
+1156 C Deathless Behemoth
+1157 U Doom Foretold
+1158 U Dormant Volcano
+1159 U Double Cleave
+1160 U Dramatic Rescue
+1161 U Dreadship Reef
+1162 U Drown in Filth
+1163 U Echoing Deeps
+1164 C Eladamris Call
+1165 C Elas il-Kor Sadistic Pilgrim
+1166 U Epic Experiment
+1167 U Everglades
+1168 C Faithful Mending
+1169 U Fathom Feeder
+1170 U Field of Ruin
+1171 U Fire Diamond
+1172 U Firemane Avenger
+1173 U Fireminds Research
+1174 C Fist of Suns
+1175 U Flayer Drone
+1176 U Flayer Husk
+1177 U Fleetfeather Sandals
+1179 U Frontier Bivouac
+1180 U Fulminator Mage
+1181 U Fungal Reaches
+1182 U Fusion Elemental
+1183 U Gelectrode
+1184 U Ghoulcallers Bell
+1185 U Gift of Orzhova
+1186 U Gilt-Leaf Palace
+1187 U Gleam of Battle
+1189 U Goblin Charbelcher
+1190 U Gold Myr
+1192 U Grove Rumbler
+1193 U Hall of Tagsin
+1194 C Herald of Kozilek
+1195 C Heroic Reinforcements
+1196 U Hexplate Golem
+1197 U Horned Kavu
+1198 U Hussar Patrol
+1199 U Hypersonic Dragon
+1200 U Ideas Unbound
+1201 C Idol of Oblivion
+1202 R Infernal Tribute
+1203 U Iron Myr
+1204 C Isochron Scepter
+1205 U Jungle Basin
+1206 U Jungle Shrine
+1207 R Karlov of the Ghost Council
+1208 U Karoo
+1209 U Knowledge is Power
+1210 C Kraul Whipcracker
+1211 C Lazav Wearer of Faces
+1212 U Leaden Myr
+1213 U Lightning Helix
 F1 L Forest
 F2 L Forest
 F3 L Forest

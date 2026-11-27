@@ -1,0 +1,8 @@
+Name:Gold Myr
+ManaCost:2
+Types:Artifact Creature Myr
+PT:1/1
+S:Mode$ ReduceCost | ValidCard$ Card.Self | Type$ Spell | Amount$ 1 | EffectZone$ All | Condition$ Metalcraft | Description$ Metalcraft — This costs 1 less if you control three or more artifacts.
+S:Mode$ Continuous | Affected$ Myr.YouCtrl | AddAbility$ ABMana | Description$ Myr you control have "T: Add W."
+SVar:ABMana:AB$ Mana | Cost$ T | Produced$ W | SpellDescription$ Add {W}.
+Oracle:Metalcraft — This costs 1 less if you control three or more artifacts.\nMyr you control have “T: Add W.”

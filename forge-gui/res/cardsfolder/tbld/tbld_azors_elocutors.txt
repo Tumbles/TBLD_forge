@@ -1,0 +1,12 @@
+Name:Azors Elocutors
+ManaCost:2 WU WU
+Types:Creature Human Advisor
+PT:3/5
+T:Mode$ Phase | Phase$ Upkeep | ValidPlayer$ You | TriggerZones$ Battlefield | Execute$ PutCounter | TriggerDescription$ At the beginning of your upkeep, put a filibuster counter on CARDNAME. Then if CARDNAME has five or more filibuster counters on it, you win the game.
+SVar:PutCounter:DB$ PutCounter | Defined$ Self | CounterType$ FILIBUSTER | CounterNum$ 1 | SubAbility$ WinGame
+SVar:WinGame:DB$ WinsGame | Defined$ You | ConditionCheckSVar$ TalkedEnough | ConditionSVarCompare$ GE5
+SVar:TalkedEnough:Count$CardCounters.FILIBUSTER
+T:Mode$ DamageDone | ValidTarget$ You | TriggerZones$ Battlefield | Execute$ RemoveCounter | TriggerDescription$ Whenever a source deals damage to you, remove a filibuster counter from CARDNAME.
+SVar:RemoveCounter:DB$ RemoveCounter | Defined$ Self | CounterType$ FILIBUSTER | CounterNum$ 1
+SVar:AIEvaluationModifier:30
+Oracle:At your upkeep, put a filibuster counter on this. Then if this has five or more filibuster counters, you win the game.\nWhenever you are dealt damage, remove a filibuster counter from this.

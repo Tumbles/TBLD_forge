@@ -1,0 +1,8 @@
+Name:Arcbound Bruiser
+ManaCost:4
+Types:Artifact Enchantment Creature Elemental
+PT:0/0
+K:Modular:3
+K:Evoke:2
+DeckHas:Ability$Counters
+Oracle:Modular 3 (This enters with three +1/+1 counters. When it dies, you may put its +1/+1 counters on target artifact creature.)\nEvoke 2 (You may cast this for its evoke cost. If you do, sacrifice it when it enters.)

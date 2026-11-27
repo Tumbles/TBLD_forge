@@ -1,0 +1,7 @@
+Name:Fusion Elemental
+ManaCost:W U B R G
+Types:Creature Elemental
+PT:8/8
+T:Mode$ ChangesZone | Origin$ Any | Destination$ Battlefield | ValidCard$ Card.Self | Execute$ TrigDiscover | TriggerDescription$ When CARDNAME enters, discover 5.
+SVar:TrigDiscover:DB$ Discover | Num$ 5
+Oracle:When this enters, discover 5. (Exile cards from the top of your library until you exile a nonland card with mana value 5 or less. Cast it without paying its mana cost or put it into your hand. Put the rest on the bottom in a random order.)

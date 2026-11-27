@@ -31,3 +31,7 @@ Wipe Away | Crescendo (TBLD keyword, not in the engine yet)
 Dead Weight | Reflex (TBLD keyword, not in the engine yet)
 Tainted Pact | Exiling until two cards share a name or you stop needs custom work
 Thieving Sprite | Revealing X cards, exiling one until it leaves and casting it needs custom work
+Flying Crane Technique | Crescendo (TBLD keyword, not in the engine yet)
+Glowspore Shaman | Spirited (TBLD mechanic, not in the engine yet)
+Gorger Wurm | Devour X plus X more counters needs custom work
+Shadow Guildmage | Brett's data: cost "U/UB/B" (probably U/B U/B)

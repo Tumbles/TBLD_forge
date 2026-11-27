@@ -1,0 +1,12 @@
+Name:Fathom Feeder
+ManaCost:B R
+Types:Creature Eldrazi
+PT:1/1
+K:Devoid
+K:Ingest
+K:Deathtouch
+A:AB$ Draw | Cost$ 3 U B | NumCards$ 2 | Defined$ You | SubAbility$ DBExileHand | SpellDescription$ Draw two cards, then exile a card from your hand. Each opponent exiles the top two cards of their library.
+SVar:DBExileHand:DB$ ChangeZone | Origin$ Hand | Destination$ Exile | ChangeType$ Card | ChangeNum$ 1 | Hidden$ True | Mandatory$ True | SubAbility$ DBExile
+SVar:DBExile:DB$ Dig | Defined$ Player.Opponent | DestinationZone$ Exile | DigNum$ 2 | ChangeNum$ All
+DeckHints:Type$Processor
+Oracle:Devoid (This card has no color.)\nDeathtouch\nIngest (Whenever this deals combat damage to a player, they exile the top two cards of their library.)\n3UB: Draw two cards, then exile a card from your hand. Each opponent exiles the top two cards of their library.

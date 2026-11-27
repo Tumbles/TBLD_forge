@@ -1,0 +1,10 @@
+Name:Gelectrode
+ManaCost:1 U R
+Types:Creature Elemental
+PT:0/1
+K:Haste
+A:AB$ DealDamage | Cost$ T | ValidTgts$ Any | NumDmg$ 1 | SpellDescription$ CARDNAME deals 1 damage to any target.
+T:Mode$ SpellCast | ValidCard$ Sorcery | ValidActivatingPlayer$ You | TriggerZones$ Battlefield | Execute$ TrigUntap | TriggerDescription$ Whenever you cast a sorcery spell, untap CARDNAME.
+SVar:TrigUntap:DB$ Untap | Defined$ Self
+SVar:NonCombatPriority:1
+Oracle:Haste\nT: This deals 1 damage to any target.\nWhenever you cast a sorcery spell, untap this.

@@ -13,3 +13,5 @@ Vodalian Mindsinger | You keep control as long as you control Vodalian Mindsinge
 Aether Snap | Removes counters from permanents but not from players.
 Defeat | Every opponent discards if you attacked this turn (the text: each opponent that was attacked).
 Sludge Crawler | Its pump costs 2 (the text says 2/C, two or colorless).
+Beamsplitter Mage | Copies the spell for one other creature (the text says up to two).
+Bountiful Promenade | You add the mana yourself (the text says a player of your choice).
