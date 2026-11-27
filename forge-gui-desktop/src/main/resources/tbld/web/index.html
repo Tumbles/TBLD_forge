@@ -172,7 +172,7 @@
   .landstack > .card.tapped .badges { inset: 28.4% 0 0; }
   .landstack > .card.tapped .tags { top: calc(28.4% + 4px); }
   .paybtn { display: flex; } .paybtn:empty { display: none; }
-  .landstack > .stackcount { position: absolute; right: -4px; top: -6px; z-index: 30; }
+  .landstack > .stackcount { position: absolute; left: 50%; top: calc(100% - 4px); transform: translateX(-50%); z-index: 30; }
 
   /* ---- side panel ---- */
   #side { display: flex; flex-direction: column; gap: 8px; padding: 8px 8px 8px 0; min-height: 0; }
@@ -901,10 +901,13 @@ function landStack(group) {
   st.style.width = `calc(${n - 1} * 13px + var(--ch))`;
   st.style.setProperty("--tap-x", Math.max(0, n - t - 1) * 13 + "px");
   const nodes = group.map((c, i) => { const x = cardEl(c, "bf"); x.style.setProperty("--i", i < t ? t - 1 - i : i - t); return x; });
-  let count = st.querySelector(":scope > .stackcount");
-  if (!count) count = el("div", "badge stackcount");
-  count.textContent = "×" + group.length;
-  setChildren(st, [...nodes, count]);
+  // Only a stack of 7 or more lands shows its count, under the stack
+  if (n >= 7) {
+    const count = st.querySelector(":scope > .stackcount") || el("div", "badge stackcount");
+    count.textContent = "×" + n;
+    nodes.push(count);
+  }
+  setChildren(st, nodes);
   return st;
 }
 

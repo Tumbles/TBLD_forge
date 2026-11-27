@@ -99,7 +99,18 @@ await settle(300);
 check(await count('#half-me [data-row="creatures"] .card[data-id="10"]') === 1, "creatures are in the front row");
 check(await count('#half-me [data-row="back"] .card[data-id="11"]') === 1, "a noncreature, nonland permanent is in the back row");
 check(await count('#half-me [data-row="back"] .landstack') === 1, "matching lands are stacked, tapped and untapped together");
-check((await page.locator('#half-me .landstack').first().textContent()).includes("×5"), "the stack shows its count");
+check(await count('#half-me .landstack .stackcount') === 0, "a stack of fewer than 7 lands shows no count");
+const sevenLands = makeState();
+sevenLands.players[0].battlefield.push(mountain(6), mountain(7));
+send({ t: "state", state: sevenLands });
+await settle(300);
+const sevenBox = await page.locator('#half-me .landstack').first().boundingBox();
+const countBox = await page.locator('#half-me .landstack .stackcount').boundingBox();
+check((await page.locator('#half-me .landstack .stackcount').textContent()) === "×7" && countBox.y > sevenBox.y + sevenBox.height - 6
+  && Math.abs((countBox.x + countBox.width / 2) - (sevenBox.x + sevenBox.width / 2)) < 2, "a stack of 7 lands shows its count under the stack");
+await page.screenshot({ path: path.join(here, "out/ui-land-count.png") });
+send({ t: "state", state: makeState() });
+await settle(300);
 const stackIds = await page.locator('#half-me .landstack .card').evaluateAll(xs => xs.map(x => x.dataset.id));
 check(JSON.stringify(stackIds) === '["4","5","1","2","3"]', "tapped lands are at the back of the stack");
 // two clicks on the same spot tap two lands: after the first, the next untapped land is under the pointer
