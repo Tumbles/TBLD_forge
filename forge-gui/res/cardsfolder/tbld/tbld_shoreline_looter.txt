@@ -1,0 +1,10 @@
+Name:Shoreline Looter
+ManaCost:1 U
+Types:Creature Rat Rogue
+PT:1/1
+S:Mode$ CantBlockBy | ValidAttacker$ Creature.Self | Description$ CARDNAME can't be blocked.
+T:Mode$ DamageDone | ValidSource$ Card.Self | ValidTarget$ Player | Execute$ TrigDraw | TriggerDescription$ Threshold — Whenever CARDNAME deals damage to a player, draw a card. Then discard a card unless seven or more cards are in your graveyard.
+SVar:TrigDraw:DB$ Draw | SubAbility$ DBDiscard
+SVar:DBDiscard:DB$ Discard | Mode$ TgtChoose | ConditionCheckSVar$ X | ConditionSVarCompare$ LE6
+SVar:X:Count$ValidGraveyard Card.YouOwn
+Oracle:This can’t be blocked.\nThreshold — Whenever this deals damage to a player, draw a card. Then discard a card unless seven or more cards are in your graveyard.

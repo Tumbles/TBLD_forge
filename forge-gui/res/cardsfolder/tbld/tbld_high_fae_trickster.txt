@@ -1,0 +1,7 @@
+Name:High Fae Trickster
+ManaCost:3 U
+Types:Flash Creature Faerie Wizard
+PT:4/2
+K:Flying
+S:Mode$ CastWithFlash | ValidCard$ Card | ValidSA$ Spell | Caster$ You | Description$ You may cast spells as though they had flash.
+Oracle:Flying\nYou may cast spells at flash speed.

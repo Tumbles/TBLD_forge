@@ -1,0 +1,9 @@
+Name:Pestermite
+ManaCost:2 U
+Types:Flash Creature Faerie Rogue
+PT:2/1
+K:Flying
+T:Mode$ ChangesZone | ValidCard$ Card.Self | Origin$ Any | Destination$ Battlefield | Execute$ TrigTapOrUntap | OptionalDecider$ You | TriggerDescription$ When CARDNAME enters, you may tap or untap target permanent.
+SVar:TrigTapOrUntap:DB$ TapOrUntap | ValidTgts$ Permanent
+K:TypeCycling:Faerie:2
+Oracle:Flying\nWhen this enters, you may tap or untap target permanent.\nFaeriecycling 2

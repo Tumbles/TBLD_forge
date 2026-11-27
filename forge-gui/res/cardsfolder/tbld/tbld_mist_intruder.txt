@@ -1,0 +1,10 @@
+Name:Mist Intruder
+ManaCost:U
+Types:Creature Eldrazi
+PT:1/2
+K:Devoid
+K:Flying
+K:Ward:2
+K:Ingest
+DeckHints:Type$Processor
+Oracle:Devoid (This card has no color.)\nFlying, ward 2\nIngest (Whenever this deals combat damage to a player, they exile the top two cards of their library.)

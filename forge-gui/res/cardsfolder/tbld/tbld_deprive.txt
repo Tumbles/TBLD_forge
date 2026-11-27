@@ -1,0 +1,5 @@
+Name:Deprive
+ManaCost:U U
+Types:Flash Sorcery
+A:SP$ Counter | Cost$ U U Return<1/Land> | TargetType$ Spell | TgtPrompt$ Select target spell | ValidTgts$ Card | Destination$ Exile | SpellDescription$ Counter target spell. If you do, exile it rather than putting it into a graveyard.
+Oracle:As an additional cost to cast this, return a land you control to its owner’s hand.\nCounter target spell. If you do, exile it rather than putting it into a graveyard.

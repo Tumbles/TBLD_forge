@@ -1,0 +1,9 @@
+Name:Rescind
+ManaCost:2 U
+Types:Flash Sorcery
+A:SP$ ChangeZone | ValidTgts$ Permanent | Origin$ Battlefield | Destination$ Hand | ConditionCheckSVar$ Kicked | ConditionSVarCompare$ EQ0 | SubAbility$ DBTop | SpellDescription$ Return target permanent to its owner's hand. If this was kicked, put it on top of that player's library instead.
+SVar:DBTop:DB$ ChangeZone | Defined$ Targeted | Origin$ Battlefield | Destination$ Library | LibraryPosition$ 0 | Condition$ Kicked
+SVar:Kicked:Count$Kicked.1.0
+K:Kicker:1 U
+K:TypeCycling:Wizard:2
+Oracle:Kicker 1U\nReturn target permanent to its owner’s hand. If this was kicked, put it on top of that player’s library instead.\nWizardcycling 2 (2, Discard this: Search your library for a Wizard card, reveal it, and put it into your hand.)

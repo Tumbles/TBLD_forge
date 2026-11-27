@@ -1,0 +1,8 @@
+Name:Sultai Skullkeeper
+ManaCost:1 U
+Types:Creature Snake Shaman
+PT:2/1
+T:Mode$ ChangesZone | Origin$ Any | Destination$ Battlefield | ValidCard$ Card.Self | Execute$ TrigMill | TriggerDescription$ When CARDNAME enters, mill five cards.
+SVar:TrigMill:DB$ Mill | NumCards$ 5 | Defined$ You
+DeckHas:Ability$Graveyard
+Oracle:When this enters, mill five cards.

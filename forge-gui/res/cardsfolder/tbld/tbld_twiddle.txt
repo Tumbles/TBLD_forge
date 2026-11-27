@@ -1,0 +1,7 @@
+Name:Twiddle
+ManaCost:U
+Types:Flash Sorcery
+A:SP$ TapOrUntap | ValidTgts$ Permanent | TgtPrompt$ Select target permanent | SpellDescription$ You may tap or untap target permanent.
+K:Jump-start
+AI:RemoveDeck:All
+Oracle:You may tap or untap target permanent.\nJump-Start (You may cast this from your graveyard by discarding a card in addition to paying its other costs. Then exile this.)

@@ -1,0 +1,10 @@
+Name:Jin-Gitaxias Progress Tyrant
+ManaCost:5 U U
+Types:Legendary Creature Phyrexian Praetor
+PT:4/3
+T:Mode$ SpellCast | TriggerZones$ Battlefield | ValidCard$ Sorcery,Artifact | ValidActivatingPlayer$ You | ActivationLimit$ 1 | Execute$ TrigCopy | TriggerDescription$ Whenever you cast an artifact or sorcery spell, copy it. This ability triggers only once each turn.
+SVar:TrigCopy:DB$ CopySpellAbility | Defined$ TriggeredSpellAbility
+T:Mode$ SpellCast | TriggerZones$ Battlefield | ValidCard$ Sorcery,Artifact | ValidActivatingPlayer$ Opponent | ActivationLimit$ 1 | Execute$ TrigCounter | TriggerDescription$ Whenever an opponent casts an artifact or sorcery spell, counter it. This ability triggers only once each turn.
+SVar:TrigCounter:DB$ Counter | Defined$ TriggeredSpellAbility
+DeckHints:Type$Artifact|Sorcery
+Oracle:Whenever you cast an artifact or sorcery spell, copy it. This ability triggers only once each turn.\nWhenever an opponent casts an artifact or sorcery spell, counter it. This ability triggers only once each turn.

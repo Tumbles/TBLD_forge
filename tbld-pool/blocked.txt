@@ -3,8 +3,6 @@
 Akki Rockspeaker | Spirited (TBLD mechanic, not in the engine yet)
 Blisterspit Gremlin | Spirited (TBLD mechanic, not in the engine yet)
 Mardu Heart-Piercer | Spirited (TBLD mechanic, not in the engine yet)
-Play with Fire | Scan (TBLD mechanic, not in the engine yet)
-Strafe | Scan (TBLD mechanic, not in the engine yet)
 Stomping Slabs | Needs a custom script: reveal seven in random order, draw otherwise, the card goes to the bottom
 Zada Hedron Grinder | Brett's data: type line "Legendary Creature - Goblin 4"
 Indebted Spirit | Brett's data: type "Enhantment"
@@ -14,10 +12,19 @@ Atzocan Archer | Spirited (TBLD mechanic, not in the engine yet)
 Carapace Forger | Arm (create an attached Equipment token): needs a TBLD token script
 Elvish Eulogist | Shift (TBLD face-down mechanic, not in the engine yet)
 Maul Splicer | Spirited (TBLD mechanic, not in the engine yet)
-Root Out | Investigate (TBLD Clue: an enchantment token with "2, Sacrifice this: Scan, then draw a card"), and Scan
 Vital Splicer | Spirited (TBLD mechanic, not in the engine yet)
 Warpspeed | Upload (TBLD mechanic, not in the engine yet)
 Angel of Finality | Shift (TBLD face-down mechanic, not in the engine yet)
-Erase | Scan (TBLD mechanic, not in the engine yet)
 Master Splicer | Spirited (TBLD mechanic, not in the engine yet)
 Sensor Splicer | Spirited (TBLD mechanic, not in the engine yet)
+Ancestral Communion | Needs a custom draw replacement ("if you would draw one or more cards, draw three instead")
+Cast Through Time | Giving rebound to the first sorcery from hand each turn needs testing in the engine
+Higure the Still Wind | Searching a card into exile face down and using ninjutsu from there needs custom work
+Metamorphic Alteration | Reflex (keyword not known yet)
+Nix | Needs a check of mana spent against mana value
+Slickshot Lockpicker | Reflex (TBLD keyword, not in the engine yet)
+Split Decision | Voting (TBLD voting rules not done yet)
+Tempest Caller | Spirited (TBLD mechanic, not in the engine yet)
+Watertrap Weaver | "Pay 1U any number of times, when you do" needs custom work
+Wing Splicer | Spirited (TBLD mechanic, not in the engine yet)
+Wipe Away | Crescendo (TBLD keyword, not in the engine yet)

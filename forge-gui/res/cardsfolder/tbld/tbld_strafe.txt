@@ -1,0 +1,6 @@
+Name:Strafe
+ManaCost:R
+Types:Flash Sorcery
+A:SP$ DealDamage | ValidTgts$ Creature.nonRed | TgtPrompt$ Select target nonred creature | NumDmg$ 3 | SubAbility$ DBScan | SpellDescription$ CARDNAME deals 3 damage to target nonred creature. Scan.
+SVar:DBScan:DB$ Dig | DigNum$ 2 | ChangeNum$ 1 | DestinationZone$ Exile | DestinationZone2$ Library | LibraryPosition2$ 0
+Oracle:This deals 3 damage to target nonred creature.\nScan. (Look at the top two cards of your library and exile one of them.)

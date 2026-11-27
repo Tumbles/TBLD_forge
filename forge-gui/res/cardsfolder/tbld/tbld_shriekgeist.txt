@@ -1,0 +1,9 @@
+Name:Shriekgeist
+ManaCost:U
+Types:Creature Spirit
+PT:1/1
+K:Flying
+T:Mode$ DamageDone | ValidSource$ Spirit | ValidTarget$ Opponent | TriggerZones$ Battlefield | Execute$ TrigMill | TriggerDescription$ Whenever a Spirit deals damage to an opponent, they mill three times that many cards.
+SVar:TrigMill:DB$ Mill | Defined$ TriggeredTarget | NumCards$ X
+SVar:X:TriggerCount$DamageAmount/Times.3
+Oracle:Flying\nWhenever a Spirit deals damage to an opponent, they mill three times that many cards.

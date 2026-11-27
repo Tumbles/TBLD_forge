@@ -1,0 +1,8 @@
+Name:Psychic Surgery
+ManaCost:U
+Types:Enchantment
+T:Mode$ Shuffled | ValidPlayer$ Opponent | TriggerZones$ Battlefield | Execute$ TrigDig | TriggerDescription$ Whenever an opponent shuffles their library, they reveal the top two cards of their library and exile one of them of your choice. Then put the rest on top of that library in any order.
+SVar:TrigDig:DB$ Dig | Defined$ TriggeredPlayer | DigNum$ 2 | ChangeNum$ 1 | Reveal$ True | DestinationZone$ Exile | LibraryPosition2$ 0
+A:AB$ Shuffle | Cost$ 7 U | ValidTgts$ Player | TgtPrompt$ Select target player | SpellDescription$ Target player shuffles their library.
+AI:RemoveDeck:All
+Oracle:Whenever an opponent shuffles their library, they reveal the top two cards of their library and exile one of them of your choice. Then put the rest on top of that library in any order.\n7U: Target player shuffles their library.

@@ -1,0 +1,9 @@
+Name:Moonsnare Specialist
+ManaCost:3 U
+Types:Creature Human Rogue
+PT:2/2
+K:Ninjutsu:2 U
+K:Hexproof
+T:Mode$ ChangesZone | Origin$ Any | Destination$ Battlefield | ValidCard$ Card.Self | Execute$ TrigReturn | TriggerDescription$ When CARDNAME enters, return up to one target creature to its owner's hand.
+SVar:TrigReturn:DB$ ChangeZone | ValidTgts$ Creature | TargetMin$ 0 | TargetMax$ 1 | Origin$ Battlefield | Destination$ Hand | TgtPrompt$ Select up to one target creature
+Oracle:Ninjutsu 2U (2U, Return an unblocked attacker you control to hand: Put this into play from your hand tapped and attacking.)\nHexproof\nWhen this enters, return up to one target creature to its owner’s hand.

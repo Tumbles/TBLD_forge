@@ -1,0 +1,8 @@
+Name:Confirm Suspicions
+ManaCost:3 U U
+Types:Flash Sorcery
+R:Event$ Counter | ValidCard$ Card.Self | ValidSA$ Spell | Layer$ CantHappen | Description$ This spell can't be countered.
+A:SP$ Counter | TargetType$ Spell | TgtPrompt$ Select target spell | ValidTgts$ Card | SubAbility$ DBInvestigate | SpellDescription$ Counter target spell. Investigate three times.
+SVar:DBInvestigate:DB$ Token | TokenAmount$ 3 | TokenScript$ tbld_c_e_clue_scan | TokenOwner$ You
+DeckHas:Ability$Token
+Oracle:This spell can’t be countered.\nCounter target spell.\nInvestigate three times. (Create three colorless Clue enchantment tokens with “2, Sacrifice this: Scan, then draw a card.”)

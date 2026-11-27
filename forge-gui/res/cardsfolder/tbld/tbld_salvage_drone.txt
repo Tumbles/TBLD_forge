@@ -1,0 +1,11 @@
+Name:Salvage Drone
+ManaCost:U
+Types:Creature Eldrazi
+PT:1/1
+K:Devoid
+K:Ingest
+T:Mode$ ChangesZone | Origin$ Battlefield | Destination$ Graveyard | ValidCard$ Card.Self | Execute$ TrigDraw | TriggerDescription$ When CARDNAME dies, draw a card, then exile a card from your hand unless you put two cards an opponent controls from exile into their graveyard.
+SVar:TrigDraw:DB$ Draw | NumCards$ 1 | SubAbility$ DBExile
+SVar:DBExile:DB$ ChangeZone | Origin$ Hand | Destination$ Exile | ChangeType$ Card | ChangeNum$ 1 | Hidden$ True | Mandatory$ True | UnlessCost$ ExiledMoveToGrave<2/Card.OppOwn/cards an opponent owns> | UnlessPayer$ You
+DeckHints:Type$Processor
+Oracle:Devoid (This card has no color.)\nIngest (Whenever this deals combat damage to a player, exile the top two cards of their library.)\nWhen this dies, draw a card, then exile a card from your hand unless you put two cards an opponent controls from exile into their graveyard.

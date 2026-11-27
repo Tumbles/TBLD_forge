@@ -1,0 +1,6 @@
+Name:Exclude
+ManaCost:2 U
+Types:Flash Sorcery
+A:SP$ Counter | TargetType$ Spell | TgtPrompt$ Select target creature spell | ValidTgts$ Creature | Destination$ Exile | SubAbility$ DBDraw | SpellDescription$ Counter target creature spell. If you do, exile it instead of putting it into a graveyard. Draw a card.
+SVar:DBDraw:DB$ Draw
+Oracle:Counter target creature spell. If you do, exile it instead of putting it into a graveyard.\nDraw a card.

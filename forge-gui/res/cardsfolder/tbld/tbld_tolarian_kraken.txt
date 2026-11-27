@@ -1,0 +1,8 @@
+Name:Tolarian Kraken
+ManaCost:3 U U
+Types:Creature Leviathan
+PT:4/6
+S:Mode$ Continuous | Affected$ Card.Self+untapped | AddKeyword$ Hexproof | Description$ CARDNAME has hexproof as long as it's untapped.
+T:Mode$ Drawn | ValidCard$ Card.YouOwn | OptionalDecider$ You | TriggerZones$ Battlefield | Execute$ TrigTapOrUntap | TriggerDescription$ Whenever you draw a card, you may tap or untap target creature.
+SVar:TrigTapOrUntap:DB$ TapOrUntap | ValidTgts$ Creature | TgtPrompt$ Select target creature
+Oracle:This has hexproof as long as it's untapped.\nWhenever you draw a card, you may tap or untap target creature.

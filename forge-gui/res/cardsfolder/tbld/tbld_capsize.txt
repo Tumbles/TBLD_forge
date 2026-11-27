@@ -1,0 +1,6 @@
+Name:Capsize
+ManaCost:1 U U
+Types:Flash Sorcery
+A:SP$ ChangeZone | ValidTgts$ Permanent | Origin$ Battlefield | Destination$ Hand | AILogic$ PriorityOptionalCost | SpellDescription$ Return target permanent to its owner's hand.
+K:Buyback:1 U
+Oracle:Buyback 1U (You may pay an additional 1U as you cast this. If you do, put this into your hand as it resolves.)\nReturn target permanent to its owners hand.

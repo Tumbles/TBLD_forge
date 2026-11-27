@@ -1,0 +1,6 @@
+Name:Clue Token
+ManaCost:no cost
+Types:Enchantment Clue
+A:AB$ Dig | Cost$ 2 Sac<1/CARDNAME> | DigNum$ 2 | ChangeNum$ 1 | DestinationZone$ Exile | DestinationZone2$ Library | LibraryPosition2$ 0 | SubAbility$ DBDraw | SpellDescription$ Scan, then draw a card. (To scan, look at the top two cards of your library and exile one of them.)
+SVar:DBDraw:DB$ Draw | NumCards$ 1
+Oracle:2, Sacrifice this: Scan, then draw a card.

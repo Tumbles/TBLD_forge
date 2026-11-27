@@ -1,0 +1,8 @@
+Name:Logic Knot
+ManaCost:X U U
+Types:Flash Sorcery
+K:Delve
+R:Event$ Counter | ValidCard$ Card.Self | ValidSA$ Spell | Layer$ CantHappen | Description$ This spell can't be countered.
+A:SP$ Counter | TargetType$ Spell | ValidTgts$ Card | UnlessCost$ X | UnlessPayer$ TargetedController | SpellDescription$ Counter target spell unless its controller pays X.
+SVar:X:Count$xPaid
+Oracle:Delve (Each card you exile from your graveyard while casting this pays for 1.)\nThis spell can’t be countered.\nCounter target spell unless its controller pays X.

@@ -1,0 +1,6 @@
+Name:Miscalculation
+ManaCost:1 U
+Types:Flash Sorcery
+A:SP$ Counter | TargetType$ Spell | TgtPrompt$ Select target spell | ValidTgts$ Card | UnlessCost$ 2 | Destination$ Exile | SpellDescription$ Counter target spell unless its controller pays 2. If you do, exile it instead of putting it into a graveyard.
+K:Cycling:2
+Oracle:Counter target spell unless its controller pays 2. If you do, exile it instead of putting it into a graveyard.\nCycling 2 (2, Discard this: Draw a card.)

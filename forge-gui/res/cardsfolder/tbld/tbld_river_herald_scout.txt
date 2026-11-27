@@ -1,0 +1,8 @@
+Name:River Herald Scout
+ManaCost:1 U
+Types:Creature Merfolk Scout
+PT:1/2
+T:Mode$ ChangesZone | Origin$ Any | Destination$ Battlefield | ValidCard$ Card.Self | Execute$ TrigExplore | TriggerDescription$ When CARDNAME enters, target creature you control explores.
+SVar:TrigExplore:DB$ Explore | ValidTgts$ Creature.YouCtrl | TgtPrompt$ Select target creature you control
+DeckHas:Ability$Counters
+Oracle:When this enters, target creature you control explores. (Reveal the top card of your library. Put it into your hand if it’s a land. Otherwise, put a +1/+1 counter on this, then put the card back on top or into your graveyard.)

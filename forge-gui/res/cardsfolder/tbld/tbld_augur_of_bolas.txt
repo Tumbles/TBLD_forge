@@ -1,0 +1,8 @@
+Name:Augur of Bolas
+ManaCost:1 U
+Types:Creature Merfolk Wizard
+PT:1/3
+T:Mode$ ChangesZone | ValidCard$ Card.Self | Origin$ Any | Destination$ Battlefield | Execute$ TrigDig | TriggerDescription$ When CARDNAME enters, reveal the top three cards of your library. You may reveal a sorcery card from among them and put it into your hand. Put the rest into your graveyard.
+SVar:TrigDig:DB$ Dig | DigNum$ 3 | Reveal$ True | ChangeNum$ 1 | Optional$ True | ChangeValid$ Sorcery | DestinationZone2$ Graveyard
+DeckHas:Ability$Graveyard
+Oracle:When this enters, reveal the top three cards of your library. You may reveal a sorcery card from among them and put it into your hand. Put the rest into your graveyard.

@@ -1,0 +1,8 @@
+Name:Nyxborn Triton
+ManaCost:1 U
+Types:Enchantment Creature Merfolk
+PT:2/3
+K:Bestow:2 U
+K:Ward:1
+S:Mode$ Continuous | AffectedDefined$ Enchanted | AddPower$ 2 | AddToughness$ 3 | AddKeyword$ Ward:1 | Description$ Enchanted creature gets +2/+3 and has ward 1.
+Oracle:Bestow 2U (If you cast this for its bestow cost, it’s an Aura spell with enchant creature. It becomes a creature again if it’s not attached to a creature.)\nWard 1\nEnchanted creature gets +2/+3 and has ward 1.

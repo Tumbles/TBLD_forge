@@ -1,0 +1,7 @@
+Name:Mystical Teachings
+ManaCost:3 U
+Types:Flash Sorcery
+K:Flashback:5 B
+A:SP$ ChangeZone | ChangeType$ Card.Flash | ChangeNum$ 1 | Origin$ Library | Destination$ Hand | Shuffle$ True | SpellDescription$ Search your library for a flash card, reveal it, and put it into your hand.
+AI:RemoveDeck:Random
+Oracle:Search your library for a flash card, reveal it, and put it into your hand.\nFlashback 5B (You may cast this from your graveyard for its flashback cost. Then exile it.)

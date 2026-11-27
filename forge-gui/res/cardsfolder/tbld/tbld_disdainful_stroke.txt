@@ -1,0 +1,6 @@
+Name:Disdainful Stroke
+ManaCost:1 U
+Types:Flash Sorcery
+A:SP$ Counter | TargetType$ Spell | TgtPrompt$ Select target spell with mana value 4 or greater | ValidTgts$ Card.cmcGE4 | SubAbility$ DBCounterAll | SpellDescription$ Counter target spell with mana value 4 or greater. Counter all triggered abilities you don't control.
+SVar:DBCounterAll:DB$ Counter | Defined$ ValidStack Triggered.OppCtrl
+Oracle:Counter target spell with mana value 4 or greater. Counter all triggered abilities you don’t control.

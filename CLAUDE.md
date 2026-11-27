@@ -28,7 +28,10 @@ This repository is a fork of [Forge](https://github.com/Card-Forge/forge), the o
 
 | The first land a player plays in their first turn enters tapped | `Player.playLand`; on when `GameRules.setTbldFirstLandEntersTapped(true)` (the web server sets it) | `TbldPriorityAndPaymentTest` |
 
-Not started: Scan, Journey, Upload, Spirited, Experience, luck counters, modified Clues, modified voting, no planeswalkers, the TBLD life total and deck rules.
+| Scan ("look at the top two cards of your library and exile one of them") | No engine change: scripts use `DB$ Dig | DigNum$ 2 | ChangeNum$ 1 | DestinationZone$ Exile | DestinationZone2$ Library | LibraryPosition2$ 0` | `TbldCardPoolTest` (cards build) |
+| TBLD Clues (Investigate makes a Clue enchantment token with "2, Sacrifice this: Scan, then draw a card") | Token script `tbld_c_e_clue_scan`; TBLD cards that investigate create it with `DB$ Token` | `TbldCardPoolTest` |
+
+Not started: Journey, Upload, Spirited, Shift, Reflex, Crescendo, Experience, luck counters, modified voting, no planeswalkers, the TBLD life total and deck rules. Cards that need them are in `tbld-pool/blocked.txt`.
 
 ## Card pool
 

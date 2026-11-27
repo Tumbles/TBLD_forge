@@ -1,0 +1,11 @@
+Name:Aqueous Form
+ManaCost:U
+Types:Enchantment Aura
+K:Enchant:Creature
+SVar:AttachAILogic:Pump
+S:Mode$ CantBlockBy | ValidAttacker$ Creature.EnchantedBy | Description$ Enchanted creature can't be blocked.
+T:Mode$ Attacks | ValidCard$ Card.AttachedBy | Execute$ DBScan | TriggerZones$ Battlefield | TriggerDescription$ Whenever enchanted creature attacks, Scan. (Look at the top two cards of your library and exile one of them.)
+SVar:DBScan:DB$ Dig | DigNum$ 2 | ChangeNum$ 1 | DestinationZone$ Exile | DestinationZone2$ Library | LibraryPosition2$ 0
+S:Mode$ Continuous | AffectedDefined$ Enchanted | Affected$ Creature | AddSVar$ AE
+SVar:AE:SVar:HasAttackEffect:TRUE
+Oracle:Enchant creature\nEnchanted creature can't be blocked.\nWhenever enchanted creature attacks, Scan. (Look at the top two cards of your library and exile one of them.)

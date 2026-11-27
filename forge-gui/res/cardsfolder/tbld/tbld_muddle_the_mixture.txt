@@ -1,0 +1,6 @@
+Name:Muddle the Mixture
+ManaCost:U U
+Types:Flash Sorcery
+A:SP$ Counter | TargetType$ Spell | TgtPrompt$ Select target sorcery spell | ValidTgts$ Sorcery | SpellDescription$ Counter target sorcery spell.
+K:Transmute:U U
+Oracle:Counter target sorcery spell.\nTransmute UU (UU, Exile this from your hand: Search your library for a card with the same mana value as this, reveal it, and put it into your hand. Can’t transmute at flash speed.)

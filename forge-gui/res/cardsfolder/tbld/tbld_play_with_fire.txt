@@ -1,0 +1,7 @@
+Name:Play with Fire
+ManaCost:R
+Types:Flash Sorcery
+A:SP$ DealDamage | ValidTgts$ Any | NumDmg$ 2 | RememberDamaged$ True | SubAbility$ DBScan | StackDescription$ SpellDescription | SpellDescription$ CARDNAME deals 2 damage to any target. If a player is dealt damage this way, Scan.
+SVar:DBScan:DB$ Dig | DigNum$ 2 | ChangeNum$ 1 | DestinationZone$ Exile | DestinationZone2$ Library | LibraryPosition2$ 0 | ConditionDefined$ Remembered | ConditionPresent$ Player | ConditionCompare$ GE1 | SubAbility$ DBCleanup
+SVar:DBCleanup:DB$ Cleanup | ClearRemembered$ True
+Oracle:This deals 2 damage to any target. If a player is dealt damage this way, Scan. (Look at the top two cards of your library and exile one of them.)

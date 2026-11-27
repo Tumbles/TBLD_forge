@@ -1,0 +1,6 @@
+Name:Pieces of the Puzzle
+ManaCost:2 U
+Types:Sorcery
+A:SP$ Dig | DigNum$ 6 | Reveal$ True | ChangeNum$ 2 | ChangeValid$ Sorcery | DestinationZone2$ Graveyard | Optional$ True | SpellDescription$ Reveal the top six cards of your library. Put up to two sorcery cards from among them into your hand and the rest into your graveyard.
+DeckHas:Ability$Graveyard
+Oracle:Reveal the top six cards of your library. Put up to two sorcery cards from among them into your hand and the rest into your graveyard.

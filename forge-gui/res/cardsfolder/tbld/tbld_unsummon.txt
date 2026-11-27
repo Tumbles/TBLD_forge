@@ -1,0 +1,6 @@
+Name:Unsummon
+ManaCost:U
+Types:Flash Sorcery
+A:SP$ ChangeZone | ValidTgts$ Creature | Origin$ Battlefield | Destination$ Hand | SpellDescription$ Return target creature to its owner's hand.
+K:Cycling:2
+Oracle:Return target creature to its owner's hand.\nCycling 2 (2, Discard this: Draw a card.)

@@ -1,0 +1,6 @@
+Name:Maximize Altitude
+ManaCost:U
+Types:Sorcery
+K:Jump-start
+A:SP$ Pump | ValidTgts$ Creature | NumAtt$ +2 | KW$ Flying | SpellDescription$ Target creature gets +2/+0 and gains flying this turn.
+Oracle:Target creature gets +2/+0 and gains flying this turn.\nJump-start (You may cast this from your graveyard by discarding a card in addition to paying its other costs. Then exile this.)

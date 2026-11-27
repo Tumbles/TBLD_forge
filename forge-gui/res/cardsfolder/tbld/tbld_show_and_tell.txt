@@ -1,0 +1,8 @@
+Name:Show and Tell
+ManaCost:2 U
+Types:Sorcery
+A:SP$ ChangeZone | Origin$ Hand | Destination$ Battlefield | ChangeType$ Card.nonSorcery | DefinedPlayer$ Player | ChangeNum$ 1 | SpellDescription$ Each player may put a nonsorcery card from their hand into play.
+K:Cycling:3
+SVar:NeedsToPlayVar:Y GE1
+SVar:Y:Count$ValidHand Permanent.YouCtrl+cmcGE4
+Oracle:Each player may put a nonsorcery card from their hand into play.\nCycling 3 (3, Discard this: Draw a card.)

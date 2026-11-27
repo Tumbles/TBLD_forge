@@ -1,0 +1,8 @@
+Name:Faerie Miscreant
+ManaCost:U
+Types:Creature Faerie Rogue
+PT:1/1
+K:Flying
+T:Mode$ ChangesZone | ValidCard$ Card.Self | IsPresent$ Creature.Rogue+withFlying+YouCtrl+Other | Origin$ Any | Destination$ Battlefield | Execute$ TrigDraw | TriggerDescription$ When CARDNAME enters, if you control another Rogue with flying, draw a card.
+SVar:TrigDraw:DB$ Draw
+Oracle:Flying\nWhen this enters, if you control another Rogue with flying, draw a card.

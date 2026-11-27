@@ -1,0 +1,10 @@
+Name:Citywatch Sphinx
+ManaCost:4 U
+Types:Creature Sphinx
+PT:5/4
+K:Flying
+T:Mode$ ChangesZone | Origin$ Battlefield | Destination$ Graveyard | ValidCard$ Card.Self | Execute$ TrigSurveil | TriggerDescription$ When CARDNAME dies, surveil 4.
+SVar:TrigSurveil:DB$ Surveil | Amount$ 4
+K:Cycling:1
+DeckHas:Ability$Surveil|Graveyard
+Oracle:Flying\nWhen this dies, surveil 4. (Look at the top four cards of your library. Put any number of them into your graveyard and the rest back on top in any order.)\nCycling 1 (1, Discard this: Draw a card.)

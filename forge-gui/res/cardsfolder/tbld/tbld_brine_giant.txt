@@ -1,0 +1,8 @@
+Name:Brine Giant
+ManaCost:5 U
+Types:Creature Giant
+PT:5/6
+K:Affinity:Enchantment
+K:Ward:1
+DeckHints:Type$Enchantment
+Oracle:Affinity for enchantments (This costs 1 less for each enchantment you control.)\nWard 1

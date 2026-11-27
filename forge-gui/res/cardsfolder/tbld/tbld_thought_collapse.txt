@@ -1,0 +1,7 @@
+Name:Thought Collapse
+ManaCost:1 U U
+Types:Flash Sorcery
+A:SP$ Counter | TargetType$ Spell | TgtPrompt$ Select target spell | ValidTgts$ Card | SubAbility$ DBMill | SpellDescription$ Counter target spell. Its controller mills two cards for every spell cast this turn.
+SVar:DBMill:DB$ Mill | NumCards$ X | Defined$ TargetedController
+SVar:X:Count$ThisTurnCast_Card/Times.2
+Oracle:Counter target spell. Its controller mills two cards for every spell cast this turn.

@@ -1,0 +1,10 @@
+Name:Phantom Carriage
+ManaCost:3 U U
+Types:Flash Creature Spirit
+PT:4/4
+K:Flying
+S:Mode$ CantBlockBy | ValidAttacker$ Creature.withoutFlying | ValidBlocker$ Creature.Self | Description$ CARDNAME can't block creatures without flying.
+T:Mode$ ChangesZone | Origin$ Any | Destination$ Battlefield | ValidCard$ Card.Self | Execute$ PhantomSearch | TriggerDescription$ When CARDNAME enters, search your library for a card and put it into your graveyard.
+SVar:PhantomSearch:DB$ ChangeZone | Origin$ Library | Destination$ Graveyard | ChangeNum$ 1 | ChangeType$ Card.YouOwn | Mandatory$ True
+DeckHas:Ability$Graveyard
+Oracle:Flying\nThis can’t block creatures without flying.\nWhen this enters, search your library for a card and put it into your graveyard.

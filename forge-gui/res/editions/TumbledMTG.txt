@@ -802,6 +802,140 @@ Type=Custom_Set
 813 U Werefox Bodyguard
 814 U Wispweaver Angel
 815 C Youthful Valkyrie
+816 C Academy Loremaster
+818 U Annul
+819 U Aqueous Form
+820 U Arcane Flight
+821 U Armored Skaab
+822 C Augur of Bolas
+823 U Augury Raven
+824 C Baral Chief of Compliance
+825 U Battlefield Thaumaturge
+826 U Boomerang
+827 U Brine Giant
+828 U Capsize
+830 C Chart a Course
+831 U Citywatch Sphinx
+832 U Confirm Suspicions
+833 U Confound
+834 U Curious Inquiry
+835 U Deceiver Exarch
+836 U Deep-Sea Kraken
+837 U Deprive
+838 C Devious Cover-Up
+839 U Disdainful Stroke
+840 C Distant Melody
+841 U Divination
+842 U Dream Twist
+843 U Drowner of Hope
+844 U Eel Umbra
+845 U Eldrazi Skyspawner
+846 U Essence Scatter
+847 U Exclude
+848 U Exhaustion
+849 U Faerie Miscreant
+850 U Force Spike
+851 C Forgotten Creation
+852 U Geralfs Masterpiece
+853 U Geralfs Mindcrusher
+854 C Ghostly Flicker
+855 U Ghostly Wings
+856 U Grafted Identity
+857 C High Fae Trickster
+859 C Hope-Ender Coatl
+860 U Horribly Awry
+861 C Hullbreaker Horror
+862 R Hunters Mark
+863 C Illusion of Choice
+864 U Isperias Skywatch
+865 U Jin-Gitaxias Progress Tyrant
+866 U Jump
+867 C Logic Knot
+868 U Lullmage Mentor
+869 C Mana Severance
+870 C Mass Manipulation
+871 U Master of Predicaments
+872 U Maximize Altitude
+873 R Meeting of Minds
+874 U Memory Erosion
+875 C Memory Lapse
+876 U Memorys Journey
+877 U Merfolk Looter
+878 U Merfolk Trickster
+880 C Micromancer
+881 C Miscalculation
+882 U Mist Intruder
+883 U Monastery Siege
+884 U Moonsnare Specialist
+885 U Muddle the Mixture
+886 U Murk Strider
+887 C Mystic Reflection
+888 C Mystical Teachings
+889 C Ninja of the Deep Hours
+891 U Novijen Sages
+892 U Nyxborn Triton
+893 U Ordeal of Thassa
+894 U Part the Waterveil
+895 U Persistent Petitioners
+896 U Pestermite
+897 U Phantom Carriage
+898 U Pieces of the Puzzle
+899 U Prophet of Distortion
+900 U Prosperous Thief
+901 U Psychic Surgery
+902 U Qumulox
+903 U Radical Idea
+905 U Rescind
+906 U Retraction Helix
+907 U River Herald Scout
+908 U Rooftop Storm
+909 U Sage of Hours
+910 U Sailor of Means
+911 U Salvage Drone
+912 U Scroll Thief
+913 C Sea-Dasher Octopus
+914 U Seagraf Skaab
+915 U Shipwreck Dowser
+916 U Shoal Serpent
+917 C Shoreline Looter
+918 U Show and Tell
+919 U Shriekgeist
+920 U Sidisis Faithful
+921 U Sleep of the Dead
+923 U Slimebind
+924 C Spellstutter Sprite
+925 U Sphinx of the Second Sun
+927 U Starlit Mantle
+928 R Steady Progress
+929 U Stealth Mission
+930 C Stern Dismissal
+931 U Stitched Assistant
+932 U Stitchers Apprentice
+933 U Sultai Skullkeeper
+934 U Summary Dismissal
+936 U Thassas Rebuff
+937 U Thought Collapse
+938 U Thought Harvester
+939 U Timestream Navigator
+940 U Tolarian Kraken
+941 U Tome Scour
+942 C Treasure Mage
+943 C Trinket Mage
+944 C Triskaidekaphile
+945 U Triton Fortune Hunter
+946 U Twiddle
+947 U Unsummon
+948 C Vesuvan Duplimancy
+949 U Vodalian Mindsinger
+950 U Void Snare
+951 U War-Wing Siren
+953 U Wavecrash Triton
+954 U Welcome to the Fold
+957 R Reason
+958 U Erase
+959 U Play with Fire
+960 R Root Out
+961 U Strafe
 F1 L Forest
 F2 L Forest
 F3 L Forest

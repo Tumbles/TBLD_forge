@@ -1,0 +1,9 @@
+Name:Micromancer
+ManaCost:3 U
+Types:Creature Human Wizard
+PT:3/3
+T:Mode$ ChangesZone | Origin$ Any | Destination$ Battlefield | ValidCard$ Card.Self | Execute$ TrigChange | OptionalDecider$ You | TriggerDescription$ When CARDNAME enters, you may search your library for a sorcery card with mana value 1, reveal it, and put it into your hand.
+SVar:TrigChange:DB$ ChangeZone | Origin$ Library | Destination$ Hand | ChangeType$ Sorcery.cmcEQ1 | ChangeNum$ 1
+AI:RemoveDeck:Random
+DeckNeeds:Type$Sorcery
+Oracle:When this enters, you may search your library for a sorcery card with mana value 1, reveal it, and put it into your hand.

@@ -1,0 +1,6 @@
+Name:Force Spike
+ManaCost:U
+Types:Flash Sorcery
+A:SP$ Counter | TargetType$ Spell | TgtPrompt$ Select target spell | ValidTgts$ Card | UnlessCost$ 1 | UnlessResolveSubs$ WhenNotPaid | SubAbility$ DBDamage | SpellDescription$ Counter target spell unless its controller pays 1. If it's countered this way, CARDNAME deals 1 damage to its controller.
+SVar:DBDamage:DB$ DealDamage | Defined$ TargetedController | NumDmg$ 1
+Oracle:Counter target spell unless its controller pays 1. If it's countered this way, this deals 1 damage to its controller.

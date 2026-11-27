@@ -1,0 +1,6 @@
+Name:Jump
+ManaCost:U
+Types:Flash Sorcery
+A:SP$ Pump | ValidTgts$ Creature | KW$ Flying | SubAbility$ DBDraw | SpellDescription$ Target creature gains flying this turn. Draw a card.
+SVar:DBDraw:DB$ Draw
+Oracle:Target creature gains flying this turn.\nDraw a card.

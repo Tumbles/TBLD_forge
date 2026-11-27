@@ -1,0 +1,10 @@
+Name:Sphinx of the Second Sun
+ManaCost:6 U U
+Types:Creature Sphinx
+PT:6/6
+K:Flying
+T:Mode$ Phase | Phase$ Main2 | ValidPlayer$ You | TriggerZones$ Battlefield | Execute$ TrigAddPhase | TriggerDescription$ After your postcombat main phase, there is an additional beginning phase.
+SVar:TrigAddPhase:DB$ AddPhase | ExtraPhase$ Beginning
+K:Suspend:6:U U
+SVar:PlayMain1:TRUE
+Oracle:Flying\nAfter your postcombat main phase, there is an additional beginning phase. (The beginning phase includes the untap, upkeep, and draw steps.)\nSuspend 6—UU

@@ -1,0 +1,9 @@
+Name:Merfolk Looter
+ManaCost:1 U
+Types:Creature Merfolk Rogue
+PT:0/1
+S:Mode$ Continuous | Affected$ Card.Self+untapped | AddKeyword$ Hexproof | Description$ CARDNAME has hexproof as long as it's untapped.
+A:AB$ Draw | Cost$ T | NumCards$ 1 | SpellDescription$ Draw a card, then discard a card. | SubAbility$ DBDiscard
+SVar:DBDiscard:DB$ Discard | Defined$ You | Mode$ TgtChoose | NumCards$ 1
+DeckHas:Ability$Discard
+Oracle:This has hexproof as long as it's untapped.\nT: Draw a card, then discard a card.

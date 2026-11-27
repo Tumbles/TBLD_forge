@@ -1,0 +1,10 @@
+Name:Augury Raven
+ManaCost:3 U
+Types:Creature Bird
+PT:3/3
+K:Flying
+T:Mode$ ChangesZone | Origin$ Any | Destination$ Battlefield | ValidCard$ Card.Self | Execute$ TrigScry | TriggerDescription$ Whenever CARDNAME enters or attacks, scry 2.
+T:Mode$ Attacks | ValidCard$ Card.Self | Execute$ TrigScry | Secondary$ True | TriggerDescription$ Whenever CARDNAME enters or attacks, scry 2.
+SVar:TrigScry:DB$ Scry | ScryNum$ 2
+K:Foretell:1 U
+Oracle:Flying\nWhenever this enters or attacks, scry 2.\nForetell 1U (During your turn, you may pay 2 and exile this card from your hand face down. Cast it on a later turn for its foretell cost.)

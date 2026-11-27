@@ -1,0 +1,7 @@
+Name:Sleep of the Dead
+ManaCost:U
+Types:Sorcery
+A:SP$ Tap | ValidTgts$ Creature | SubAbility$ DBStun | SpellDescription$ Tap target creature. Put a stun counter on it.
+SVar:DBStun:DB$ PutCounter | Defined$ Targeted | CounterType$ STUN | CounterNum$ 1
+K:Escape:U ExileFromGrave<3/Card.Other/other>
+Oracle:Tap target creature. Put a stun counter on it. (If a permanent with a stun counter would become untapped, remove one from it instead.)\nEscape—U, Exile three other cards from your graveyard. (You may cast this from your graveyard for its escape cost.)

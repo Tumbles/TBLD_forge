@@ -1,0 +1,10 @@
+Name:Stitched Assistant
+ManaCost:1 U
+Types:Creature Zombie
+PT:2/1
+K:Exploit
+T:Mode$ Exploited | ValidCard$ Creature | ValidSource$ Card.Self | TriggerZones$ Battlefield | Execute$ TrigSurveil | TriggerDescription$ When CARDNAME exploits a creature, surveil 2, then draw a card.
+SVar:TrigSurveil:DB$ Surveil | Amount$ 2 | SubAbility$ DBDraw
+SVar:DBDraw:DB$ Draw | Defined$ You | NumCards$ 1
+DeckHas:Ability$Sacrifice|Surveil
+Oracle:Exploit (When this enters, you may sacrifice a creature.)\nWhen this exploits a creature, surveil 2, then draw a card. (Look at the top two cards of your library, then put any number of them into your graveyard and the rest on top of your library in any order.)

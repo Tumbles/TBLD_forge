@@ -1,0 +1,5 @@
+Name:Exhaustion
+ManaCost:2 U
+Types:Sorcery
+A:SP$ PutCounterAll | ValidTgts$ Player | TgtPrompt$ Select target player | ValidCards$ Creature.tapped+TargetedPlayerCtrl,Land.tapped+TargetedPlayerCtrl | CounterType$ STUN | CounterNum$ 1 | IsCurse$ True | SpellDescription$ Put a stun counter on each tapped creature and each tapped land that target player controls.
+Oracle:Put a stun counter on each tapped creature and each tapped land that target player controls. (If a permanent with a stun counter would become untapped, remove one from it instead.)

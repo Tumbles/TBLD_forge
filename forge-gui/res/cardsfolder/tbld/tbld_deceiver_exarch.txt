@@ -1,0 +1,9 @@
+Name:Deceiver Exarch
+ManaCost:2 U
+Types:Flash Creature Phyrexian Cleric
+PT:1/4
+T:Mode$ ChangesZone | Origin$ Any | Destination$ Battlefield | ValidCard$ Card.Self | Execute$ TrigCharm | TriggerDescription$ When CARDNAME enters, ABILITY
+SVar:TrigCharm:DB$ Charm | Choices$ DBUntap,DBTap
+SVar:DBUntap:DB$ Untap | TgtPrompt$ Choose two target permanents | ValidTgts$ Permanent | TargetMin$ 2 | TargetMax$ 2 | SpellDescription$ Untap two target permanents.
+SVar:DBTap:DB$ Tap | TgtPrompt$ Choose two target permanents | ValidTgts$ Permanent | TargetMin$ 2 | TargetMax$ 2 | SpellDescription$ Tap two target permanents.
+Oracle:When this enters, choose one -\n• Untap two target permanents.\n• Tap two target permanents.

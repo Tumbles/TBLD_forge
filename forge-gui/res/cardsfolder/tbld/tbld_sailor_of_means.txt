@@ -1,0 +1,11 @@
+Name:Sailor of Means
+ManaCost:2 U
+Types:Creature Human Rogue
+PT:1/4
+T:Mode$ ChangesZone | Origin$ Any | Destination$ Battlefield | ValidCard$ Card.Self | Execute$ TrigCharm | TriggerDescription$ Whenever CARDNAME enters or deals combat damage to an opponent, ABILITY
+T:Mode$ DamageDone | ValidSource$ Card.Self | ValidTarget$ Opponent | CombatDamage$ True | Execute$ TrigCharm | Secondary$ True | TriggerDescription$ Whenever CARDNAME enters or deals combat damage to an opponent, ABILITY
+SVar:TrigCharm:DB$ Charm | Choices$ DBTreasure,DBLoot
+SVar:DBTreasure:DB$ Token | TokenScript$ c_a_treasure_sac | TokenOwner$ You | SpellDescription$ Create a Treasure token.
+SVar:DBLoot:DB$ Draw | NumCards$ 1 | SubAbility$ DBDiscard | SpellDescription$ Draw a card, then discard a card.
+SVar:DBDiscard:DB$ Discard | Defined$ You | Mode$ TgtChoose | NumCards$ 1
+Oracle:Whenever this enters or deals combat damage to an opponent, choose one -\n• Create a Treasure token.\n• Draw a card, then discard a card.

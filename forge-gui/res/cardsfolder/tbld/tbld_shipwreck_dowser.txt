@@ -1,0 +1,8 @@
+Name:Shipwreck Dowser
+ManaCost:1 U U U
+Types:Creature Merfolk Wizard
+PT:2/2
+K:Prowess
+T:Mode$ ChangesZone | Origin$ Any | Destination$ Battlefield | ValidCard$ Card.Self | Execute$ TrigChangeZone | TriggerDescription$ When CARDNAME enters, return target sorcery or noncreature artifact card from your graveyard to your hand.
+SVar:TrigChangeZone:DB$ ChangeZone | Origin$ Graveyard | Destination$ Hand | ValidTgts$ Sorcery.YouOwn,Artifact.nonCreature+YouOwn | TgtPrompt$ Select target sorcery or noncreature artifact card in your graveyard
+Oracle:Prowess\nWhen this enters, return target sorcery or noncreature artifact card from your graveyard to your hand.

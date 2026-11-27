@@ -1,0 +1,5 @@
+Name:Boomerang
+ManaCost:U U
+Types:Flash Sorcery
+A:SP$ ChangeZone | ValidTgts$ Permanent,Card.inZoneStack | TgtZone$ Stack,Battlefield | Origin$ Battlefield,Stack | Destination$ Hand | TgtPrompt$ Select target spell or permanent | SpellDescription$ Return target spell or permanent to its owner's hand.
+Oracle:Return target spell or permanent to its owner’s hand.

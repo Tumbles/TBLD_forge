@@ -1,0 +1,6 @@
+Name:Meeting of Minds
+ManaCost:3 U U
+Types:Flash Sorcery
+K:Convoke
+A:SP$ Draw | NumCards$ 3 | SpellDescription$ Draw three cards.
+Oracle:Convoke (Your creatures can help cast this. Each creature you tap while casting this pays for 1 or one mana of that creature’s color.)\nDraw three cards.

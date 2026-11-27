@@ -1,0 +1,8 @@
+Name:Root Out
+ManaCost:1 G G
+Types:Sorcery
+R:Event$ Counter | ValidCard$ Card.Self | ValidSA$ Spell | Layer$ CantHappen | Description$ This spell can't be countered.
+A:SP$ Destroy | ValidTgts$ Artifact,Enchantment | TgtPrompt$ Select target artifact or enchantment | SubAbility$ DBInvestigate | SpellDescription$ Destroy target artifact or enchantment. Investigate.
+SVar:DBInvestigate:DB$ Token | TokenScript$ tbld_c_e_clue_scan | TokenOwner$ You
+DeckHas:Ability$Token
+Oracle:This spell can’t be countered.\nDestroy target artifact or enchantment.\nInvestigate. (Create a Clue enchantment token with “2, Sacrifice this: Scan, then draw a card.”)

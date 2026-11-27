@@ -1,0 +1,6 @@
+Name:Hunters Mark
+ManaCost:1 U
+Types:Enchantment Aura Curse
+K:Enchant:Opponent
+S:Mode$ ReduceCost | ValidTarget$ Player.EnchantedBy | Activator$ You | Type$ Spell | Amount$ 2 | Description$ Spells you cast that target enchanted player cost 2 less.
+Oracle:Enchant opponent\nSpells you cast that target enchanted player cost 2 less.

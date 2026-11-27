@@ -5,3 +5,8 @@ Wish | You may play the exiled card this turn only.
 Gift of Immortality | Returns only itself at the next end step, not every Aura that was attached.
 Nevermore | Superiority (opponents with lower life reveal their hands) is not done; the naming is.
 Warhorn Blast | The copy made when cast from exile uses the spell's copy rules; untested.
+Annul | Counters an activated ability only if its source is an artifact or enchantment (the text says any activated ability).
+Monastery Siege | Dragons gives ward 3 to your permanents but not to you.
+Mystic Reflection | The copying effect lasts only this turn (the text has no limit).
+Sidisis Faithful | The returned creature's name is not locked until your next turn.
+Vodalian Mindsinger | You keep control as long as you control Vodalian Mindsinger (the text says as long as you control a Merfolk Wizard).

@@ -1,0 +1,7 @@
+Name:Radical Idea
+ManaCost:1 U
+Types:Flash Sorcery
+K:Jump-start
+A:SP$ Dig | DigNum$ 2 | ChangeNum$ 1 | DestinationZone$ Exile | DestinationZone2$ Library | LibraryPosition2$ 0 | SubAbility$ DBDraw | SpellDescription$ Scan, then draw a card.
+SVar:DBDraw:DB$ Draw
+Oracle:Scan, then draw a card. (To scan, look at the top two cards of your library and exile one of them.)\nJump-start (You may cast this from your graveyard by discarding a card in addition to paying its other costs. Then exile this.)

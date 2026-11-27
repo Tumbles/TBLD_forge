@@ -1,0 +1,6 @@
+Name:Confound
+ManaCost:1 U
+Types:Flash Sorcery
+A:SP$ Counter | TargetType$ Spell | TgtPrompt$ Select target spell that targets a permanent | ValidTgts$ Card | TargetValidTargeting$ Permanent.inRealZoneBattlefield | SubAbility$ DBDraw | SpellDescription$ Counter target spell that targets a permanent. Draw a card.
+SVar:DBDraw:DB$ Draw
+Oracle:Counter target spell that targets a permanent.\nDraw a card.

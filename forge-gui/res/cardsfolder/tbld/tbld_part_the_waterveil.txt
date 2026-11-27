@@ -1,0 +1,7 @@
+Name:Part the Waterveil
+ManaCost:2 U U
+Types:Sorcery
+A:SP$ ChangeZone | Origin$ Battlefield | Destination$ Hand | ChangeType$ Land.YouCtrl | ChangeNum$ 2 | Hidden$ True | Mandatory$ True | SubAbility$ DBAddTurn | SpellDescription$ Return two lands you control to their owner's hand. Take an extra turn after this one.
+SVar:DBAddTurn:DB$ AddTurn | NumTurns$ 1
+K:Awaken:6:6 U U
+Oracle:Return two lands you control to their owner's hand.\nTake an extra turn after this one.\nAwaken 6—6UU (If you cast this spell for 6UU, also put six +1/+1 counters on target land you control and it becomes a 0/0 Elemental creature with haste. It's still a land.)

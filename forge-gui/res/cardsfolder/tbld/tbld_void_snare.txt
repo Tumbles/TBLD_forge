@@ -1,0 +1,6 @@
+Name:Void Snare
+ManaCost:U
+Types:Sorcery
+K:Buyback:Discard<2/Card>
+A:SP$ ChangeZone | ValidTgts$ Permanent.nonLand | TgtPrompt$ Select target nonland permanent | Origin$ Battlefield | Destination$ Hand | SpellDescription$ Return target nonland permanent to its owner's hand.
+Oracle:Buyback—Discard two cards. (You may discard two cards as you cast this. If you do, put this into your hand as it resolves.)\nReturn target nonland permanent to its owner’s hand.

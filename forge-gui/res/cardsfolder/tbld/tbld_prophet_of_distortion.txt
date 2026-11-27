@@ -1,0 +1,10 @@
+Name:Prophet of Distortion
+ManaCost:U
+Types:Creature Eldrazi
+PT:1/2
+K:Devoid
+K:Ward:1
+A:AB$ Dig | Cost$ 3 C | DigNum$ 2 | ChangeNum$ 1 | DestinationZone$ Exile | DestinationZone2$ Library | LibraryPosition2$ 0 | SubAbility$ DBDraw | SpellDescription$ Scan, then draw a card.
+SVar:DBDraw:DB$ Draw | Defined$ You | NumCards$ 1
+DeckHints:Ability$Mana.Colorless
+Oracle:Devoid (This card has no color.)\nWard 1\n3C: Scan, then draw a card.

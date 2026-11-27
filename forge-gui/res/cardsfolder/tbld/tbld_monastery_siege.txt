@@ -1,0 +1,14 @@
+Name:Monastery Siege
+ManaCost:2 U
+Types:Enchantment
+K:ETBReplacement:Other:SiegeChoice
+SVar:SiegeChoice:DB$ GenericChoice | Choices$ Khans,Dragons | Defined$ You | SetChosenMode$ True | AILogic$ Khans | ShowChoice$ ExceptSelf | SpellDescription$ As CARDNAME enters, choose Khans or Dragons.
+SVar:Khans:DB$ Nothing | SpellDescription$ Khans
+SVar:Dragons:DB$ Nothing | SpellDescription$ Dragons
+S:Mode$ Continuous | AffectedDefined$ Self | Affected$ Card.ChosenModeKhans | AddTrigger$ KhansTrigger | Description$ • Khans — At your draw step, draw an additional card, then discard a card.
+S:Mode$ Continuous | AffectedDefined$ Self | Affected$ Card.ChosenModeDragons | AddStaticAbility$ DragonsST | Description$ • Dragons — You and each permanent you control have ward 3.
+SVar:KhansTrigger:Mode$ Phase | Phase$ Draw | TriggerZones$ Battlefield | ValidPlayer$ You | Execute$ Filter | Secondary$ True | TriggerDescription$ At your draw step, draw an additional card, then discard a card.
+SVar:Filter:DB$ Draw | Defined$ You | NumCards$ 1 | SubAbility$ DBDiscard
+SVar:DBDiscard:DB$ Discard | Defined$ You | Mode$ TgtChoose | NumCards$ 1
+SVar:DragonsST:Mode$ Continuous | Affected$ Permanent.YouCtrl | AddKeyword$ Ward:3 | Secondary$ True | Description$ Each permanent you control has ward 3.
+Oracle:As this enters, choose Khans or Dragons.\n• Khans — At your draw step, draw an additional card, then discard a card.\n• Dragons — You and each permanent you control have ward 3. (Whenever they become the target of a spell or ability an opponent controls, counter it unless they pay 3.)

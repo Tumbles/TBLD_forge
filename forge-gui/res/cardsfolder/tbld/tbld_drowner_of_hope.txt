@@ -1,0 +1,11 @@
+Name:Drowner of Hope
+ManaCost:4 U
+Types:Creature Eldrazi
+PT:5/5
+K:Devoid
+T:Mode$ SpellCast | ValidCard$ Card.Self | Execute$ TrigToken | TriggerDescription$ When you cast CARDNAME, create two 1/1 colorless Eldrazi Spawn tokens with "Sacrifice this: Add C."
+SVar:TrigToken:DB$ Token | TokenAmount$ 2 | TokenScript$ tbld_c_1_1_eldrazi_spawn_sac | TokenOwner$ You
+A:AB$ Tap | Cost$ Sac<1/Eldrazi.Other/another Eldrazi> | ValidTgts$ Permanent | TgtPrompt$ Select target permanent | SpellDescription$ Tap target permanent.
+DeckHints:Type$Eldrazi
+DeckHas:Ability$Mana.Colorless|Token
+Oracle:Devoid (This card has no color.)\nWhen you cast this, create two 1/1 colorless Eldrazi Spawn tokens with “Sacrifice this: Add C.”\nSacrifice another Eldrazi: Tap target permanent.

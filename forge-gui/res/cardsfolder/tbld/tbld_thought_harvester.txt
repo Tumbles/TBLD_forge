@@ -1,0 +1,10 @@
+Name:Thought Harvester
+ManaCost:3 U
+Types:Creature Eldrazi
+PT:2/4
+K:Devoid
+K:Hexproof
+T:Mode$ SpellCast | ValidCard$ Card.Colorless | ValidActivatingPlayer$ You | TriggerZones$ Battlefield | Execute$ TrigExile | TriggerDescription$ Whenever you cast a colorless spell, target player exiles the top card of their library.
+SVar:TrigExile:DB$ Dig | DigNum$ 1 | ChangeNum$ All | DestinationZone$ Exile | ValidTgts$ Player | TgtPrompt$ Choose target player
+SVar:BuffedBy:Card.Colorless
+Oracle:Devoid (This card has no color.)\nHexproof\nWhenever you cast a colorless spell, target player exiles the top card of their library.

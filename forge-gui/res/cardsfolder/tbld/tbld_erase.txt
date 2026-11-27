@@ -1,0 +1,6 @@
+Name:Erase
+ManaCost:W
+Types:Flash Sorcery
+A:SP$ ChangeZone | ValidTgts$ Enchantment | Origin$ Battlefield | Destination$ Exile | SubAbility$ DBScan | SpellDescription$ Exile target enchantment. Scan.
+SVar:DBScan:DB$ Dig | DigNum$ 2 | ChangeNum$ 1 | DestinationZone$ Exile | DestinationZone2$ Library | LibraryPosition2$ 0
+Oracle:Exile target enchantment.\nScan. (Look at the top two cards of your library and exile one of them.)

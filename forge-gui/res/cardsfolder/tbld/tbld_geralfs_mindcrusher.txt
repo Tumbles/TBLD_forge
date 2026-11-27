@@ -1,0 +1,8 @@
+Name:Geralfs Mindcrusher
+ManaCost:3 U U
+Types:Creature Zombie
+PT:5/5
+K:Undying
+T:Mode$ ChangesZone | Origin$ Any | Destination$ Battlefield | ValidCard$ Card.Self | Execute$ TrigMill | TriggerDescription$ When CARDNAME enters, target player mills eight cards.
+SVar:TrigMill:DB$ Mill | NumCards$ 8 | ValidTgts$ Player
+Oracle:When this enters, target player mills eight cards.\nUndying (When this dies, if it had no +1/+1 counters, return it to play under its owner’s control with a +1/+1 counter.)
