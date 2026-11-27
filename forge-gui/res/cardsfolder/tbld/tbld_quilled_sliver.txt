@@ -1,0 +1,8 @@
+Name:Quilled Sliver
+ManaCost:1 W
+Types:Creature Sliver
+PT:1/1
+S:Mode$ Continuous | Affected$ Sliver.YouCtrl | AddAbility$ Damage | Description$ Slivers you control have "T: This deals 1 damage to target attacking or blocking creature."
+SVar:Damage:AB$ DealDamage | Cost$ T | ValidTgts$ Creature.attacking,Creature.blocking | TgtPrompt$ Choose target attacking or blocking creature. | NumDmg$ 1 | SpellDescription$ This deals 1 damage to target attacking or blocking creature.
+SVar:PlayMain1:TRUE
+Oracle:Slivers you control have "T: This deals 1 damage to target attacking or blocking creature."

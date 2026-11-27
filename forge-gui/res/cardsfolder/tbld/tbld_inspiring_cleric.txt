@@ -1,0 +1,7 @@
+Name:Inspiring Cleric
+ManaCost:2 W
+Types:Creature Vampire Cleric
+PT:3/2
+T:Mode$ ChangesZone | Origin$ Any | Destination$ Battlefield | ValidCard$ Card.Self | Execute$ TrigGainLife | TriggerDescription$ When CARDNAME enters, gain 5 life.
+SVar:TrigGainLife:DB$ GainLife | LifeAmount$ 5
+Oracle:When this enters, gain 5 life.

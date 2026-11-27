@@ -1,0 +1,8 @@
+Name:Ministrant of Obligation
+ManaCost:2 W
+Types:Creature Human Scout
+PT:2/1
+K:Extort
+K:Afterlife:2
+DeckHas:Ability$Token
+Oracle:Extort (Whenever you cast a spell, you may pay W/B. If you do, each opponent loses 1 life and you gain 1 life.)\nAfterlife 2 (When this dies, create two 1/1 white Spirit tokens with flying.)

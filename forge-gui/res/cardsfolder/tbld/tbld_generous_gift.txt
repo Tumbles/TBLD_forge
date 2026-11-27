@@ -1,0 +1,6 @@
+Name:Generous Gift
+ManaCost:2 W
+Types:Flash Sorcery
+A:SP$ Destroy | ValidTgts$ Permanent | AITgts$ Card.cmcGE4 | SubAbility$ DBToken | SpellDescription$ Destroy target permanent. Its controller creates a 3/3 green Elephant token with trample.
+SVar:DBToken:DB$ Token | TokenScript$ tbld_g_3_3_elephant_trample | TokenOwner$ TargetedController
+Oracle:Destroy target permanent. Its controller creates a 3/3 green Elephant token with trample.

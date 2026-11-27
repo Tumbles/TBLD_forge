@@ -1,0 +1,7 @@
+Name:Warhorn Blast
+ManaCost:3 W
+Types:Flash Sorcery
+A:SP$ PumpAll | ValidCards$ Creature.YouCtrl | NumAtt$ +2 | NumDef$ +1 | SubAbility$ DBCopy | SpellDescription$ If this was cast from exile, copy it. Creatures you control get +2/+1 this turn.
+SVar:DBCopy:DB$ CopySpellAbility | Defined$ Parent | ConditionDefined$ Self | ConditionPresent$ Card.wasCastFromExile | ConditionCompare$ GE1
+K:Foretell:3 W
+Oracle:If this was cast from exile, copy it.\nCreatures you control get +2/+1 this turn.\nForetell 3W (During your turn, you may pay 2 and exile this from your hand face down. Cast it on a later turn for its foretell cost.)

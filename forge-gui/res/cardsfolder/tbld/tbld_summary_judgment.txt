@@ -1,0 +1,6 @@
+Name:Summary Judgment
+ManaCost:W
+Types:Flash Sorcery
+A:SP$ DealDamage | ValidTgts$ Creature.tapped | NumDmg$ X | TgtPrompt$ Select target tapped creature | SpellDescription$ CARDNAME deals 2 damage to target tapped creature. Addendum - If you cast this during your main phase, it deals 5 damage instead.
+SVar:X:Count$IfCastInOwnMainPhase.5.2
+Oracle:This deals 2 damage to target tapped creature.\nAddendum - If you cast this during your main phase, it deals 5 damage instead.

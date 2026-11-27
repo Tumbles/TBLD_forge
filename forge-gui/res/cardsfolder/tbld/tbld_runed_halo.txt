@@ -1,0 +1,8 @@
+Name:Runed Halo
+ManaCost:W W
+Types:Enchantment
+K:ETBReplacement:Other:DBNameCard
+SVar:DBNameCard:DB$ NameCard | Defined$ You | SpellDescription$ As CARDNAME enters, choose a card name.
+S:Mode$ Continuous | Affected$ You | AddKeyword$ Protection:ChosenName | Description$ You can't be targeted or dealt damage by anything with the chosen name.
+AI:RemoveDeck:All
+Oracle:As this enters, choose a card name.\nYou can't be targeted or dealt damage by anything with the chosen name. (This includes spells, abilities, creatures, etc.)

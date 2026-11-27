@@ -1,0 +1,9 @@
+Name:Avacyns Memorial
+ManaCost:5 W W W
+Types:Legendary Artifact
+K:Indestructible
+S:Mode$ Continuous | Affected$ Permanent.Other+YouCtrl+Legendary | AddKeyword$ Indestructible | Description$ Legendary permanents you control have indestructible.
+S:Mode$ ReduceCost | ValidCard$ Card.Self | Type$ Spell | Amount$ 5 | EffectZone$ All | CheckSVar$ X | SVarCompare$ GE1 | Description$ This costs 5 less if a legendary creature you control died this turn.
+SVar:X:Count$ThisTurnEntered_Graveyard_from_Battlefield_Creature.Legendary+YouOwn
+DeckNeeds:Type$Legendary
+Oracle:Legendary permanents you control have indestructible.\nThis costs 5 less if a legendary creature you control died this turn.

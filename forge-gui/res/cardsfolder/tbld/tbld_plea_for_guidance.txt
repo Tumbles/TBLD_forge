@@ -1,0 +1,7 @@
+Name:Plea for Guidance
+ManaCost:4 W
+Types:Sorcery
+A:SP$ ChangeZone | Origin$ Library | Destination$ Hand | ChangeType$ Enchantment | ChangeNum$ 2 | SpellDescription$ Search your library for up to two enchantment cards, reveal them, and put them into your hand.
+K:Cycling:2
+AI:RemoveDeck:Random
+Oracle:Search your library for up to two enchantment cards, reveal them, and put them into your hand.\nCycling 2 (2, Discard this: Draw a card.)

@@ -1,0 +1,7 @@
+Name:Tethmos High Priest
+ManaCost:2 W
+Types:Creature Cat Cleric
+PT:2/3
+T:Mode$ SpellCast | ValidActivatingPlayer$ You | TargetsValid$ Card.Self | TriggerZones$ Battlefield | Execute$ TrigChange | TriggerDescription$ Heroic - Whenever you cast a spell that targets CARDNAME, return target creature card with mana value 3 or less from your graveyard to play.
+SVar:TrigChange:DB$ ChangeZone | Origin$ Graveyard | Destination$ Battlefield | ValidTgts$ Creature.YouOwn+cmcLE3 | TgtPrompt$ Select target creature card with mana value 3 or less
+Oracle:Heroic - Whenever you cast a spell that targets this, return target creature card with mana value 3 or less from your graveyard to play.

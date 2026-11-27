@@ -1,0 +1,6 @@
+Name:Arresters Zeal
+ManaCost:W
+Types:Flash Sorcery
+A:SP$ Pump | ValidTgts$ Creature | NumAtt$ +3 | NumDef$ +1 | SubAbility$ DBAddendum | AILogic$ Main1IfAble | SpellDescription$ Target creature gets +3/+1 this turn.
+SVar:DBAddendum:DB$ Pump | Defined$ Targeted | ConditionPlayerTurn$ True | ConditionPhases$ Main1,Main2 | ConditionDefined$ Self | ConditionPresent$ Card.wasCast | KW$ Flying | SpellDescription$ Addendum - If you cast this during your main phase, that creature gains flying this turn.
+Oracle:Target creature gets +3/+1 this turn.\nAddendum - If you cast this during your main phase, that creature gains flying this turn.

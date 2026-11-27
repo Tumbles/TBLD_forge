@@ -1,0 +1,7 @@
+Name:Profound Journey
+ManaCost:5 W W
+Types:Sorcery
+K:Rebound
+A:SP$ ChangeZone | Origin$ Graveyard | Destination$ Battlefield | TgtPrompt$ Choose target permanent card in your graveyard | ValidTgts$ Permanent.YouCtrl | SubAbility$ DBGainLife | SpellDescription$ Return target permanent card from your graveyard to play. Gain 4 life.
+SVar:DBGainLife:DB$ GainLife | LifeAmount$ 4
+Oracle:Return target permanent card from your graveyard to play. Gain 4 life.\nRebound (If you cast this from your hand, exile it as it resolves. At your next upkeep, you may cast this from exile without paying its mana cost.)

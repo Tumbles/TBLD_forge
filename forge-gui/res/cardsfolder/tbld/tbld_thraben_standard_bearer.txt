@@ -1,0 +1,8 @@
+Name:Thraben Standard Bearer
+ManaCost:W
+Types:Creature Human Soldier
+PT:1/1
+K:Vigilance
+A:AB$ Token | Cost$ 1 W T Discard<1/Card> | TokenAmount$ 2 | TokenScript$ w_1_1_soldier | TokenOwner$ You | SpellDescription$ Create two 1/1 white Soldier tokens.
+DeckHints:Ability$Discard
+Oracle:Vigilance\n1W, T, Discard a card: Create two 1/1 white Soldier tokens.

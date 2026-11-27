@@ -1,0 +1,8 @@
+Name:Triplicate Spirits
+ManaCost:4 W W
+Types:Sorcery
+K:Convoke
+A:SP$ Token | TokenAmount$ 3 | TokenScript$ w_1_1_spirit_flying | TokenOwner$ You | SpellDescription$ Create three 1/1 white Spirit tokens with flying.
+K:Cycling:1
+DeckHas:Ability$Token
+Oracle:Convoke (Your creatures can help cast this. Each creature you tap while casting this pays for 1 or one mana of that creature’s color.)\nCreate three 1/1 white Spirit tokens with flying.\nCycling 1 (1, Discard this: Draw a card.)

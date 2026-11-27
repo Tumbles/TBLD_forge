@@ -1,0 +1,9 @@
+Name:Veteran of the Depths
+ManaCost:2 W
+Types:Creature Merfolk Soldier
+PT:2/1
+T:Mode$ Taps | ValidCard$ Card.Self | Execute$ TrigBuff | TriggerDescription$ Whenever CARDNAME becomes tapped or becomes untapped, put a +1/+1 counter on it.
+T:Mode$ Untaps | ValidCard$ Card.Self | TriggerZones$ Battlefield | Execute$ TrigBuff | Secondary$ True | TriggerDescription$ Whenever CARDNAME becomes tapped or becomes untapped, put a +1/+1 counter on it.
+SVar:TrigBuff:DB$ PutCounter | Defined$ Self | CounterType$ P1P1 | CounterNum$ 1
+DeckHas:Ability$Counters
+Oracle:Whenever this becomes tapped or becomes untapped, put a +1/+1 counter on it.

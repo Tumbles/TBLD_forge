@@ -1,0 +1,7 @@
+Name:Masters Call
+ManaCost:1 W
+Types:Sorcery
+A:SP$ Token | TokenAmount$ 2 | TokenScript$ c_1_1_a_myr | TokenOwner$ You | SubAbility$ DBUntap | SpellDescription$ Create two 1/1 colorless Myr artifact creature tokens. Untap each Myr you control.
+SVar:DBUntap:DB$ UntapAll | ValidCards$ Myr.YouCtrl
+DeckHas:Ability$Token
+Oracle:Create two 1/1 colorless Myr artifact creature tokens.\nUntap each Myr you control.

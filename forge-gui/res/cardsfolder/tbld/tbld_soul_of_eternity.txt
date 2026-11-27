@@ -1,0 +1,10 @@
+Name:Soul of Eternity
+ManaCost:4 W W
+Types:Creature Avatar
+PT:*/*
+K:Encore:4 W W
+S:Mode$ Continuous | CharacteristicDefining$ True | SetPower$ X | SetToughness$ X | Description$ This creature's power and toughness are each equal to your life total.
+SVar:X:Count$YourLifeTotal
+DeckHas:Ability$Token
+DeckHints:Ability$LifeGain
+Oracle:This creature's power and toughness are each equal to your life total.\nEncore 4WW (4WW, Exile this from your graveyard: For each opponent, create a token copy with haste that attacks them this turn if able. Sacrifice them at the next end step. Can't be activated at flash speed.)

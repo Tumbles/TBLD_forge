@@ -1,0 +1,8 @@
+Name:Catastrophe
+ManaCost:4 W W
+Types:Sorcery
+A:SP$ Charm | Choices$ DBKillCreatures,DBKillLand
+SVar:DBKillCreatures:DB$ DestroyAll | ValidCards$ Creature | SpellDescription$ Destroy all creatures.
+SVar:DBKillLand:DB$ DestroyAll | ValidCards$ Land | SpellDescription$ Destroy all lands.
+K:Foretell:3 W W
+Oracle:Choose one —\n• Destroy all creatures.\n• Destroy all lands.\nForetell 3WW (During your turn, you may pay 2 and exile this card from your hand face down. Cast it on a later turn for its foretell cost.)

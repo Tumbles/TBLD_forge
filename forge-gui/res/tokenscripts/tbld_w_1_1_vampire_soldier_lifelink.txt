@@ -1,0 +1,7 @@
+Name:Vampire Soldier Token
+ManaCost:no cost
+Colors:white
+Types:Creature Vampire Soldier
+PT:1/1
+K:Lifelink
+Oracle:Lifelink

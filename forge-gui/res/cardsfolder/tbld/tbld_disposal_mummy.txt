@@ -1,0 +1,7 @@
+Name:Disposal Mummy
+ManaCost:W
+Types:Creature Zombie Dog
+PT:2/1
+T:Mode$ ChangesZone | Origin$ Any | Destination$ Battlefield | ValidCard$ Card.Self,Zombie.Other+YouCtrl | TriggerZones$ Battlefield | Execute$ TrigExile | TriggerDescription$ Whenever CARDNAME or another Zombie enters under your control, exile up to one target card from a graveyard.
+SVar:TrigExile:DB$ ChangeZone | Origin$ Graveyard | Destination$ Exile | TgtPrompt$ Choose up to one target card in a graveyard | ValidTgts$ Card | TargetMin$ 0 | TargetMax$ 1
+Oracle:Whenever this or another Zombie enters under your control, exile up to one target card from a graveyard.

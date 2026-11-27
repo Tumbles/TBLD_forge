@@ -1,0 +1,6 @@
+Name:Knight of New Benalia
+ManaCost:1 W
+Types:Creature Human Knight
+PT:3/3
+S:Mode$ Continuous | Affected$ Card.Self | AddKeyword$ First Strike | IsPresent$ Knight.Other+YouCtrl | Description$ As long as you control another Knight, CARDNAME has first strike.
+Oracle:As long as you control another Knight, this has first strike.

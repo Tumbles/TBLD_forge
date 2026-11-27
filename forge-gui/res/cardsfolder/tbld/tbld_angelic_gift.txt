@@ -1,0 +1,10 @@
+Name:Angelic Gift
+ManaCost:1 W
+Types:Flash Enchantment Aura
+K:Enchant:Creature
+SVar:AttachAILogic:Pump
+T:Mode$ ChangesZone | Origin$ Any | Destination$ Battlefield | ValidCard$ Card.Self | Execute$ TrigDraw | TriggerDescription$ When CARDNAME enters, draw a card and gain 2 life.
+SVar:TrigDraw:DB$ Draw | Defined$ You | NumCards$ 1 | SubAbility$ DBGainLife
+SVar:DBGainLife:DB$ GainLife | LifeAmount$ 2
+S:Mode$ Continuous | AffectedDefined$ Enchanted | Affected$ Creature | AddKeyword$ Flying | Description$ Enchanted creature has flying.
+Oracle:Enchant creature\nWhen this enters, draw a card and gain 2 life.\nEnchanted creature has flying.

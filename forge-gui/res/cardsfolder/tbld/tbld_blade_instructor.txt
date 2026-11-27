@@ -1,0 +1,7 @@
+Name:Blade Instructor
+ManaCost:W W
+Types:Creature Human Soldier
+PT:3/1
+T:Mode$ Attacks | ValidCard$ Card.Self | TriggerZones$ Battlefield | Execute$ TrigPump | IsPresent$ Creature.attacking+Other | NoResolvingCheck$ True | PresentCompare$ GE2 | TriggerDescription$ Battalion — Whenever CARDNAME and at least two other creatures attack, CARDNAME gains first strike this turn.
+SVar:TrigPump:DB$ Pump | Defined$ Self | KW$ First Strike
+Oracle:Battalion — Whenever this and at least two other creatures attack, this gains first strike this turn.

@@ -1,0 +1,6 @@
+Name:Cathar Commando
+ManaCost:1 W
+Types:Flash Creature Human Soldier
+PT:3/1
+A:AB$ Destroy | Cost$ 1 Sac<1/CARDNAME> | ValidTgts$ Artifact,Enchantment | TgtPrompt$ Select target artifact or enchantment | SpellDescription$ Destroy target artifact or enchantment.
+Oracle:1, Sacrifice this: Destroy target artifact or enchantment.

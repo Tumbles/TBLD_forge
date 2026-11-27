@@ -1,0 +1,6 @@
+Name:Feeling of Dread
+ManaCost:1 W
+Types:Flash Sorcery
+K:Flashback:1 U
+A:SP$ Tap | ValidTgts$ Permanent | TgtPrompt$ Select two target permanents | TargetMin$ 2 | TargetMax$ 2 | SpellDescription$ Tap two target permanents.
+Oracle:Tap two target permanents.\nFlashback 1U (You may cast this from your graveyard for its flashback cost. Then exile it.)

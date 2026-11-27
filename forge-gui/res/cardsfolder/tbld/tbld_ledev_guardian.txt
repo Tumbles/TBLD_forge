@@ -1,0 +1,8 @@
+Name:Ledev Guardian
+ManaCost:2 W
+Types:Creature Elf Knight
+PT:3/5
+K:Convoke
+K:Vigilance
+S:Mode$ Continuous | Affected$ Card.Self | CanBlockAmount$ 1 | Description$ CARDNAME can block an additional creature.
+Oracle:Convoke (Your creatures can help cast this. Each creature you tap while casting this pays for 1 or one mana of that creature’s color.)\nVigilance\nThis can block an additional creature.

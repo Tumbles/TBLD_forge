@@ -1,0 +1,7 @@
+Name:Standardize
+ManaCost:3 W W
+Types:Sorcery
+A:SP$ Charm | Choices$ DBModified,DBUnmodified
+SVar:DBModified:DB$ DestroyAll | ValidCards$ Creature.modified | SpellDescription$ Destroy all modified creatures.
+SVar:DBUnmodified:DB$ DestroyAll | ValidCards$ Creature.!modified | SpellDescription$ Destroy all creatures that aren't modified.
+Oracle:Choose one -\n• Destroy all modified creatures.\n• Destroy all creatures that aren't modified. (Equipment, Auras with the same controller, and counters are modifications.)

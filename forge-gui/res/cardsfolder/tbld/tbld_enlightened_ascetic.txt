@@ -1,0 +1,8 @@
+Name:Enlightened Ascetic
+ManaCost:1 W
+Types:Creature Cat Monk
+PT:1/2
+T:Mode$ ChangesZone | Origin$ Any | Destination$ Battlefield | ValidCard$ Card.Self | Execute$ TrigExile | TriggerDescription$ When CARDNAME enters, exile up to one target enchantment.
+SVar:TrigExile:DB$ ChangeZone | Origin$ Battlefield | Destination$ Exile | ValidTgts$ Enchantment | TgtPrompt$ Select up to one target enchantment | TargetMin$ 0 | TargetMax$ 1
+SVar:PlayMain1:TRUE
+Oracle:When this enters, exile up to one target enchantment.

@@ -1,0 +1,9 @@
+Name:Bishop of Rebirth
+ManaCost:2 W W
+Types:Creature Vampire Cleric
+PT:3/3
+K:Vigilance
+K:Lifelink
+T:Mode$ Attacks | ValidCard$ Card.Self | Execute$ TrigChangeZone | TriggerZones$ Battlefield | OptionalDecider$ You | TriggerDescription$ Whenever CARDNAME attacks, you may return target creature card with mana value 3 or less from your graveyard to play.
+SVar:TrigChangeZone:DB$ ChangeZone | Origin$ Graveyard | Destination$ Battlefield | ValidTgts$ Creature.YouCtrl+cmcLE3 | TgtPrompt$ Select target creature card with mana value 3 or less
+Oracle:Vigilance, lifelink\nWhenever this attacks, you may return target creature card with mana value 3 or less from your graveyard to play.

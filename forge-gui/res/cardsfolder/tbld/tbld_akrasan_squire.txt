@@ -1,0 +1,8 @@
+Name:Akrasan Squire
+ManaCost:W
+Types:Creature Human Soldier
+PT:1/1
+K:Exalted
+T:Mode$ Attacks | ValidCard$ Creature.YouCtrl | Alone$ True | TriggerZones$ Battlefield | Execute$ TrigPump | TriggerDescription$ Vanguard - Whenever a creature you control attacks alone, it gains first strike this turn.
+SVar:TrigPump:DB$ Pump | Defined$ TriggeredAttackerLKICopy | KW$ First Strike
+Oracle:Exalted (Whenever a creature you control attacks alone, it gets +1/+1 this turn.)\nVanguard - Whenever a creature you control attacks alone, it gains first strike this turn.

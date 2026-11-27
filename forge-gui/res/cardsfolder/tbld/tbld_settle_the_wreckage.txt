@@ -1,0 +1,8 @@
+Name:Settle the Wreckage
+ManaCost:2 W W
+Types:Flash Sorcery
+A:SP$ ChangeZoneAll | ValidTgts$ Player | ChangeType$ Creature.attacking | Origin$ Battlefield | Destination$ Exile | RememberChanged$ True | SubAbility$ DBGetLands | SpellDescription$ Exile all attacking creatures target player controls. That player may search their library for that many basic-typed land cards and put them into play tapped.
+SVar:DBGetLands:DB$ ChangeZone | Optional$ True | Origin$ Library | Destination$ Battlefield | Tapped$ True | ChangeType$ Land.hasABasicLandType | ChangeTypeDesc$ basic-typed land | ChangeNum$ X | DefinedPlayer$ TargetedPlayer | ShuffleNonMandatory$ True | SubAbility$ DBCleanup
+SVar:DBCleanup:DB$ Cleanup | ClearRemembered$ True
+SVar:X:Count$RememberedSize
+Oracle:Exile all attacking creatures target player controls. That player may search their library for that many basic-typed land cards and put them into play tapped.

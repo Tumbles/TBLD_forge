@@ -1,0 +1,12 @@
+Name:Battlegrace Angel
+ManaCost:3 W W
+Types:Creature Angel
+PT:4/4
+K:Flying
+K:First Strike
+K:Exalted
+K:Exalted
+T:Mode$ Attacks | ValidCard$ Creature.YouCtrl | Alone$ True | TriggerZones$ Battlefield | Execute$ TrigPump | TriggerDescription$ Whenever a creature you control attacks alone, it gains lifelink this turn.
+SVar:TrigPump:DB$ Pump | Defined$ TriggeredAttackerLKICopy | KW$ Lifelink
+DeckHas:Ability$LifeGain
+Oracle:Flying, first strike\nExalted, exalted (Whenever a creature you control attacks alone, it gets +1/+1 this turn.)\nWhenever a creature you control attacks alone, it gains lifelink this turn.

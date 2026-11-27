@@ -1,0 +1,6 @@
+Name:Wake the Reflections
+ManaCost:W
+Types:Sorcery
+A:SP$ CopyPermanent | Populate$ True
+DeckNeeds:Ability$Token
+Oracle:Convoke (Your creatures can help cast this. Each creature you tap while casting this pays for 1 or one mana of that creature’s color.)\nPopulate. (Create a token that's a copy of a creature token you control.)

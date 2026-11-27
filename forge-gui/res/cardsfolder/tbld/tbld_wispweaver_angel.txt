@@ -1,0 +1,11 @@
+Name:Wispweaver Angel
+ManaCost:3 W W
+Types:Creature Angel
+PT:4/4
+K:Flying
+T:Mode$ ChangesZone | ValidCard$ Card.Self | Origin$ Any | Destination$ Battlefield | Execute$ RestorationExile | TriggerDescription$ When CARDNAME enters, exile any number of other target creatures you control, then return them to play under your control.
+SVar:RestorationExile:DB$ ChangeZone | ValidTgts$ Creature.Other+YouCtrl | TgtPrompt$ Select any number of other target creatures you control | TargetMin$ 0 | TargetMax$ X | Origin$ Battlefield | Destination$ Exile | RememberChanged$ True | SubAbility$ RestorationReturn
+SVar:RestorationReturn:DB$ ChangeZone | Defined$ Remembered | Origin$ Exile | Destination$ Battlefield | GainControl$ True | SubAbility$ DBCleanup
+SVar:DBCleanup:DB$ Cleanup | ClearRemembered$ True
+SVar:X:Count$Valid Creature.Other+YouCtrl
+Oracle:Flying\nWhen this enters, exile any number of other target creatures you control, then return them to play under your control.

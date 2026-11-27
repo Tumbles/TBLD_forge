@@ -1,0 +1,9 @@
+Name:Azorius Justiciar
+ManaCost:2 W
+Types:Creature Human Wizard
+PT:3/1
+T:Mode$ ChangesZone | Origin$ Any | Destination$ Battlefield | ValidCard$ Card.Self | Execute$ Detain | TriggerDescription$ When CARDNAME enters, detain up to two target nonland permanents your opponents control.
+SVar:Detain:DB$ Detain | TargetMin$ 0 | TargetMax$ 2 | ValidTgts$ Permanent.nonLand+OppCtrl | ValidTgtsDesc$ nonland permanent your opponents control
+A:AB$ Counter | Cost$ WU WU Sac<1/CARDNAME> | TargetType$ Spell | ValidTgts$ Card.nonCreature | TgtPrompt$ Select target noncreature spell | UnlessCost$ 2 | SpellDescription$ Counter target noncreature spell unless its controller pays 2.
+SVar:PlayMain1:TRUE
+Oracle:When this enters, detain up to two target nonland permanents your opponents control. (Until your next turn, they can't attack or block and their activated abilities can't be activated.)\nW/UW/U, Sacrifice this: Counter target noncreature spell unless its controller pays 2.

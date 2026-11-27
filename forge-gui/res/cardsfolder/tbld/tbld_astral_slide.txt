@@ -1,0 +1,11 @@
+Name:Astral Slide
+ManaCost:2 W
+Types:Enchantment
+T:Mode$ Cycled | ValidCard$ Card | Execute$ TrigExile | TriggerZones$ Battlefield | TriggerDescription$ Whenever a player cycles a card, exile up to one target creature. At the next end step, return it to play under its owner's control.
+SVar:TrigExile:DB$ ChangeZone | ValidTgts$ Creature | TgtPrompt$ Select up to one target creature | TargetMin$ 0 | TargetMax$ 1 | Origin$ Battlefield | Destination$ Exile | RememberChanged$ True | SubAbility$ DelTrigEffect
+SVar:DelTrigEffect:DB$ DelayedTrigger | Mode$ Phase | Phase$ End Of Turn | Execute$ TrigReturn | RememberObjects$ RememberedLKI | TriggerDescription$ Return the exiled card to play under its owner's control at the next end step. | SubAbility$ DBCleanup | AILogic$ Always
+SVar:TrigReturn:DB$ ChangeZone | Defined$ DelayTriggerRememberedLKI | Origin$ Exile | Destination$ Battlefield
+SVar:DBCleanup:DB$ Cleanup | ClearRemembered$ True
+K:Cycling:3
+AI:RemoveDeck:All
+Oracle:Whenever a player cycles a card, exile up to one target creature. At the next end step, return it to play under its owner’s control.\nCycling 3 (3, Discard this: Draw a card.)

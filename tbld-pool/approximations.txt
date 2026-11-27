@@ -2,3 +2,6 @@
 Epic Confrontation | Only the creature you don't control is exiled if it would die; your own creature dies normally.
 Frontier Siege | Khans adds GG at your first main phase (the text says once per turn, at your main phase).
 Wish | You may play the exiled card this turn only.
+Gift of Immortality | Returns only itself at the next end step, not every Aura that was attached.
+Nevermore | Superiority (opponents with lower life reveal their hands) is not done; the naming is.
+Warhorn Blast | The copy made when cast from exile uses the spell's copy rules; untested.

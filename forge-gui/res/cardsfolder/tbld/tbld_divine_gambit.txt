@@ -1,0 +1,6 @@
+Name:Divine Gambit
+ManaCost:W
+Types:Sorcery
+A:SP$ ChangeZone | ValidTgts$ Permanent.OppCtrl | Origin$ Battlefield | Destination$ Exile | TgtPrompt$ Select target permanent an opponent controls | SubAbility$ DBChangeZone | SpellDescription$ Exile target permanent an opponent controls. That player may put a nonsorcery card from their hand into play.
+SVar:DBChangeZone:DB$ ChangeZone | DefinedPlayer$ TargetedController | ChangeType$ Card.nonSorcery | Origin$ Hand | Destination$ Battlefield
+Oracle:Exile target permanent an opponent controls. That player may put a nonsorcery card from their hand into play.

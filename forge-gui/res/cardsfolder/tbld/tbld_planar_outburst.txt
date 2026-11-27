@@ -1,0 +1,7 @@
+Name:Planar Outburst
+ManaCost:3 W W
+Types:Sorcery
+A:SP$ DestroyAll | ValidCards$ Creature.nonLand | SpellDescription$ Destroy all nonland creatures.
+K:Awaken:5:5 W W
+DeckHints:Keyword$Awaken
+Oracle:Destroy all nonland creatures.\nAwaken 5-5WW (If you cast this for 5WW, also put five +1/+1 counters on target land you control and it becomes a 0/0 Elemental creature with haste. It's still a land.)

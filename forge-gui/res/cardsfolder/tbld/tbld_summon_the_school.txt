@@ -1,0 +1,7 @@
+Name:Summon the School
+ManaCost:2 W W
+Types:Flash Sorcery
+A:SP$ Token | TokenAmount$ 2 | TokenScript$ u_1_1_merfolk_hexproof | TokenOwner$ You | SpellDescription$ Create two 1/1 blue Merfolk creature tokens with hexproof.
+A:AB$ ChangeZone | Cost$ tapXType<4/Merfolk> | Origin$ Graveyard | Destination$ Hand | ActivationZone$ Graveyard | SpellDescription$ Return CARDNAME from your graveyard to your hand.
+AI:RemoveDeck:Random
+Oracle:Create two 1/1 blue Merfolk creature tokens with hexproof.\nTap four untapped Merfolk you control: Return this from your graveyard to your hand.

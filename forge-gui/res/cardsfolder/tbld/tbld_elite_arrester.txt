@@ -1,0 +1,8 @@
+Name:Elite Arrester
+ManaCost:W
+Types:Creature Human Soldier
+PT:0/4
+A:AB$ Detain | Cost$ 1 U T | ValidTgts$ Creature | TgtPrompt$ Select target creature | SpellDescription$ Detain target creature.
+A:AB$ Counter | Cost$ 1 WU Sac<1/CARDNAME> | TargetType$ Spell | ValidTgts$ Card.nonCreature | TgtPrompt$ Select target noncreature spell | UnlessCost$ 2 | SpellDescription$ Counter target noncreature spell unless its controller pays 2.
+SVar:NonCombatPriority:5
+Oracle:1U, T: Detain target creature. (Until your next turn, it can't attack or block and its activated abilities can't be activated.)\n1W/U, Sacrifice this: Counter target noncreature spell unless its controller pays 2.

@@ -707,6 +707,101 @@ Type=Custom_Set
 714 C Wirewood Herald
 715 U Withstand Death
 716 U Wreath of Geists
+717 U Akrasan Squire
+719 U Angelic Exaltation
+720 U Angelic Gift
+721 U Arrest
+722 U Arresters Zeal
+723 U Astral Slide
+724 U Auriok Edgewright
+725 U Avacyns Memorial
+726 U Azorius Justiciar
+727 U Banishing Light
+728 C Battle Screech
+729 U Battlegrace Angel
+730 C Binding Mummy
+731 U Bishop of Rebirth
+732 U Blade Instructor
+733 U Blade-Blizzard Kitsune
+734 U Bring Down
+735 U Catastrophe
+736 C Cathar Commando
+737 C Citadel Siege
+738 U Conclave Equenaut
+739 U Cosmic Intervention
+740 U Dawnbringer Charioteers
+741 C Deadeye Harpooner
+742 U Disposal Mummy
+743 U Divine Gambit
+744 U Elite Arrester
+745 U Enlightened Ascetic
+747 U Fabled Hero
+748 U Fall of the Thran
+749 C Famished Paladin
+750 U Feeling of Dread
+751 U Forerunner of the Legion
+752 U Frantic Salvage
+753 U Generous Gift
+754 C Ghostly Prison
+755 U Gift of Immortality
+756 U Holy Strength
+757 U Idyllic Tutor
+758 U In Oketras Name
+759 C Increasing Devotion
+760 U Inspiring Cleric
+761 R Justice
+762 U Knight of New Benalia
+763 U Knight of Old Benalia
+764 U Ledev Guardian
+765 U Light of Promise
+766 U Mammoth Umbra
+767 U Martyr of Dusk
+769 U Masters Call
+770 U Mesa Enchantress
+771 U Ministrant of Obligation
+772 C Moon-Blessed Cleric
+773 C Mortals Ardor
+774 U Nearheath Chaplain
+775 U Nevermore
+776 C Ordeal of Heliod
+777 U Planar Outburst
+778 U Plea for Guidance
+779 U Profound Journey
+780 U Quilled Sliver
+781 U Refurbish
+782 U Runed Halo
+784 U Settle the Wreckage
+785 U Solemn Offering
+786 U Solitary Confinement
+787 U Soul of Eternity
+788 U Soulfire Grand Master
+789 U Spectral Steel
+790 C Squadron Hawk
+791 R Standardize
+792 U Starnheim Aspirant
+793 U Stonybrook Schoolmaster
+794 U Summary Judgment
+795 U Summon the School
+796 C Suppression Field
+797 U Syndic of Tithes
+798 U Tethmos High Priest
+799 U The Birth of Meletis
+800 U Those Who Serve
+801 U Thraben Standard Bearer
+802 U Timely Hordemate
+803 C Tithe Taker
+804 C To Arms
+805 U Tocatli Honor Guard
+806 U Trapjaw Tyrant
+807 U Triplicate Spirits
+808 U Trove Warden
+809 U Valor of the Worthy
+810 U Veteran of the Depths
+811 U Wake the Reflections
+812 U Warhorn Blast
+813 U Werefox Bodyguard
+814 U Wispweaver Angel
+815 C Youthful Valkyrie
 F1 L Forest
 F2 L Forest
 F3 L Forest

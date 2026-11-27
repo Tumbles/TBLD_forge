@@ -1,0 +1,6 @@
+Name:To Arms
+ManaCost:1 W
+Types:Flash Sorcery
+A:SP$ UntapAll | ValidCards$ Creature.YouCtrl | SpellDescription$ Untap each creature you control. Draw a card. | SubAbility$ DBDraw
+SVar:DBDraw:DB$ Draw
+Oracle:Untap each creature you control.\nDraw a card.

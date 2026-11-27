@@ -1,0 +1,13 @@
+Name:Justice
+ManaCost:5 W W
+Types:Flash Enchantment Creature Elemental
+PT:7/1
+K:Evoke:W ExileFromHand<1/Card.nonLand+Other/nonland card>
+T:Mode$ ChangesZone | Origin$ Any | Destination$ Battlefield | ValidCard$ Card.Self | Execute$ TrigCharm | TriggerDescription$ When CARDNAME enters, ABILITY
+SVar:TrigCharm:DB$ Charm | Choices$ DBExile,DBCounters
+SVar:DBExile:DB$ ChangeZone | ValidTgts$ Creature | TgtPrompt$ Select target creature | Origin$ Battlefield | Destination$ Exile | SubAbility$ DBGainLife | SpellDescription$ Exile target creature. Its controller gains life equal to its power.
+SVar:DBGainLife:DB$ GainLife | Defined$ TargetedController | LifeAmount$ X
+SVar:X:TargetedLKI$CardPower
+SVar:DBCounters:DB$ PutCounter | ValidTgts$ Creature | TgtPrompt$ Select target creature | CounterType$ P1P1 | CounterNum$ 1 | SubAbility$ DBFirstStrike | SpellDescription$ Put a +1/+1 counter and a first strike counter on target creature.
+SVar:DBFirstStrike:DB$ PutCounter | Defined$ Targeted | CounterType$ First Strike | CounterNum$ 1
+Oracle:When this enters, choose one —\n• Exile target creature. Its controller gains life equal to its power.\n• Put a +1/+1 counter and a first strike counter on target creature.\nEvoke—W, Exile a nonland card from your hand.

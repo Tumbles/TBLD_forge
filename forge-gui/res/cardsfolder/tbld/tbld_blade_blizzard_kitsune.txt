@@ -1,0 +1,7 @@
+Name:Blade-Blizzard Kitsune
+ManaCost:2 W
+Types:Creature Fox Rogue
+PT:2/2
+K:Ninjutsu:2 W
+K:Double Strike
+Oracle:Ninjutsu 2W (2W, Return an unblocked attacker you control to hand: Put this card into play from your hand tapped and attacking.)\nDouble strike

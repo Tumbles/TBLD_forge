@@ -1,0 +1,6 @@
+Name:Those Who Serve
+ManaCost:1 W
+Types:Creature Zombie
+PT:2/4
+K:Cycling:1
+Oracle:Cycling 1 (1, Discard this: Draw a card.)

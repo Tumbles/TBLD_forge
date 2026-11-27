@@ -1,0 +1,6 @@
+Name:Solemn Offering
+ManaCost:2 W
+Types:Sorcery
+A:SP$ ChangeZone | ValidTgts$ Artifact,Enchantment | TgtPrompt$ Select target artifact or enchantment | Origin$ Battlefield | Destination$ Exile | SubAbility$ DBGainLife | SpellDescription$ Exile target artifact or enchantment. Gain 5 life.
+SVar:DBGainLife:DB$ GainLife | Defined$ You | LifeAmount$ 5
+Oracle:Exile target artifact or enchantment.\nGain 5 life.

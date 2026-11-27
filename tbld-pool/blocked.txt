@@ -17,3 +17,7 @@ Maul Splicer | Spirited (TBLD mechanic, not in the engine yet)
 Root Out | Investigate (TBLD Clue: an enchantment token with "2, Sacrifice this: Scan, then draw a card"), and Scan
 Vital Splicer | Spirited (TBLD mechanic, not in the engine yet)
 Warpspeed | Upload (TBLD mechanic, not in the engine yet)
+Angel of Finality | Shift (TBLD face-down mechanic, not in the engine yet)
+Erase | Scan (TBLD mechanic, not in the engine yet)
+Master Splicer | Spirited (TBLD mechanic, not in the engine yet)
+Sensor Splicer | Spirited (TBLD mechanic, not in the engine yet)

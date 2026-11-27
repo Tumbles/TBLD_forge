@@ -1,0 +1,6 @@
+Name:Bring Down
+ManaCost:W
+Types:Flash Sorcery
+K:Replicate:tapXType<2/Creature>
+A:SP$ Destroy | ValidTgts$ Creature.powerGE4 | TgtPrompt$ Select target creature with power 4 or greater | SpellDescription$ Destroy target creature with power 4 or greater.
+Oracle:Replicate—Tap two untapped creatures you control. (When you cast this, copy it for each time you paid its replicate cost.)\nDestroy target creature with power 4 or greater.
