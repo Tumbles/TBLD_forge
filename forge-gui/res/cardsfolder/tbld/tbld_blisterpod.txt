@@ -1,0 +1,11 @@
+Name:Blisterpod
+ManaCost:G
+Types:Creature Eldrazi
+PT:1/1
+K:Devoid
+T:Mode$ ChangesZone | Origin$ Battlefield | Destination$ Graveyard | ValidCard$ Card.Self | Execute$ TrigToken | TriggerDescription$ When CARDNAME dies, create a 1/1 colorless Eldrazi Spawn token. It has "Sacrifice this: Add C."
+SVar:TrigToken:DB$ Token | TokenScript$ tbld_c_1_1_eldrazi_spawn_sac | TokenOwner$ You
+SVar:SacMe:1
+DeckHints:Type$Eldrazi
+DeckHas:Ability$Mana.Colorless|Token
+Oracle:Devoid (This card has no color.)\nWhen this dies, create a 1/1 colorless Eldrazi Spawn token. It has "Sacrifice this: Add C."

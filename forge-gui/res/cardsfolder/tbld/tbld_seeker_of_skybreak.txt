@@ -1,0 +1,7 @@
+Name:Seeker of Skybreak
+ManaCost:1 G
+Types:Creature Elf Scout Archer
+PT:2/2
+K:Dash:G
+A:AB$ Untap | Cost$ T | ValidTgts$ Creature.Other | TgtPrompt$ Select another target creature | SpellDescription$ Untap another target creature.
+Oracle:Dash G (You may cast this for its dash cost. If you do, it gains haste, and it's returned from play to its owner's hand at the next end step.)\nT: Untap another target creature.

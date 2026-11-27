@@ -1,0 +1,11 @@
+Name:Birthing Hulk
+ManaCost:6 G
+Types:Creature Eldrazi
+PT:5/4
+K:Devoid
+T:Mode$ Phase | Phase$ End of Turn | ValidPlayer$ You | TriggerZones$ Battlefield | Execute$ TrigToken | TriggerDescription$ At your end step, create two 1/1 colorless Eldrazi Spawn tokens. They have "Sacrifice this: Add C."
+SVar:TrigToken:DB$ Token | TokenAmount$ 2 | TokenScript$ tbld_c_1_1_eldrazi_spawn_sac | TokenOwner$ You
+A:AB$ Regenerate | Cost$ 1 C | SpellDescription$ Regenerate CARDNAME.
+DeckHints:Type$Eldrazi
+DeckHas:Ability$Mana.Colorless|Token
+Oracle:Devoid (This card has no color.)\nAt your end step, create two 1/1 colorless Eldrazi Spawn tokens. They have "Sacrifice this: Add C."\n1C: Regenerate this. (The next time this would be destroyed this turn, instead remove all damage from it, tap it, and remove it from combat.)

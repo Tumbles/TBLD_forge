@@ -1,0 +1,7 @@
+Name:Pounce
+ManaCost:G
+Types:Flash Sorcery
+K:Split second
+A:SP$ Pump | ValidTgts$ Creature.YouCtrl | TgtPrompt$ Choose target creature you control | NumAtt$ +1 | NumDef$ +1 | ConditionDefined$ Targeted | ConditionPresent$ Card.ThisTurnEntered | ConditionCompare$ GE1 | SubAbility$ DBFight | SpellDescription$ Choose target creature you control. It gets +1/+1 this turn if it entered this turn. It fights target creature you don't control.
+SVar:DBFight:DB$ Fight | Defined$ ParentTarget | ValidTgts$ Creature.YouDontCtrl | TgtPrompt$ Choose target creature you don't control
+Oracle:Split second (Players can’t cast spells or activate abilities that aren’t mana abilities while this spell is on the stack.)\nChoose target creature you control. It gets +1/+1 this turn if it entered this turn. It fights target creature you don’t control.

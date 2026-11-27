@@ -1,0 +1,8 @@
+Name:Elvish Visionary
+ManaCost:1 G
+Types:Creature Elf Shaman
+PT:1/1
+T:Mode$ ChangesZone | Origin$ Any | Destination$ Battlefield | ValidCard$ Card.Self | Execute$ TrigDraw | TriggerDescription$ When CARDNAME enters, you draw a card and get E (an energy counter).
+SVar:TrigDraw:DB$ Draw | Defined$ You | NumCards$ 1 | SubAbility$ DBEnergy
+SVar:DBEnergy:DB$ PutCounter | Defined$ You | CounterType$ ENERGY | CounterNum$ 1
+Oracle:When this enters play, you draw a card and get E (an energy counter).

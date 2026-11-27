@@ -1,0 +1,6 @@
+Name:Slaughterhorn
+ManaCost:2 G
+Types:Creature Beast
+PT:3/3
+A:AB$ Pump | Cost$ G Discard<1/CARDNAME> | ActivationZone$ Hand | PrecostDesc$ Bloodrush — | ValidTgts$ Creature.attacking | TgtPrompt$ Select target attacking creature | NumAtt$ +3 | NumDef$ +3 | SpellDescription$ Target attacking creature gets +3/+3 this turn.
+Oracle:Bloodrush - G, Discard this: Target attacking creature gets +3/+3 this turn.

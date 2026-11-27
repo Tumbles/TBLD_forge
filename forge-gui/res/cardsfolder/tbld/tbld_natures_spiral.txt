@@ -1,0 +1,6 @@
+Name:Natures Spiral
+ManaCost:G
+Types:Sorcery
+A:SP$ ChangeZone | Origin$ Graveyard | Destination$ Hand | TgtPrompt$ Choose target nonsorcery card in a graveyard | ValidTgts$ Card.nonSorcery | SubAbility$ DBGainLife | SpellDescription$ Return target nonsorcery card from a graveyard to its owner's hand. That player gains 2 life.
+SVar:DBGainLife:DB$ GainLife | Defined$ TargetedOwner | LifeAmount$ 2
+Oracle:Return target nonsorcery card from a graveyard to its owner’s hand. That player gains 2 life.

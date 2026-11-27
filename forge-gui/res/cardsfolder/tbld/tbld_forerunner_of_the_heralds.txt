@@ -1,0 +1,12 @@
+Name:Forerunner of the Heralds
+ManaCost:3 G
+Types:Flash Creature Merfolk Scout
+PT:2/2
+T:Mode$ ChangesZone | Origin$ Any | Destination$ Battlefield | ValidCard$ Card.Self | Execute$ TrigChange | OptionalDecider$ You | TriggerDescription$ When CARDNAME enters, you may search your library for a Merfolk card, reveal it, and put it on top.
+SVar:TrigChange:DB$ ChangeZone | Origin$ Library | Destination$ Library | LibraryPosition$ 0 | ChangeType$ Card.Merfolk | ChangeNum$ 1 | ShuffleNonMandatory$ True
+T:Mode$ ChangesZone | Origin$ Any | Destination$ Battlefield | ValidCard$ Permanent.Merfolk+YouCtrl+Other | TriggerZones$ Battlefield | Execute$ TrigCounters | TriggerDescription$ Whenever another Merfolk enters under your control, put two +1/+1 counters on target creature.
+SVar:TrigCounters:DB$ PutCounter | ValidTgts$ Creature | TgtPrompt$ Select target creature | CounterType$ P1P1 | CounterNum$ 2
+AI:RemoveDeck:Random
+DeckHas:Ability$Counters
+DeckHints:Type$Merfolk
+Oracle:When this enters, you may search your library for a Merfolk card, reveal it, and put it on top.\nWhenever another Merfolk enters under your control, put two +1/+1 counters on target creature.

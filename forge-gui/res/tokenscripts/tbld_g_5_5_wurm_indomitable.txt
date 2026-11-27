@@ -1,0 +1,7 @@
+Name:Wurm Token
+ManaCost:no cost
+Colors:green
+Types:Creature Wurm
+PT:5/5
+S:Mode$ CantBlockBy | ValidAttacker$ Creature.Self | ValidBlocker$ Creature.powerLE2 | Description$ Indomitable (This can't be blocked by creatures with power 2 or less.)
+Oracle:Indomitable (This can't be blocked by creatures with power 2 or less.)

@@ -1,0 +1,10 @@
+Name:Void Attendant
+ManaCost:1 G
+Types:Creature Eldrazi
+PT:2/3
+K:Devoid
+K:Ingest
+A:AB$ Token | Cost$ G ExiledMoveToGrave<2/Card.OppOwn/cards an opponent owns> | TokenScript$ tbld_c_1_1_eldrazi_spawn_sac | TokenOwner$ You | SpellDescription$ Create a 1/1 colorless Eldrazi Spawn token with "Sacrifice this: Add C."
+DeckHints:Keyword$Ingest & Type$Eldrazi
+DeckHas:Ability$Mana.Colorless|Token
+Oracle:Devoid, ingest\nG, Put two cards an opponent owns from exile into their graveyard: Create a 1/1 colorless Eldrazi Spawn token with "Sacrifice this: Add C."

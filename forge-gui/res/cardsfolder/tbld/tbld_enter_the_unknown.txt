@@ -1,0 +1,13 @@
+Name:Enter the Unknown
+ManaCost:G
+Types:Sorcery
+K:Strive:G
+A:SP$ Explore | ValidTgts$ Creature.YouCtrl | TgtPrompt$ Select one or more target creatures you control | TargetMin$ 1 | TargetMax$ MaxTargets | SubAbility$ TrigEffect | SpellDescription$ One or more target creatures you control each explore. You may play an additional land this turn for each creature that explores this way.
+SVar:TrigEffect:DB$ Effect | StaticAbilities$ Exploration | AILogic$ Always
+SVar:Exploration:Mode$ Continuous | Affected$ You | AdjustLandPlays$ Y | Description$ You may play an additional land this turn for each creature that explored.
+SVar:MaxTargets:Count$Valid Creature.YouCtrl
+SVar:Y:Targeted$Amount
+SVar:NeedsToPlayVar:ZZ GE1
+SVar:ZZ:Count$ValidHand Land.YouOwn
+DeckHas:Ability$Counters
+Oracle:Strive — This costs G more for each target beyond the first.\nOne or more target creatures you control each explore. You may play an additional land this turn for each creature that explores this way.

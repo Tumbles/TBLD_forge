@@ -1,0 +1,7 @@
+Name:Unnatural Predation
+ManaCost:GP
+Types:Flash Sorcery
+A:SP$ Pump | ValidTgts$ Creature.attacking | TgtPrompt$ Select target attacking creature | NumAtt$ +2 | NumDef$ +2 | KW$ Trample | ConditionDefined$ Targeted | ConditionPresent$ Card.counters_GE1_P1P1 | ConditionCompare$ GE1 | SubAbility$ DBCounter | SpellDescription$ If target attacking creature has a +1/+1 counter, it gets +2/+2 and gains trample this turn. Otherwise, put a +1/+1 counter on it.
+SVar:DBCounter:DB$ PutCounter | Defined$ Targeted | CounterType$ P1P1 | CounterNum$ 1 | ConditionDefined$ Targeted | ConditionPresent$ Card.counters_GE1_P1P1 | ConditionCompare$ EQ0
+DeckHas:Ability$Counters
+Oracle:(H/G can be paid with either G or 2 life.)\nIf target attacking creature has a +1/+1 counter, it gets +2/+2 and gains trample this turn. Otherwise, put a +1/+1 counter on it.

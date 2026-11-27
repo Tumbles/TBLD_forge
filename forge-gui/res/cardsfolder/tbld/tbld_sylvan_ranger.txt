@@ -1,0 +1,7 @@
+Name:Sylvan Ranger
+ManaCost:1 G
+Types:Flash Creature Elf Scout
+PT:1/1
+T:Mode$ ChangesZone | Origin$ Any | Destination$ Battlefield | ValidCard$ Card.Self | Execute$ TrigChange | OptionalDecider$ You | TriggerDescription$ When CARDNAME enters, you may search your library for a basic-typed land card, reveal it, and put it into your hand.
+SVar:TrigChange:DB$ ChangeZone | Origin$ Library | Destination$ Hand | ChangeType$ Land.hasABasicLandType | ChangeTypeDesc$ basic-typed land | ShuffleNonMandatory$ True
+Oracle:When this enters, you may search your library for a basic-typed land card, reveal it, and put it into your hand.

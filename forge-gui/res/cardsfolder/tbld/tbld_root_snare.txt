@@ -1,0 +1,8 @@
+Name:Root Snare
+ManaCost:1 G
+Types:Flash Sorcery
+K:Entwine:2 G
+A:SP$ Charm | Choices$ DBFog,DBLand
+SVar:DBFog:DB$ Fog | SpellDescription$ Prevent all combat damage that would be dealt this turn.
+SVar:DBLand:DB$ ChangeZone | Origin$ Graveyard | Destination$ Battlefield | ValidTgts$ Land | TgtPrompt$ Select target land card in a graveyard | GainControl$ True | SpellDescription$ Put target land card from a graveyard into play under your control.
+Oracle:Choose one -\n• Prevent all combat damage that would be dealt this turn.\n• Put target land card from a graveyard into play under your control.\nEntwine 2G (Choose both if you pay the entwine cost.)

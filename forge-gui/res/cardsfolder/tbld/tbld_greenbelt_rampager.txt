@@ -1,0 +1,13 @@
+Name:Greenbelt Rampager
+ManaCost:G
+Types:Creature Elephant
+PT:3/4
+K:Trample
+T:Mode$ ChangesZone | Origin$ Any | Destination$ Battlefield | ValidCard$ Card.Self | Execute$ TrigEnergy | TriggerDescription$ When CARDNAME enters, you get EE (two energy counters). Then you may pay any amount of E. Gain twice that much life.
+SVar:TrigEnergy:DB$ PutCounter | Defined$ You | CounterType$ ENERGY | CounterNum$ 2 | SubAbility$ DBChooseNumber
+SVar:DBChooseNumber:DB$ ChooseNumber | Max$ Max | ListTitle$ amount of energy to pay | SubAbility$ DBGainLife
+SVar:DBGainLife:DB$ GainLife | LifeAmount$ Y | UnlessCost$ PayEnergy<X> | UnlessPayer$ You | UnlessSwitched$ True
+SVar:Max:Count$YourCountersEnergy
+SVar:X:Count$ChosenNumber
+SVar:Y:Count$ChosenNumber/Twice
+Oracle:Trample\nWhen this enters, you get EE (two energy counters). Then you may pay any amount of E. Gain twice that much life.

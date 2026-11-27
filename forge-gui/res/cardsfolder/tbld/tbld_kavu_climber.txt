@@ -1,0 +1,8 @@
+Name:Kavu Climber
+ManaCost:3 G
+Types:Flash Creature Beast
+PT:3/3
+K:Reach
+T:Mode$ ChangesZone | Origin$ Any | Destination$ Battlefield | ValidCard$ Card.Self | Execute$ TrigDraw | TriggerDescription$ When CARDNAME enters, draw a card.
+SVar:TrigDraw:DB$ Draw | Defined$ You | NumCards$ 1
+Oracle:Reach (This can block creatures with flying.)\nWhen this enters, draw a card.

@@ -1,0 +1,10 @@
+Name:Explore
+ManaCost:1 G
+Types:Sorcery
+A:SP$ Effect | StaticAbilities$ Exploration | AILogic$ Always | SubAbility$ DBDig | SpellDescription$ You may play an additional land this turn. Look at the top two cards of your library and put one of them onto the bottom. Draw a card.
+SVar:Exploration:Mode$ Continuous | Affected$ You | AdjustLandPlays$ 1 | Description$ You may play an additional land this turn.
+SVar:DBDig:DB$ Dig | DigNum$ 2 | ChangeNum$ 1 | DestinationZone$ Library | LibraryPosition$ -1 | DestinationZone2$ Library | LibraryPosition2$ 0 | SubAbility$ DBDraw
+SVar:DBDraw:DB$ Draw | Defined$ You | NumCards$ 1
+SVar:NeedsToPlayVar:ZZ GE1
+SVar:ZZ:Count$ValidHand Land.YouOwn
+Oracle:You may play an additional land this turn.\nLook at the top two cards of your library and put one of them onto the bottom.\nDraw a card.

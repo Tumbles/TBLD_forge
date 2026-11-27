@@ -1,0 +1,10 @@
+Name:From Beyond
+ManaCost:3 G
+Types:Enchantment
+K:Devoid
+T:Mode$ Phase | Phase$ Upkeep | ValidPlayer$ You | TriggerZones$ Battlefield | Execute$ TrigToken | TriggerDescription$ At your upkeep, create a 1/1 colorless Eldrazi Spawn token with "Sacrifice this: Add C."
+SVar:TrigToken:DB$ Token | TokenScript$ tbld_c_1_1_eldrazi_spawn_sac | TokenOwner$ You
+A:AB$ ChangeZone | Cost$ 1 G Sac<1/CARDNAME> | Origin$ Library | Destination$ Hand | ChangeType$ Eldrazi | ChangeNum$ 1 | SpellDescription$ Search your library for an Eldrazi card, reveal it, and put it into your hand.
+DeckHints:Type$Eldrazi
+DeckHas:Ability$Mana.Colorless|Token
+Oracle:Devoid (This card has no color.)\nAt your upkeep, create a 1/1 colorless Eldrazi Spawn token with "Sacrifice this: Add C."\n1G, Sacrifice this: Search your library for an Eldrazi card, reveal it, and put it into your hand.

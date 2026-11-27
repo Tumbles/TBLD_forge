@@ -1,0 +1,7 @@
+Name:Seeker of Sunlight
+ManaCost:G
+Types:Creature Merfolk Scout
+PT:1/1
+A:AB$ Explore | Cost$ 1 G | SorcerySpeed$ True | SpellDescription$ CARDNAME explores. Can't be activated at flash speed.
+DeckHas:Ability$Counters
+Oracle:1G: This explores. Can’t be activated at flash speed. (Reveal the top card of your library. Put it into your hand if it’s a land. Otherwise, put a +1/+1 counter on this, then put the card back on top or into your graveyard.)

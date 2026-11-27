@@ -1,0 +1,7 @@
+Name:Dramatic Entrance
+ManaCost:3 G G
+Types:Flash Sorcery
+A:SP$ ChangeZone | Origin$ Hand | Destination$ Battlefield | ChangeType$ Creature.Green | ChangeNum$ 1 | SpellDescription$ You may put a green creature card from your hand into play.
+K:Cycling:2
+AI:RemoveDeck:Random
+Oracle:You may put a green creature card from your hand into play.\nCycling 2 (2, Discard this: Draw a card.)

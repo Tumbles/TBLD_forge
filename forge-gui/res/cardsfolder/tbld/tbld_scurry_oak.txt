@@ -1,0 +1,10 @@
+Name:Scurry Oak
+ManaCost:2 G
+Types:Creature Treefolk
+PT:1/2
+K:Evolve
+T:Mode$ CounterAdded | ValidCard$ Card.Self | TriggerZones$ Battlefield | CounterType$ P1P1 | Execute$ TrigSquirrel | TriggerDescription$ Whenever a +1/+1 counter is put on CARDNAME, create a 1/1 green Squirrel token.
+SVar:TrigSquirrel:DB$ Token | TokenScript$ g_1_1_squirrel | TokenOwner$ You
+DeckHints:Ability$Counters
+DeckHas:Ability$Token|Counters
+Oracle:Evolve (Whenever a creature enters under your control, if that creature has greater power or toughness than this, put a +1/+1 counter on this.)\nWhenever a +1/+1 counter is put on this, create a 1/1 green Squirrel token.

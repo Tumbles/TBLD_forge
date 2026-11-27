@@ -1,0 +1,6 @@
+Name:Kalonian Tusker
+ManaCost:G G
+Types:Creature Beast
+PT:3/3
+K:TypeCycling:Beast:2
+Oracle:Beastcycling 2 (2, Discard this: Search your library for a Beast card, reveal it, and put it into your hand.)

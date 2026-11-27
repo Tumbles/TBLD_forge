@@ -1,0 +1,9 @@
+Name:Boneyard Wurm
+ManaCost:1 G
+Types:Creature Wurm
+PT:*/*
+S:Mode$ CantBlockBy | ValidAttacker$ Creature.Self | ValidBlocker$ Creature.powerLE2 | Description$ Indomitable (CARDNAME can't be blocked by creatures with power 2 or less.)
+S:Mode$ Continuous | CharacteristicDefining$ True | SetPower$ X | SetToughness$ X | Description$ CARDNAME's power and toughness are each equal to the number of creature cards in your graveyard.
+SVar:X:Count$ValidGraveyard Creature.YouOwn
+SVar:NeedsToPlayVar:X GE1
+Oracle:Indomitable (This can’t be blocked by creatures with power 2 or less.)\nThis creature’s power and toughness are each equal to the number of creature cards in your graveyard.

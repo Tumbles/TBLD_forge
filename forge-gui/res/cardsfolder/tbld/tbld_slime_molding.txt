@@ -1,0 +1,8 @@
+Name:Slime Molding
+ManaCost:X G
+Types:Sorcery
+A:SP$ Token | TokenScript$ tbld_g_0_0_ooze | TokenOwner$ You | WithCountersType$ P1P1 | WithCountersAmount$ X | SubAbility$ DBDraw | SpellDescription$ Create a 0/0 green Ooze token. Put X +1/+1 counters on it. Draw a card.
+SVar:DBDraw:DB$ Draw | NumCards$ 1
+SVar:X:Count$xPaid
+DeckHas:Ability$Token|Counters
+Oracle:Create a 0/0 green Ooze token. Put X +1/+1 counters on it.\nDraw a card.

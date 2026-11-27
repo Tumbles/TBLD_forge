@@ -1,0 +1,10 @@
+Name:Arborback Stomper
+ManaCost:3 G G
+Types:Creature Beast
+PT:5/4
+K:Trample
+T:Mode$ ChangesZone | Origin$ Any | Destination$ Battlefield | ValidCard$ Card.Self | Execute$ TrigCharm | TriggerDescription$ When CARDNAME enters, ABILITY
+SVar:TrigCharm:DB$ Charm | Choices$ DBGainLife,DBEnergy
+SVar:DBGainLife:DB$ GainLife | LifeAmount$ 5 | SpellDescription$ Gain 5 life.
+SVar:DBEnergy:DB$ PutCounter | Defined$ You | CounterType$ ENERGY | CounterNum$ 5 | SpellDescription$ You get EEEEE (five energy counters).
+Oracle:Trample\nWhen this enters, choose one —\n• Gain 5 life.\n• You get EEEEE (five energy counters).

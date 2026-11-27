@@ -1,0 +1,10 @@
+Name:Fertile Ground
+ManaCost:1 G
+Types:Enchantment Aura
+K:Enchant:Land
+SVar:AttachAILogic:Pump
+T:Mode$ TapsForMana | ValidCard$ Card.AttachedBy | Execute$ TrigMana | Static$ True | TriggerDescription$ Whenever enchanted land is tapped for mana, its controller adds an additional one mana of any color.
+SVar:TrigMana:DB$ Mana | Produced$ Any | Amount$ 1 | Defined$ TriggeredCardController
+T:Mode$ ChangesZone | Origin$ Battlefield | Destination$ Graveyard | ValidCard$ Card.Self | Execute$ TrigTreasure | TriggerDescription$ When CARDNAME is put into a graveyard from play, create a Treasure token.
+SVar:TrigTreasure:DB$ Token | TokenScript$ c_a_treasure_sac | TokenOwner$ You
+Oracle:Enchant land\nWhenever enchanted land is tapped for mana, its controller adds an additional one mana of any color.\nWhen this is put into a graveyard from play, create a Treasure token.

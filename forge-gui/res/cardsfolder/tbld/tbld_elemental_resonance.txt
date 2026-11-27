@@ -1,0 +1,10 @@
+Name:Elemental Resonance
+ManaCost:2 G G
+Types:Enchantment Aura
+K:Enchant:Permanent
+SVar:AttachAILogic:Pump
+SVar:AttachAITgts:Card.cmcGE1
+S:Mode$ Continuous | AffectedDefined$ Enchanted | AddKeyword$ Ward:2 | Description$ Enchanted permanent has ward 2.
+T:Mode$ Phase | Phase$ Main1 | ValidPlayer$ You | TriggerZones$ Battlefield | Execute$ TrigMana | TriggerDescription$ At your first main phase, add mana equal to enchanted permanent's mana cost.
+SVar:TrigMana:DB$ Mana | Produced$ Special EnchantedManaCost
+Oracle:Enchant permanent\nEnchanted permanent has ward 2.\nAt your first main phase, add mana equal to enchanted permanent’s mana cost. (Mana cost includes color. If a mana symbol has multiple colors, choose one.)

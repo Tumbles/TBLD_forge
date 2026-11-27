@@ -1,0 +1,11 @@
+Name:Brood Monitor
+ManaCost:3 G G
+Types:Creature Eldrazi
+PT:3/3
+K:Devoid
+T:Mode$ SpellCast | ValidCard$ Card.Self | Execute$ TrigToken | TriggerDescription$ When you cast CARDNAME, create three 1/1 colorless Eldrazi Spawn tokens. They have "Sacrifice this: Add C."
+SVar:TrigToken:DB$ Token | TokenAmount$ 3 | TokenScript$ tbld_c_1_1_eldrazi_spawn_sac | TokenOwner$ You
+R:Event$ CreateToken | ActiveZones$ Battlefield | ValidToken$ Card.Eldrazi+Spawn+YouCtrl | ReplaceWith$ SpawnPlusOne | Description$ If one or more Eldrazi Spawn tokens would be created under your control, create that many plus one tokens instead.
+SVar:SpawnPlusOne:DB$ ReplaceToken | Type$ Amount | Amount$ Plus.1
+DeckHas:Ability$Mana.Colorless|Token
+Oracle:Devoid (This card has no color.)\nWhen you cast this, create three 1/1 colorless Eldrazi Spawn tokens. They have “Sacrifice this: Add C.”\nIf one or more Eldrazi Spawn tokens would be created under your control, create that many plus one tokens instead.

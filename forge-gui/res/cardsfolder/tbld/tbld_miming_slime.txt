@@ -1,0 +1,8 @@
+Name:Miming Slime
+ManaCost:1 G
+Types:Flash Sorcery
+A:SP$ Token | TokenScript$ tbld_g_0_0_ooze | TokenOwner$ You | WithCountersType$ P1P1 | WithCountersAmount$ X | SpellDescription$ Create a 0/0 green Ooze token. Put a number of +1/+1 counters on it equal to the greatest power among creatures you control.
+SVar:X:Count$Valid Creature.YouCtrl$GreatestCardPower
+SVar:NeedsToPlay:Creature.YouCtrl
+DeckHas:Ability$Token|Counters & Type$Ooze
+Oracle:Create a 0/0 green Ooze token. Put a number of +1/+1 counters on it equal to the greatest power among creatures you control.

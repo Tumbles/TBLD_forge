@@ -1,0 +1,7 @@
+Name:Trumpeting Herd
+ManaCost:2 G G
+Types:Sorcery
+A:SP$ Token | TokenScript$ tbld_g_3_3_elephant_trample | TokenOwner$ You | SpellDescription$ Create a 3/3 green Elephant token with trample.
+K:Rebound
+DeckHas:Ability$Token
+Oracle:Create a 3/3 green Elephant token with trample.\nRebound (If you cast this from your hand, exile it as it resolves. At your next upkeep, you may cast this from exile without paying its mana cost.)

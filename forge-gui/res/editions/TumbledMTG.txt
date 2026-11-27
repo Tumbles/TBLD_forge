@@ -574,6 +574,139 @@ Type=Custom_Set
 574 C Wild Wasteland
 575 U Wish
 576 U World at War
+577 C Aid from the Cowl
+578 U Arachnoform
+579 U Arborback Stomper
+580 U Archweaver
+581 U Aspect of Hydra
+583 C Avenger of Zendikar
+584 U Birthing Hulk
+585 U Blisterpod
+586 U Blossoming Defense
+587 U Boar Umbra
+588 U Boneyard Wurm
+589 U Brood Monitor
+590 U Brutalizer Exarch
+592 U Centaur Battlemaster
+593 U Charging Badger
+594 U Coiling Stalker
+595 C Composer of Spring
+596 U Copperhorn Scout
+597 U Creeping Renaissance
+598 U Crush of Wurms
+599 U Cultivate
+600 U Deadbridge Goliath
+601 U Deadly Recluse
+602 U Death-Hood Cobra
+603 U Dramatic Entrance
+604 U Drudge Beetle
+605 U Druid of the Anima
+606 C Eidolon of Blossoms
+607 U Elemental Resonance
+608 C Elves of Deep Shadow
+609 C Elvish Branchbender
+611 U Elvish Vanguard
+612 C Elvish Visionary
+613 U Emergent Sequence
+614 U Enter the Unknown
+615 U Epic Confrontation
+616 U Eureka
+617 C Explore
+618 U Fallow Earth
+619 U Feed the Pack
+620 U Fertile Ground
+621 U Fierce Empath
+622 U Fists of Ironwood
+623 U Forerunner of the Heralds
+624 U Fortifying Draught
+625 U From Beyond
+626 U Frontier Siege
+627 U Gaeas Gift
+628 U Gelatinous Genesis
+629 C Ghalta Primal Hunger
+630 U Ghoultree
+631 U Giant Growth
+632 U Gladecover Scout
+633 U Gluttonous Slime
+634 U Gnarlback Rhino
+635 U Grapple with the Past
+636 C Greenbelt Rampager
+637 U Greenweaver Druid
+638 C Groundswell
+639 U Harvest Season
+640 U Heir of the Wilds
+641 C Herald of the Pantheon
+642 U Hidden Herbalists
+643 U Impervious Greatwurm
+644 C Kalonian Tusker
+645 U Kavu Climber
+646 C Llanowar Stalker
+647 U Longtusk Cub
+648 C Lotus Cobra
+649 U Lys Alana Huntmaster
+650 U Mammoth Growth
+651 U Marwyn the Nurturer
+653 U Miming Slime
+654 U Monstrify
+655 C Mossborn Hydra
+656 U Mycoloth
+657 C Natures Lore
+658 U Natures Spiral
+659 U Nyleas Colossus
+660 U Nyxborn Hydra
+661 U On the Trail
+662 U Oran-Rief Ooze
+663 U Ordeal of Nylea
+664 U Orochi Merge-Keeper
+665 C Outcaster Trailblazer
+666 U Overwhelm
+667 U Paleoloth
+668 U Pounce
+669 U Prey Upon
+670 U Primal Prayers
+671 U Reap and Sow
+673 U Root Snare
+674 U Rot Shambler
+675 U Satyr Wayfinder
+676 C Scapeshift
+677 U Scatter the Seeds
+678 U Scurry Oak
+679 U Seeker of Skybreak
+680 U Seeker of Sunlight
+681 C Shared Summons
+682 U Skarrg Goliath
+683 C Skarrgan Pit-Skulk
+684 C Skyshroud Claim
+685 C Slaughterhorn
+686 U Slime Molding
+687 U Sporecrown Thallid
+688 C Spring-Leaf Avenger
+689 U Stalking Drone
+690 U Strength of the Pack
+691 C Swift Warden
+692 C Sylvan Anthem
+693 U Sylvan Ranger
+694 U Sylvan Scrying
+695 U Tajuru Pathwarden
+696 U Tapping at the Window
+697 U Taunting Elf
+698 U Thirsting Roots
+699 U Thornado
+700 U Tilling Treefolk
+701 U Tranquility
+702 U Trumpeting Herd
+703 U Unbridled Growth
+704 U Unnatural Predation
+705 U Veteran Explorer
+706 U Viridian Acolyte
+708 U Void Attendant
+709 C Vorinclex Voice of Hunger
+711 U Warriors Lesson
+712 C Weaver of Harmony
+713 U Wildheart Invoker
+714 C Wirewood Herald
+715 U Withstand Death
+716 U Wreath of Geists
 F1 L Forest
 F2 L Forest
 F3 L Forest

@@ -1,0 +1,8 @@
+Name:Death-Hood Cobra
+ManaCost:1 GP
+Types:Artifact Creature Phyrexian Snake
+PT:1/1
+T:Mode$ AttackerUnblocked | ValidCard$ Card.Self | Execute$ TrigPump | TriggerDescription$ Frenzy 1 (Whenever CARDNAME attacks and isn't blocked, it gets +1/+0 this turn.)
+SVar:TrigPump:DB$ Pump | Defined$ Self | NumAtt$ +1
+A:AB$ Pump | Cost$ 1 GP | Defined$ Self | KW$ Reach & Deathtouch | SpellDescription$ CARDNAME gains reach and deathtouch this turn.
+Oracle:(H/G can be paid with either G or 2 life.)\nFrenzy 1 (Whenever this attacks and isn't blocked, it gets +1/+0 this turn.)\n1H/G: This gains reach and deathtouch this turn.

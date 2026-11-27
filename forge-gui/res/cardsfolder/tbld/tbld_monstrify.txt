@@ -1,0 +1,8 @@
+Name:Monstrify
+ManaCost:3 G
+Types:Sorcery
+K:Retrace
+A:SP$ PutCounter | ValidTgts$ Creature | CounterType$ P1P1 | CounterNum$ 4 | SubAbility$ DBPump | SpellDescription$ Put four +1/+1 counters on target creature. It gains trample this turn.
+SVar:DBPump:DB$ Pump | Defined$ Targeted | KW$ Trample
+DeckHas:Ability$Counters
+Oracle:Put four +1/+1 counters on target creature. It gains trample this turn.\nRetrace (You may cast this card from your graveyard by discarding a land card in addition to paying its other costs.)

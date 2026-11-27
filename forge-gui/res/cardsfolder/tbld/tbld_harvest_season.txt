@@ -1,0 +1,6 @@
+Name:Harvest Season
+ManaCost:1 G
+Types:Sorcery
+A:SP$ ChangeZone | Origin$ Library | Destination$ Battlefield | ChangeType$ Land.hasABasicLandType | ChangeTypeDesc$ basic-typed land | ChangeNum$ X | Tapped$ True | SpellDescription$ Search your library for up to X basic-typed land cards, where X is the number of tapped creatures you control, and put those cards into play tapped.
+SVar:X:Count$Valid Creature.tapped+YouCtrl
+Oracle:Search your library for up to X basic-typed land cards, where X is the number of tapped creatures you control, and put those cards into play tapped.

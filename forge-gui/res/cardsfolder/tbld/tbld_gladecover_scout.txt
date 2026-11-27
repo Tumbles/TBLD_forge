@@ -1,0 +1,7 @@
+Name:Gladecover Scout
+ManaCost:G
+Types:Creature Elf Scout
+PT:1/1
+K:Hexproof
+K:TypeCycling:Elf:2
+Oracle:Hexproof\nElfcycling 2 (2, Discard this: Search your library for an Elf card, reveal it, and put it into your hand.)

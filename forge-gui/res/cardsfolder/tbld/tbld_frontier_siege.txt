@@ -1,0 +1,15 @@
+Name:Frontier Siege
+ManaCost:3 G
+Types:Enchantment
+K:ETBReplacement:Other:SiegeChoice
+SVar:SiegeChoice:DB$ GenericChoice | Choices$ Khans,Dragons | Defined$ You | SetChosenMode$ True | AILogic$ Khans | ShowChoice$ ExceptSelf | SpellDescription$ As CARDNAME enters, choose Khans or Dragons.
+SVar:Khans:DB$ Nothing | SpellDescription$ Khans
+SVar:Dragons:DB$ Nothing | SpellDescription$ Dragons
+S:Mode$ Continuous | AffectedDefined$ Self | Affected$ Card.ChosenModeKhans | AddTrigger$ KhansTrigger | Description$ • Khans — Once per turn, at your main phase, add GG.
+S:Mode$ Continuous | AffectedDefined$ Self | Affected$ Card.ChosenModeDragons | AddTrigger$ DragonsTrigger | Description$ • Dragons — Whenever you attack, target attacking creature with flying fights up to one target creature.
+SVar:KhansTrigger:Mode$ Phase | Phase$ Main1 | TriggerZones$ Battlefield | ValidPlayer$ You | Execute$ ManaGain | Secondary$ True | TriggerDescription$ Once per turn, at your main phase, add GG.
+SVar:ManaGain:DB$ Mana | Produced$ G G
+SVar:DragonsTrigger:Mode$ AttackersDeclared | AttackingPlayer$ You | TriggerZones$ Battlefield | Execute$ AirFight | Secondary$ True | TriggerDescription$ Whenever you attack, target attacking creature with flying fights up to one target creature.
+SVar:AirFight:DB$ Pump | ValidTgts$ Creature.attacking+withFlying | TgtPrompt$ Select target attacking creature with flying | SubAbility$ DBFight
+SVar:DBFight:DB$ Fight | Defined$ ParentTarget | ValidTgts$ Creature | TargetMin$ 0 | TargetMax$ 1 | TargetUnique$ True | TgtPrompt$ Select up to one target creature
+Oracle:As this enters, choose Khans or Dragons.\n• Khans — Once per turn, at your main phase, add GG.\n• Dragons — Whenever you attack, target attacking creature with flying fights up to one target creature.

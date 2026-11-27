@@ -1,0 +1,4 @@
+# Scripts that do almost, but not exactly, what Brett's text says: "Name | difference". For Brett's review.
+Epic Confrontation | Only the creature you don't control is exiled if it would die; your own creature dies normally.
+Frontier Siege | Khans adds GG at your first main phase (the text says once per turn, at your main phase).
+Wish | You may play the exiled card this turn only.

@@ -1,0 +1,8 @@
+Name:Elvish Branchbender
+ManaCost:2 G
+Types:Creature Elf Shaman
+PT:2/2
+A:AB$ Animate | Cost$ T | ValidTgts$ Land | TgtPrompt$ Select target land | Power$ X | Toughness$ X | Types$ Creature,Treefolk | Keywords$ Trample & Haste | SpellDescription$ This turn, target land becomes an X/X Treefolk creature with trample and haste in addition to its other types, where X is the number of Elves you control.
+SVar:X:Count$Valid Elf.YouCtrl
+AI:RemoveDeck:Random
+Oracle:T: This turn, target land becomes an X/X Treefolk creature with trample and haste in addition to its other types, where X is the number of Elves you control.

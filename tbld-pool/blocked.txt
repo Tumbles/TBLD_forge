@@ -10,3 +10,10 @@ Zada Hedron Grinder | Brett's data: type line "Legendary Creature - Goblin 4"
 Indebted Spirit | Brett's data: type "Enhantment"
 Eater of Virtue | Brett's data: type "Legnedary"
 Bludgeon | Brett's data: type "sorcery" in lower case
+Atzocan Archer | Spirited (TBLD mechanic, not in the engine yet)
+Carapace Forger | Arm (create an attached Equipment token): needs a TBLD token script
+Elvish Eulogist | Shift (TBLD face-down mechanic, not in the engine yet)
+Maul Splicer | Spirited (TBLD mechanic, not in the engine yet)
+Root Out | Investigate (TBLD Clue: an enchantment token with "2, Sacrifice this: Scan, then draw a card"), and Scan
+Vital Splicer | Spirited (TBLD mechanic, not in the engine yet)
+Warpspeed | Upload (TBLD mechanic, not in the engine yet)

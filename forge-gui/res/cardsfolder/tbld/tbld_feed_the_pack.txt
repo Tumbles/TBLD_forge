@@ -1,0 +1,8 @@
+Name:Feed the Pack
+ManaCost:3 G G
+Types:Enchantment
+T:Mode$ Phase | Phase$ End of Turn | ValidPlayer$ You | OptionalDecider$ You | TriggerZones$ Battlefield | Execute$ TrigToken | TriggerDescription$ At your end step, you may sacrifice a nontoken creature. If you do, create X 2/1 green Wolf tokens, where X is the sacrificed creature's toughness.
+SVar:TrigToken:AB$ Token | Cost$ Sac<1/Creature.!token/nontoken creature> | TokenAmount$ X | TokenScript$ tbld_g_2_1_wolf | TokenOwner$ You | ConditionCheckSVar$ X
+SVar:X:Sacrificed$CardToughness
+AI:RemoveDeck:All
+Oracle:At your end step, you may sacrifice a nontoken creature. If you do, create X 2/1 green Wolf tokens, where X is the sacrificed creature’s toughness.

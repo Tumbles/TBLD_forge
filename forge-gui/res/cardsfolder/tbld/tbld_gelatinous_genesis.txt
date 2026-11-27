@@ -1,0 +1,8 @@
+Name:Gelatinous Genesis
+ManaCost:X X G
+Types:Sorcery
+A:SP$ Token | TokenAmount$ X | TokenScript$ tbld_g_0_0_ooze | TokenOwner$ You | WithCountersType$ P1P1 | WithCountersAmount$ X | SubAbility$ DBProliferate | SpellDescription$ Create X 0/0 green Ooze tokens. Put X +1/+1 counters on each one. Proliferate.
+SVar:DBProliferate:DB$ Proliferate
+SVar:X:Count$xPaid
+DeckHas:Ability$Token|Counters
+Oracle:Create X 0/0 green Ooze tokens. Put X +1/+1 counters on each one.\nProliferate. (Choose any number of permanents and/or players with counters on them, then give each another counter of each kind already there.)

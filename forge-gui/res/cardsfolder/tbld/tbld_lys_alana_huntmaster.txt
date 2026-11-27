@@ -1,0 +1,10 @@
+Name:Lys Alana Huntmaster
+ManaCost:2 G G
+Types:Creature Elf Warrior
+PT:3/3
+T:Mode$ SpellCast | ValidCard$ Elf | ValidActivatingPlayer$ You | TriggerZones$ Battlefield | Execute$ TrigToken | TriggerDescription$ Whenever you cast an Elf spell or an Elf you control is turned face up, create a 1/1 green Elf Warrior token.
+T:Mode$ TurnFaceUp | ValidCard$ Elf.YouCtrl | TriggerZones$ Battlefield | Execute$ TrigToken | Secondary$ True | TriggerDescription$ Whenever you cast an Elf spell or an Elf you control is turned face up, create a 1/1 green Elf Warrior token.
+SVar:TrigToken:DB$ Token | TokenScript$ g_1_1_elf_warrior | TokenOwner$ You
+A:AB$ PumpAll | Cost$ 7 G G | ValidCards$ Creature.Other+YouCtrl | NumAtt$ +3 | NumDef$ +3 | SpellDescription$ Other creatures you control get +3/+3 this turn.
+DeckHas:Ability$Token
+Oracle:Whenever you cast an Elf spell or an Elf you control is turned face up, create a 1/1 green Elf Warrior token.\n7GG: Other creatures you control get +3/+3 this turn.

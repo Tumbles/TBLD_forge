@@ -1,0 +1,9 @@
+Name:Warriors Lesson
+ManaCost:G
+Types:Flash Sorcery
+A:SP$ Pump | ValidTgts$ Creature.YouCtrl | TgtPrompt$ Select up to two target creatures you control | TargetMin$ 0 | TargetMax$ 2 | NumAtt$ +1 | SubAbility$ DBAnimate | SpellDescription$ This turn, up to two target creatures you control each get +1/+0 and gain "Whenever this deals combat damage to a player, draw a card."
+SVar:DBAnimate:DB$ Animate | Defined$ Targeted | Triggers$ WarriorLessonDmg
+SVar:WarriorLessonDmg:Mode$ DamageDone | ValidSource$ Card.Self | ValidTarget$ Player | CombatDamage$ True | Execute$ WarriorLessonDraw | TriggerDescription$ Whenever this deals combat damage to a player, draw a card.
+SVar:WarriorLessonDraw:DB$ Draw | Defined$ You | NumCards$ 1
+AI:RemoveDeck:All
+Oracle:This turn, up to two target creatures you control each get +1/+0 and gain “Whenever this deals combat damage to a player, draw a card.”

@@ -1,0 +1,7 @@
+Name:Taunting Elf
+ManaCost:G
+Types:Creature Elf
+PT:0/1
+K:Dash:2 G
+K:All creatures able to block CARDNAME do so.
+Oracle:Dash 2G (You may cast this for its dash cost. If you do, it gains haste, and it’s returned from play to its owner’s hand at the next end step.)\nAll creatures block this each combat if able.

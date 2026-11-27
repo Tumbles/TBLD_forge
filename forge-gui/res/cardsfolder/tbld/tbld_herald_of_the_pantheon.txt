@@ -1,0 +1,7 @@
+Name:Herald of the Pantheon
+ManaCost:1 G
+Types:Creature Centaur Shaman
+PT:2/2
+A:AB$ ChangeZone | Cost$ 2 G | Origin$ Graveyard | Destination$ Exile | ValidTgts$ Creature | TgtPrompt$ Select target creature card in a graveyard | SubAbility$ DBCopy | SpellDescription$ Exile target creature card from a graveyard, then populate.
+SVar:DBCopy:DB$ CopyPermanent | Populate$ True
+Oracle:2G: Exile target creature card from a graveyard, then populate. (Create a token that's a copy of a creature token you control.)

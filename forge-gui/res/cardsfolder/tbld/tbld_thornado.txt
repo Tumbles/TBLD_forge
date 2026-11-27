@@ -1,0 +1,6 @@
+Name:Thornado
+ManaCost:2 G
+Types:Flash Sorcery
+A:SP$ Destroy | ValidTgts$ Artifact,Enchantment,Creature.withFlying | TgtPrompt$ Select target artifact, enchantment, or creature with flying | SpellDescription$ Destroy target artifact, enchantment, or creature with flying.
+K:Cycling:1
+Oracle:Destroy target artifact, enchantment, or creature with flying.\nCycling 1 (1, Discard this card: Draw a card.)

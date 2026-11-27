@@ -1,0 +1,10 @@
+Name:Gaeas Gift
+ManaCost:1 G
+Types:Flash Sorcery
+K:Strive:1 G
+A:SP$ Untap | ValidTgts$ Creature | TgtPrompt$ Select any number of target creatures | TargetMin$ 0 | TargetMax$ MaxTargets | SubAbility$ DBCounter | SpellDescription$ Untap any number of target creatures and put a +1/+1 counter on each of them. They gain reach, trample, hexproof, and indestructible this turn.
+SVar:DBCounter:DB$ PutCounter | Defined$ Targeted | CounterType$ P1P1 | CounterNum$ 1 | SubAbility$ DBPump
+SVar:DBPump:DB$ Pump | Defined$ Targeted | KW$ Hexproof & Indestructible & Trample & Reach
+SVar:MaxTargets:Count$Valid Creature
+DeckHas:Ability$Counters
+Oracle:Strive — This costs 1G more for each target beyond the first.\nUntap any number of target creatures and put a +1/+1 counter on each of them. They gain reach, trample, hexproof, and indestructible this turn.

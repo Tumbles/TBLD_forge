@@ -1,0 +1,7 @@
+Name:Elephant Token
+ManaCost:no cost
+Colors:green
+Types:Creature Elephant
+PT:3/3
+K:Trample
+Oracle:Trample

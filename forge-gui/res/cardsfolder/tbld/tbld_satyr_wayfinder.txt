@@ -1,0 +1,8 @@
+Name:Satyr Wayfinder
+ManaCost:1 G
+Types:Creature Satyr Scout
+PT:1/1
+T:Mode$ ChangesZone | Origin$ Any | Destination$ Battlefield | ValidCard$ Card.Self | Execute$ TrigDig | TriggerDescription$ When CARDNAME enters, reveal the top four cards of your library. You may put a land card from among them into your hand. Put the rest into your graveyard.
+SVar:TrigDig:DB$ Dig | DigNum$ 4 | Reveal$ True | ChangeNum$ 1 | ChangeValid$ Land | DestinationZone2$ Graveyard | Optional$ True
+K:TypeCycling:Satyr:1
+Oracle:When this enters, reveal the top four cards of your library. You may put a land card from among them into your hand. Put the rest into your graveyard.\nSatyrcycling 1 (1, Discard this: Search your library for a Satyr card, reveal it, and put it into your hand.)

@@ -1,0 +1,9 @@
+Name:Hidden Herbalists
+ManaCost:1 G
+Types:Creature Human Shaman
+PT:2/2
+K:Ward:2
+T:Mode$ ChangesZone | Origin$ Any | Destination$ Battlefield | ValidCard$ Card.Self | Revolt$ True | Execute$ TrigMana | TriggerDescription$ Revolt — When CARDNAME enters, if a permanent you controlled left play this turn, add two mana in any combination of colors.
+SVar:TrigMana:DB$ Mana | Produced$ Combo Any | Amount$ 2
+SVar:FreeSpellAI:True
+Oracle:Ward 2\nRevolt — When this enters, if a permanent you controlled left play this turn, add two mana in any combination of colors.

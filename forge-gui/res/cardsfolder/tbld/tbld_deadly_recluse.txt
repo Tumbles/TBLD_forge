@@ -1,0 +1,8 @@
+Name:Deadly Recluse
+ManaCost:1 G
+Types:Flash Creature Spider
+PT:1/2
+K:Reach
+K:Deathtouch
+K:TypeCycling:Spider:1
+Oracle:Reach, deathtouch\nSpidercycling 1 (1, Discard this: Search your library for a Spider card, reveal it, and put it into your hand.)

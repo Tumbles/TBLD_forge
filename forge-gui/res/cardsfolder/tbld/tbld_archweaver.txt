@@ -1,0 +1,8 @@
+Name:Archweaver
+ManaCost:3 G G
+Types:Flash Creature Spider
+PT:6/6
+K:Reach
+K:Trample
+S:Mode$ Continuous | Affected$ Card.Self+ThisTurnEntered | AddKeyword$ Hexproof | Description$ CARDNAME has hexproof as long as it entered this turn.
+Oracle:Reach, trample\nThis has hexproof as long as it entered this turn.

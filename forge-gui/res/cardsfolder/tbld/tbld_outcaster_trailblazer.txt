@@ -1,0 +1,10 @@
+Name:Outcaster Trailblazer
+ManaCost:2 G
+Types:Creature Human Shaman
+PT:4/2
+T:Mode$ ChangesZone | ValidCard$ Card.Self | Origin$ Any | Destination$ Battlefield | Execute$ TrigMana | TriggerDescription$ When CARDNAME enters, add one mana of any color.
+SVar:TrigMana:DB$ Mana | Produced$ Any | Amount$ 1
+T:Mode$ ChangesZone | Origin$ Any | Destination$ Battlefield | ValidCard$ Creature.powerGE4+Other+YouCtrl | TriggerZones$ Battlefield | Execute$ TrigDraw | TriggerDescription$ Whenever another creature you control with power 4 or greater enters, draw a card.
+SVar:TrigDraw:DB$ Draw | Defined$ You | NumCards$ 1
+K:Plot:2 G
+Oracle:When this enters, add one mana of any color.\nWhenever another creature with power 4 or greater enters under your control, draw a card.\nPlot 2G (You may pay 2G and exile this from your hand. Cast it as a nonflash spell on a later turn without paying its mana cost. Can’t plot at flash speed.)

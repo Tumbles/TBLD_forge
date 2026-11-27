@@ -1,0 +1,6 @@
+Name:Mammoth Growth
+ManaCost:3 G
+Types:Flash Sorcery
+A:SP$ Pump | ValidTgts$ Creature | NumAtt$ +6 | NumDef$ +6 | SpellDescription$ Target creature gets +6/+6 this turn.
+K:Foretell:G
+Oracle:Target creature gets +6/+6 this turn.\nForetell G (During your turn, you may pay 2 and exile this from your hand face down. Cast it on a later turn for its foretell cost.)

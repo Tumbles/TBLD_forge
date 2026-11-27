@@ -1,0 +1,6 @@
+Name:Deadbridge Goliath
+ManaCost:2 G G
+Types:Creature Insect
+PT:5/6
+K:Scavenge:2 G G G
+Oracle:Scavenge 2GGG (2GGG, Exile this from your graveyard: Put a number of +1/+1 counters equal to this card’s power on target creature. Can’t be activated at flash speed.)

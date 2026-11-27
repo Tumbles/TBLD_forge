@@ -1,0 +1,10 @@
+Name:Gluttonous Slime
+ManaCost:1 G
+Types:Flash Creature Ooze
+PT:2/2
+K:Devour:1
+K:CARDNAME must be blocked if able.
+T:Mode$ ChangesZone | Origin$ Battlefield | Destination$ Graveyard | ValidCard$ Creature.DamagedBy | TriggerZones$ Battlefield | Execute$ TrigPutCounter | TriggerDescription$ Whenever a creature dealt damage by CARDNAME this turn dies, put a +1/+1 counter on CARDNAME.
+SVar:TrigPutCounter:DB$ PutCounter | Defined$ Self | CounterType$ P1P1 | CounterNum$ 1
+DeckHas:Ability$Counters
+Oracle:Devour 1 (As this enters, you may sacrifice any number of creatures. This enters with one times that many +1/+1 counters.)\nThis must be blocked each combat if able.\nWhenever a creature dealt damage by this creature this turn dies, put a +1/+1 counter on this.

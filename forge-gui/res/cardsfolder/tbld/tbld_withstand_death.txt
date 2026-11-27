@@ -1,0 +1,5 @@
+Name:Withstand Death
+ManaCost:G
+Types:Flash Sorcery
+A:SP$ Pump | ValidTgts$ Permanent | TgtPrompt$ Select target permanent | KW$ Hexproof & Indestructible | SpellDescription$ Target permanent gains hexproof and indestructible this turn.
+Oracle:Target permanent gains hexproof and indestructible this turn.

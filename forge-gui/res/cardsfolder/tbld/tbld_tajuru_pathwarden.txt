@@ -1,0 +1,10 @@
+Name:Tajuru Pathwarden
+ManaCost:3 G
+Types:Creature Elf Warrior
+PT:5/4
+K:Vigilance
+K:Trample
+S:Mode$ Continuous | Affected$ Elf.Other+YouCtrl | AddKeyword$ Vigilance | Description$ Other Elves you control have vigilance.
+T:Mode$ ChangesZone | Origin$ Any | Destination$ Battlefield | ValidCard$ Card.Self | Execute$ TrigReturn | TriggerDescription$ When CARDNAME enters, return a land you control to its owner's hand.
+SVar:TrigReturn:DB$ ChangeZone | Origin$ Battlefield | Destination$ Hand | ChangeType$ Land.YouCtrl | ChangeNum$ 1 | Hidden$ True | Mandatory$ True
+Oracle:Trample, vigilance\nOther elves you control have vigilance.\nWhen this enters, return a land you control to its owner’s hand.

@@ -1,0 +1,6 @@
+Name:Blossoming Defense
+ManaCost:G
+Types:Flash Sorcery
+A:SP$ Pump | ValidTgts$ Creature.YouCtrl | TgtPrompt$ Select target creature you control | NumAtt$ +2 | NumDef$ +2 | KW$ Hexproof | SubAbility$ DBLand | SpellDescription$ Target creature you control gets +2/+2 and gains hexproof this turn. You may put a land card from your hand into play tapped.
+SVar:DBLand:DB$ ChangeZone | Origin$ Hand | Destination$ Battlefield | ChangeType$ Land | ChangeNum$ 1 | Tapped$ True
+Oracle:Target creature you control gets +2/+2 and gains hexproof this turn.\nYou may put a land card from your hand into play tapped.

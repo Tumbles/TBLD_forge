@@ -1,0 +1,6 @@
+Name:Giant Growth
+ManaCost:G
+Types:Flash Sorcery
+A:SP$ Pump | ValidTgts$ Creature | NumAtt$ +3 | NumDef$ +3 | SpellDescription$ Target creature gets +3/+3 this turn.
+K:Cycling:1
+Oracle:Target creature gets +3/+3 this turn.\nCycling 1 (1, Discard this: Draw a card.)

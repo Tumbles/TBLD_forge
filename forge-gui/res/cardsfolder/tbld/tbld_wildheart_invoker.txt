@@ -1,0 +1,6 @@
+Name:Wildheart Invoker
+ManaCost:1 G G
+Types:Creature Elf Shaman
+PT:3/3
+A:AB$ Pump | Cost$ 5 G | ValidTgts$ Creature | NumAtt$ +6 | NumDef$ +6 | KW$ Trample | SpellDescription$ Target creature gets +6/+6 and gains trample this turn.
+Oracle:5G: Target creature gets +6/+6 and gains trample this turn.

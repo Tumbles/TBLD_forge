@@ -1,0 +1,11 @@
+Name:Emergent Sequence
+ManaCost:1 G
+Types:Sorcery
+A:SP$ ChangeZone | Origin$ Library | Destination$ Battlefield | ChangeType$ Land.hasABasicLandType | ChangeTypeDesc$ basic-typed land | RememberChanged$ True | ChangeNum$ 1 | SubAbility$ DBAnimate | SpellDescription$ Search your library for a basic-typed land card and put it into play. That land becomes a 0/0 green and blue Fractal creature that's still a land. Put a number of +1/+1 counters on it equal to twice the number of lands that entered under your control this turn, minus two.
+SVar:DBAnimate:DB$ Animate | Defined$ Remembered | Power$ 0 | Toughness$ 0 | Colors$ Green,Blue | OverwriteColors$ True | Types$ Creature,Fractal | Duration$ Permanent | SubAbility$ DBPutCounter
+SVar:DBPutCounter:DB$ PutCounter | Defined$ Remembered | CounterType$ P1P1 | CounterNum$ X | SubAbility$ DBPutCounter2
+SVar:DBPutCounter2:DB$ PutCounter | Defined$ Remembered | CounterType$ P1P1 | CounterNum$ X | SubAbility$ DBCleanup
+SVar:DBCleanup:DB$ Cleanup | ClearRemembered$ True
+SVar:X:Count$ThisTurnEntered_Battlefield_Land.YouCtrl/Minus.1
+DeckHas:Ability$Counters & Type$Fractal
+Oracle:Search your library for a basic-typed land card and put it into play. That land becomes a 0/0 green and blue Fractal creature that’s still a land. Put a number of +1/+1 counters on it equal to twice the number of lands that entered under your control this turn, minus two. (It has summoning sickness.)

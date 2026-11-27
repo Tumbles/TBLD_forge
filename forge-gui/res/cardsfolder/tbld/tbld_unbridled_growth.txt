@@ -1,0 +1,10 @@
+Name:Unbridled Growth
+ManaCost:G
+Types:Enchantment Aura
+K:Enchant:Land
+SVar:AttachAILogic:Pump
+S:Mode$ Continuous | AffectedDefined$ Enchanted | AddAbility$ UnbridledGrowthTap | Description$ Enchanted land has "T: Add one mana of any color."
+SVar:UnbridledGrowthTap:AB$ Mana | Cost$ T | Produced$ Any | SpellDescription$ Add one mana of any color.
+A:AB$ Mana | Cost$ 1 Sac<1/CARDNAME> | Produced$ Any | SubAbility$ DBDraw | SpellDescription$ Add one mana of any color. Draw a card.
+SVar:DBDraw:DB$ Draw | NumCards$ 1
+Oracle:Enchant land\nEnchanted land has “T: Add one mana of any color.”\n1, Sacrifice this: Add one mana of any color. Draw a card.

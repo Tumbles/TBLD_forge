@@ -1,0 +1,6 @@
+Name:Tranquility
+ManaCost:3 G
+Types:Sorcery
+K:Affinity:Forest
+A:SP$ DestroyAll | ValidCards$ Enchantment | SpellDescription$ Destroy all enchantments.
+Oracle:Affinity for Forests (This costs 1 less for each Forest you control.)\nDestroy all enchantments.

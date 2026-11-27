@@ -1,0 +1,10 @@
+Name:Orochi Merge-Keeper
+ManaCost:G
+Types:Creature Snake Shaman
+PT:1/1
+A:AB$ Mana | Cost$ T | Produced$ C | SpellDescription$ Add {C}.
+A:AB$ Mana | Cost$ T | Produced$ G | Amount$ 2 | IsPresent$ Card.Self+modified | SpellDescription$ Add {G}{G}. Activate only if CARDNAME is modified.
+SVar:EquipMe:Once
+SVar:EnchantMe:Once
+DeckHints:Type$Equipment|Aura & Ability$Counters
+Oracle:T: Add 1.\nT: Add GG. Activate only if this is modified. (Equipment, Auras you control, and counters are modifications.)

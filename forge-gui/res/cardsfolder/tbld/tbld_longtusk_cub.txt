@@ -1,0 +1,10 @@
+Name:Longtusk Cub
+ManaCost:1 G
+Types:Creature Cat
+PT:2/2
+T:Mode$ DamageDone | ValidSource$ Card.Self | ValidTarget$ Player | Execute$ TrigEnergy | TriggerZones$ Battlefield | TriggerDescription$ Whenever CARDNAME deals damage to a player, you get EE (two energy counters).
+SVar:TrigEnergy:DB$ PutCounter | Defined$ You | CounterType$ ENERGY | CounterNum$ 2
+A:AB$ PutCounter | Cost$ PayEnergy<3> | CounterType$ P1P1 | CounterNum$ 1 | SubAbility$ DBPump | AILogic$ PayEnergyConservatively | SpellDescription$ Put a +1/+1 counter on CARDNAME. It gains trample this turn.
+SVar:DBPump:DB$ Pump | Defined$ Self | KW$ Trample
+DeckHas:Ability$Counters
+Oracle:Whenever this deals damage to a player, you get EE (two energy counters).\nPay EEE: Put a +1/+1 counter on this. It gains trample this turn.

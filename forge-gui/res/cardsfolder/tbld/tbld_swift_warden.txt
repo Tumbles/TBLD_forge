@@ -1,0 +1,8 @@
+Name:Swift Warden
+ManaCost:1 G G
+Types:Creature Merfolk Warrior
+PT:3/3
+T:Mode$ ChangesZone | Origin$ Any | Destination$ Battlefield | ValidCard$ Card.Self | Execute$ TrigPump | TriggerDescription$ When CARDNAME enters, target Merfolk you control gains hexproof this turn.
+SVar:TrigPump:DB$ Pump | ValidTgts$ Merfolk.YouCtrl | TgtPrompt$ Select target Merfolk you control | KW$ Hexproof
+DeckHints:Type$Merfolk
+Oracle:When this enters, target Merfolk you control gains hexproof this turn.

@@ -1,0 +1,8 @@
+Name:Copperhorn Scout
+ManaCost:G
+Types:Creature Elf Scout
+PT:1/1
+K:Dash:G
+T:Mode$ Attacks | ValidCard$ Card.Self | Execute$ TrigUntapAll | TriggerDescription$ Whenever CARDNAME attacks, untap each other creature you control.
+SVar:TrigUntapAll:DB$ UntapAll | ValidCards$ Creature.Other+YouCtrl
+Oracle:Dash G (You may cast this for its dash cost. If you do, it gains haste, and it's returned from play to its owner's hand at the next end step.)\nWhenever this attacks, untap each other creature you control.

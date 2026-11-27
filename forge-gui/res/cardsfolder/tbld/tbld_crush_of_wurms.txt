@@ -1,0 +1,6 @@
+Name:Crush of Wurms
+ManaCost:6 G G G
+Types:Sorcery
+A:SP$ Token | TokenAmount$ 2 | TokenScript$ tbld_g_5_5_wurm_indomitable | TokenOwner$ You | SpellDescription$ Create two 5/5 green Wurm tokens with indomitable.
+K:Rebound
+Oracle:Create two 5/5 green Wurm tokens with indomitable. (They can’t be blocked by creatures with power 2 or less.)\nRebound (If you cast this from your hand, exile it as it resolves. At your next upkeep, you may cast this from exile without paying its mana cost.)

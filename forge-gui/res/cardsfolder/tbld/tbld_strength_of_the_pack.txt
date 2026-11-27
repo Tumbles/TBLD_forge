@@ -1,0 +1,7 @@
+Name:Strength of the Pack
+ManaCost:3 G
+Types:Flash Sorcery
+A:SP$ PutCounterAll | ValidCards$ Creature.YouCtrl | CounterType$ P1P1 | CounterNum$ 1 | SpellDescription$ Put a +1/+1 counter on each creature you control.
+K:Rebound
+DeckHas:Ability$Counters
+Oracle:Put a +1/+1 counter on each creature you control.\nRebound (If you cast this from your hand, exile it as it resolves. At your next upkeep, you may cast this from exile without paying its mana cost.)
