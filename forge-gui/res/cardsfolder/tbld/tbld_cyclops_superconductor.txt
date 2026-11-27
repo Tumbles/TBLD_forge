@@ -1,0 +1,13 @@
+Name:Cyclops Superconductor
+ManaCost:1 U R
+Types:Creature Giant Wizard
+PT:2/2
+K:Prowess
+T:Mode$ ChangesZone | Origin$ Any | Destination$ Battlefield | ValidCard$ Card.Self | Execute$ TrigEnergy | TriggerDescription$ When CARDNAME enters, you get {E}{E}{E} (three energy counters).
+SVar:TrigEnergy:DB$ PutCounter | Defined$ You | CounterType$ ENERGY | CounterNum$ 3
+T:Mode$ ChangesZone | Origin$ Battlefield | Destination$ Graveyard | ValidCard$ Card.Self | Execute$ DBTrigger | TriggerDescription$ When CARDNAME dies, you may pay {E}{E}{E}. When you do, CARDNAME deals damage equal to its power to any target.
+SVar:DBTrigger:AB$ ImmediateTrigger | Cost$ PayEnergy<3> | Execute$ TrigDamage | TriggerDescription$ When you do, CARDNAME deals damage equal to its power to any target.
+SVar:TrigDamage:DB$ DealDamage | ValidTgts$ Any | NumDmg$ X
+SVar:X:Count$CardPower
+DeckHints:Type$Instant|Sorcery
+Oracle:Prowess\nWhen this enters, you get EEE (three energy counters).\nWhen this dies, you may pay EEE. When you do, this deals damage equal to its power to any target.

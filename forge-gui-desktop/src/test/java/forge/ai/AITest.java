@@ -194,7 +194,7 @@ public class AITest {
 
     protected void fillLibrary(Player player, int count) {
         for (int i = 0; i < count; i++) {
-            addCardToZone("Runeclaw Bear", player, ZoneType.Library);
+            addCardToZone("Woolly Thoctar", player, ZoneType.Library);
         }
     }
 

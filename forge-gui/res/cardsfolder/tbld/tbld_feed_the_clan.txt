@@ -1,0 +1,7 @@
+Name:Feed the Clan
+ManaCost:1 G
+Types:Flash Sorcery
+A:SP$ GainLife | LifeAmount$ X | SpellDescription$ You gain 5 life. Ferocious — You gain 10 life instead if you control a creature with power 4 or greater.
+SVar:Y:Count$Valid Creature.powerGE4+YouCtrl
+SVar:X:Count$Compare Y GE1.10.5
+Oracle:Gain 5 life.\nFerocious - Gain 10 life instead if you control a creature with power 4 or greater.

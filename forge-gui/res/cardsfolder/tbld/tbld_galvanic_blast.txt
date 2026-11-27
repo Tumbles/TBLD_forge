@@ -1,0 +1,6 @@
+Name:Galvanic Blast
+ManaCost:R
+Types:Flash Sorcery
+A:SP$ DealDamage | ValidTgts$ Any | NumDmg$ X | SpellDescription$ CARDNAME deals 2 damage to any target. Metalcraft — CARDNAME deals 4 damage instead if you control 3 or more artifacts.
+SVar:X:Count$Metalcraft.4.2
+Oracle:This deals 2 damage to any target.\nMetalcraft - This deals 4 damage instead if you control three or more artifacts.

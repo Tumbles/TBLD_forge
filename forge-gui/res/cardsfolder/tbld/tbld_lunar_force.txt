@@ -1,0 +1,7 @@
+Name:Lunar Force
+ManaCost:2U 2U
+Types:Enchantment
+T:Mode$ SpellCast | ValidCard$ Card | ValidActivatingPlayer$ Opponent | Execute$ TrigCounter | TriggerZones$ Battlefield | TriggerDescription$ When an opponent casts a spell, sacrifice CARDNAME and counter that spell.
+SVar:TrigCounter:DB$ Counter | Defined$ TriggeredSpellAbility | SubAbility$ DBSacrifice
+SVar:DBSacrifice:DB$ Sacrifice
+Oracle:(This has mana value 4.)\nWhen an opponent casts a spell, sacrifice this and counter that spell.

@@ -1,0 +1,7 @@
+Name:Stifle
+ManaCost:U
+Types:Flash Sorcery
+A:SP$ Counter | TgtPrompt$ Choose target ability | ValidTgts$ Card,Emblem | TargetType$ Activated,Triggered | SpellDescription$ Counter target ability.
+K:Jump-start
+AI:RemoveDeck:All
+Oracle:Counter target ability. (Mana abilities can’t be targeted.)\nJump-start (You may cast this from your graveyard by discarding a card in addition to paying its other costs. Then exile this.)

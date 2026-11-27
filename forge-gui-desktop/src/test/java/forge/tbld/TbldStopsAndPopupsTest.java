@@ -62,15 +62,15 @@ public class TbldStopsAndPopupsTest extends AITest {
     }
 
     /**
-     * Scry 2 (Magma Jet) is asked as a choice of cards to put on the bottom, with each card's face so
+     * Scry 2 (Twist of Fate) is asked as a choice of cards to put on the bottom, with each card's face so
      * the browser can show it, and the answer decides which card is drawn next.
      */
     @Test(timeOut = 240000)
     public void scryIsAskedWithTheCardsAndTheAnswerIsApplied() throws Exception {
         final TbldWebServer server = new TbldWebServer(2, () -> {
             final Deck d = new Deck("Scry test deck");
-            d.getMain().add("Mountain|TBLD|69", 20);
-            d.getMain().add("Magma Jet", 20);
+            d.getMain().add("Swamp|TBLD|1", 20);
+            d.getMain().add("Twist of Fate", 20);
             return d;
         });
         final int port = server.start(0);

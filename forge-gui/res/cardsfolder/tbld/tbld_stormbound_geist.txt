@@ -1,0 +1,8 @@
+Name:Stormbound Geist
+ManaCost:1 U U
+Types:Creature Spirit
+PT:2/2
+K:Flying
+K:Undying
+S:Mode$ CantBlockBy | ValidAttacker$ Creature.withoutFlying | ValidBlocker$ Creature.Self | Description$ CARDNAME can block only creatures with flying.
+Oracle:Flying\nThis can block only creatures with flying.\nUndying (When this dies, if it had no +1/+1 counters, return it to play under its owners control with a +1/+1 counter.)

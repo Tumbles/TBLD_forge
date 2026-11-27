@@ -696,6 +696,35 @@ final class TbldBot implements WebSocket.Listener {
 
         // Choosing targets: the opponent if allowed, otherwise an opposing card, otherwise anything offered
         final JsonObject sel = selection;
+        // Valid cards come in the selection's cards (the targets are players and stack items): a spell that
+        // targets only creatures (or an Aura) offers no players. Each card is tried once a turn; if none
+        // works, the spell is cancelled.
+        if (sel != null && pl.contains("target") && (!sel.has("targets") || sel.getAsJsonArray("targets").isEmpty())
+                && sel.has("cards") && !sel.getAsJsonArray("cards").isEmpty()) {
+            final Set<Integer> chosen = idSet("chosen");
+            final Set<Integer> mine = new HashSet<>();
+            for (final JsonElement ce : me.getAsJsonArray("battlefield")) {
+                mine.add(ce.getAsJsonObject().get("id").getAsInt());
+            }
+            Integer pick = null;
+            for (final boolean opposing : new boolean[] {true, false}) {
+                for (final JsonElement e : sel.getAsJsonArray("cards")) {
+                    final int id = e.getAsInt();
+                    if (pick == null && mine.contains(id) != opposing && !chosen.contains(id) && !attempted.contains("target:" + turn() + ":" + id)) {
+                        pick = id;
+                    }
+                }
+            }
+            if (pick != null) {
+                attempted.add("target:" + turn() + ":" + pick);
+                act("card", pick, "target card");
+            } else if (okEnabled) {
+                act("ok", -1, "ok");
+            } else {
+                act("cancel", -1, "cancel targeting");
+            }
+            return;
+        }
         if (sel != null && sel.has("targets") && !sel.getAsJsonArray("targets").isEmpty()) {
             JsonObject pick = null;
             for (final JsonElement e : sel.getAsJsonArray("targets")) {
@@ -806,10 +835,12 @@ final class TbldBot implements WebSocket.Listener {
         asked.addProperty("m", m);
         asked.add("a", a);
         dialogs.add(asked);
-        if ("getChoices".equals(m) && !a.get(0).isJsonNull() && a.get(0).getAsString().toLowerCase().contains("optional cost")) {
+        final boolean optionalCost = "getChoices".equals(m) && !a.get(0).isJsonNull() && a.get(0).getAsString().toLowerCase().contains("optional cost");
+        if (optionalCost) {
             final JsonObject ask = new JsonObject();
             ask.add("a", a);
-            ask.addProperty("mana", myLands(true) + pool(me()));
+            // The Player Two emblem's mana counts too
+            ask.addProperty("mana", myLands(true) + pool(me()) + (hasCommandCard("Player Two") ? 1 : 0));
             optionalCostAsks.add(ask);
         }
         final JsonElement v;
@@ -833,7 +864,17 @@ final class TbldBot implements WebSocket.Listener {
             case "confirm", "showConfirmDialog" -> v = new JsonPrimitive(true);
             case "showOptionDialog" -> v = new JsonPrimitive(0);
             case "showInputDialog" -> v = new JsonPrimitive("");
-            case "getChoices" -> v = indices(a.get(1).getAsInt());
+            case "getChoices" -> {
+                // A bot that floats mana for its spell declines optional costs (the last choice, "No buyback"):
+                // the emblem's mana can make buyback affordable, but Auto payment never spends the emblem
+                if (floatManaFirst && optionalCost) {
+                    final JsonArray last = new JsonArray();
+                    last.add(a.get(3).getAsJsonArray().size() - 1);
+                    v = last;
+                } else {
+                    v = indices(a.get(1).getAsInt());
+                }
+            }
             case "chooseEntitiesForEffect" -> v = indices(Math.max(1, a.get(2).getAsInt()));
             case "chooseSingleEntityForEffect", "getAbilityToPlay" -> v = new JsonPrimitive(0);
             default -> v = JsonNull.INSTANCE;

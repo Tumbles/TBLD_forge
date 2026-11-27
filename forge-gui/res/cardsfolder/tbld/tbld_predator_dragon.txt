@@ -1,0 +1,8 @@
+Name:Predator Dragon
+ManaCost:1 R R R
+Types:Creature Dragon
+PT:3/3
+K:Flying
+K:Haste
+K:Devour:2
+Oracle:Flying, haste\nDevour 2 (As this enters, you may sacrifice any number of creatures. This enters with two times that many +1/+1 counters.)

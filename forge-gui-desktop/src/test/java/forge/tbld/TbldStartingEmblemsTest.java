@@ -167,18 +167,18 @@ public class TbldStartingEmblemsTest extends AITest {
         final Card emblem = TbldEmblems.give(game, person, 1);
         AssertJUnit.assertFalse("Auto payment spends a person's emblem",
                 ComputerUtilMana.sparingPersonsEmblems(() -> ComputerUtilMana.getAvailableManaSources(person, true)).contains(emblem));
-        // Anything else counts its mana: two Mountains and Player Two cast Gray Ogre ({2}{R})
+        // Anything else counts its mana: two Mountains and Player Two cast Rodeo Pyromancers ({2}{R})
         AssertJUnit.assertTrue(ComputerUtilMana.getAvailableManaSources(person, true).contains(emblem));
         addCards("Mountain", 2, person);
-        final Card ogre = addCardToZone("Gray Ogre", person, ZoneType.Hand);
+        final Card ogre = addCardToZone("Rodeo Pyromancers", person, ZoneType.Hand);
         final SpellAbility cast = ogre.getFirstSpellAbility();
         cast.setActivatingPlayer(person);
-        AssertJUnit.assertTrue("Gray Ogre is not shown as castable", AvailableActions.collectActionable(person, 5000).contains(ogre.getView()));
+        AssertJUnit.assertTrue("Rodeo Pyromancers is not shown as castable", AvailableActions.collectActionable(person, 5000).contains(ogre.getView()));
         final boolean[] autoPays = new boolean[1];
         person.runWithController(() -> autoPays[0] = ComputerUtilMana.sparingPersonsEmblems(
                 () -> ComputerUtilMana.canPayManaCost(cast, person, 0, false)),
                 new PlayerControllerAi(game, person, person.getOriginalLobbyPlayer()));
-        AssertJUnit.assertFalse("Auto payment would spend the emblem for Gray Ogre", autoPays[0]);
+        AssertJUnit.assertFalse("Auto payment would spend the emblem for Rodeo Pyromancers", autoPays[0]);
     }
 
     @Test

@@ -1,0 +1,8 @@
+Name:Treasury Thrull
+ManaCost:2 W B
+Types:Creature Thrull
+PT:3/4
+K:Extort
+T:Mode$ Attacks | ValidCard$ Card.Self | OptionalDecider$ You | Execute$ TrigBounce | TriggerDescription$ Whenever CARDNAME attacks, you may return target artifact, creature, or enchantment card from your graveyard to your hand.
+SVar:TrigBounce:DB$ ChangeZone | ValidTgts$ Artifact.YouOwn,Creature.YouOwn,Enchantment.YouOwn | Origin$ Graveyard | Destination$ Hand
+Oracle:Extort (Whenever you cast a spell, you may pay W/B. If you do, each opponent loses 1 life and you gain 1 life.)\nWhenever this attacks, you may return target artifact, creature, or enchantment card from your graveyard to your hand.

@@ -1,0 +1,6 @@
+Name:Young Wolf
+ManaCost:G
+Types:Creature Wolf
+PT:1/1
+K:Undying
+Oracle:Undying (When this dies, if it had no +1/+1 counters, return it to play under its owners control with a +1/+1 counter.)

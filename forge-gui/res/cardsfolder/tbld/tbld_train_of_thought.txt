@@ -1,0 +1,6 @@
+Name:Train of Thought
+ManaCost:1 U
+Types:Flash Sorcery
+K:Replicate:1 U
+A:SP$ Draw | Defined$ You | NumCards$ 1 | SpellDescription$ Draw a card.
+Oracle:Replicate 1U (When you cast this, copy it for each time you paid its replicate cost.)\nDraw a card.

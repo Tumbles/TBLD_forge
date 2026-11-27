@@ -1,0 +1,7 @@
+Name:Fiery Temper
+ManaCost:1 R R
+Types:Flash Sorcery
+A:SP$ DealDamage | ValidTgts$ Any | NumDmg$ 3 | SpellDescription$ CARDNAME deals 3 damage to any target.
+K:Madness:R
+DeckHints:Ability$Discard
+Oracle:This deals 3 damage to any target.\nMadness R (If you discard this, discard it into exile, then cast it for its madness cost or put it into your graveyard.)

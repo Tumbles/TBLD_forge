@@ -1,0 +1,9 @@
+Name:Treacherous Pit-Dweller
+ManaCost:B B
+Types:Creature Demon
+PT:6/3
+K:Undying
+T:Mode$ ChangesZone | Origin$ Graveyard | Destination$ Battlefield | ValidCard$ Card.Self | Execute$ TrigGainControl | TriggerDescription$ When CARDNAME enters from a graveyard, target opponent gains control of it.
+SVar:TrigGainControl:DB$ GainControl | Defined$ Self | ValidTgts$ Opponent | TgtPrompt$ Select target opponent
+AI:RemoveDeck:Random
+Oracle:When this enters from a graveyard, target opponent gains control of it.\nUndying (When this dies, if it had no +1/+1 counters, return it to play under its owner’s control with a +1/+1 counter.)

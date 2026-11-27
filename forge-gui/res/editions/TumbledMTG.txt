@@ -6,6 +6,366 @@ Type=Custom_Set
 
 [cards]
 1 U Searing Touch
+2 C Adorned Pouncer
+3 C Aether Hub
+4 C Aetherflux Conduit
+5 C Aggressive Mining
+6 U Akroan Skyguard
+7 C All That Glitters
+8 C Alpha Authority
+9 C Ancestral Mask
+10 C Apex Altisaur
+11 C Arbor Elf
+12 C Arcbond
+13 C Arcbound Worker
+14 U Ashling the Pilgrim
+15 U Aven Squire
+16 C Azorius Chancery
+17 U Barrage Tyrant
+18 C Basilisk Collar
+19 C Battle Hymn
+20 C Battlewise Hoplite
+21 C Bazaar Trademage
+22 C Beguiler of Wills
+23 U Benthic Infiltrator
+24 C Blanchwood Armor
+25 C Blind Obedience
+26 C Bonders Enclave
+27 C Borborygmos Enraged
+28 C Brainstone
+29 C Brass Squire
+30 C Breakthrough
+31 C Bronze Guardian
+32 C Buried Ruin
+33 C Candelabra of Tawnos
+34 U Caustic Tar
+35 C Circular Logic
+36 C Cleaver Skaab
+37 C Clock of Omens
+38 C Collective Blessing
+39 C Colossification
+40 C Commune with Spirits
+41 C Commune with the Gods
+42 C Concentrate
+43 C Condescend
+44 C Coretapper
+45 C Corpsejack Menace
+46 C Cryptolith Rite
+47 C Crystal Vein
+48 U Curse of Shaken Faith
+49 C Cyclonic Rift
+50 C Cyclops Superconductor
+51 C Dark-Dweller Oracle
+52 C Darksteel Juggernaut
+53 C Darksteel Myr
+54 U Dawn to Dusk
+55 C Days Undoing
+56 C Dazzling Angel
+57 U Dead Drop
+58 C Deepfathom Skulker
+59 C Deeproot Champion
+60 U Defend the Hearth
+61 C Deflecting Palm
+62 C Depth Defiler
+63 C Despark
+64 C Dimir Aqueduct
+65 U Djinn Illuminatus
+66 U Domineer
+67 C Dragonsguard Elite
+68 C Drannith Stinger
+69 C Dread Defiler
+70 C Dream Halls
+71 C Dreg Mangler
+72 C Drowned Secrets
+73 C Dubious Challenge
+74 C Easy Prey
+75 C Echo of Eons
+76 C Ecstatic Electromancer
+77 C Electric Revelation
+78 C Electrosiphon
+79 C Elite Guardmage
+80 C Essence Capture
+81 C Eternal Taskmaster
+82 C Exotic Orchard
+83 C Extract Brain
+84 C Fanatical Firebrand
+85 C Feed the Clan
+86 C Fell Stinger
+87 C Fiery Temper
+88 C Firebolt
+89 C Flame Rift
+90 C Flaring Pain
+91 C Flayer of the Hatebound
+92 C Fling
+93 C Flourishing Fox
+94 C Flux Channeler
+95 C Forked Bolt
+96 U Frazzle
+97 C Freed from the Real
+98 U Frogify
+99 C Frogmite
+100 C Future Sight
+101 C Galvanic Blast
+102 C Ghastly Demise
+103 C Gilded Goose
+104 C Gilded Lotus
+105 U Glare of Subdual
+106 C Glint Hawk
+107 C Glyph Keeper
+108 C Go for the Throat
+109 C Goblin Cratermaker
+110 U Goblin Deathraiders
+111 C Goblin Heelcutter
+112 C Goblin Wardriver
+113 U Goldvein Pick
+114 C Golgari Rot Farm
+115 U Gravitic Punch
+116 C Gray Merchant of Asphodel
+117 C Gruul Turf
+118 C Guild Globe
+119 C Hardened Tactician
+120 C Harpoon Sniper
+121 C Harsh Mentor
+122 C Healers Hawk
+123 C Heap Doll
+124 C Hedron Archive
+125 C High Priest of Penance
+126 C Highway Robbery
+127 C Homunculus Horde
+128 C Honored Hydra
+129 C Hooting Mandrills
+130 U Hound of Griselbrand
+131 C Hunger of the Howlpack
+132 C Illness in the Ranks
+133 U Illusionary Armor
+135 U Indestructibility
+136 C Indulgent Aristocrat
+137 U Ingot Chewer
+138 C Innocent Blood
+139 C Insolent Neonate
+140 C Inspiration from Beyond
+141 C Ironscale Hydra
+142 C Izzet Boilerworks
+143 C Jaspera Sentinel
+144 C Jeskai Shrinekeeper
+145 C Judge of Currents
+146 U Jungleborn Pioneer
+147 C Kami of Celebration
+148 U Karametras Acolyte
+149 C Kor Skyfisher
+150 C Lantern of Insight
+151 C Lava Dart
+152 C Lay Claim
+153 U Lifelink
+154 C Lightning Axe
+155 C Lock and Load
+156 C Lucid Dreams
+157 U Lunar Force
+158 U Macabre Waltz
+159 U Magus of the Bazaar
+160 C Magus of the Disk
+161 U Magus of the Library
+162 C Makeshift Munitions
+163 C Mana Flare
+164 C Mana Leak
+165 C Mandibular Kite
+166 C Manifold Key
+167 C March of Progress
+168 C Mardu Shadowspear
+169 U Marrow Chomper
+170 C Merfolk Mistbinder
+171 C Metallic Rebuke
+172 U Mindleech Ghoul
+173 C Minister of Inquiries
+174 C Mizzium Mortars
+175 C Mnemonic Deluge
+176 C Moderation
+177 C Moments Peace
+178 C Monstrous Onslaught
+179 C Monstrous Vortex
+180 C Mortify
+181 U Mulldrifter
+182 C Mycosynth Golem
+183 C Myr Enforcer
+184 U Myr Propagator
+185 C Myr Retriever
+186 C Myr Scrapling
+187 C Myr Superion
+188 C Natural State
+189 C Nephalia Academy
+190 U Neutralizing Blast
+191 U New Perspectives
+192 C Nishoba Brawler
+193 C Nivmagus Elemental
+194 C No Witnesses
+195 C Nullmage Shepherd
+196 U Nyxborn Shieldmate
+197 U Oathsworn Vampire
+198 U Obeka Brute Chronologist
+199 U Ochran Assassin
+200 C Ornithopter
+201 C Orzhov Basilica
+202 C Out of Air
+203 C Over the Edge
+204 C Overgrowth
+205 U Peema Aether-Seer
+206 U Perilous Predicament
+207 C Perilous Vault
+208 C Perpetual Timepiece
+209 U Pestilence Demon
+210 C Phalanx Leader
+211 U Phantasmal Dreadmaw
+212 C Pitiless Carnage
+213 C Porcelain Legionnaire
+214 C Precognitive Perception
+215 U Predator Dragon
+216 U Pressure Point
+217 C Prismatic Lens
+218 C Putrid Goblin
+219 C Quasiduplicate
+220 U Queens Agent
+221 C Radiant Flames
+222 C Rakdos Carnarium
+223 C Rakdos Headliner
+224 U Rancid Rats
+225 C Rankles Prank
+226 C Ransack the Lab
+227 C Ravens Crime
+228 U Raze
+229 U Razorfin Hunter
+230 C Reality Scramble
+231 C Reckless Abandon
+232 C Reckless Impulse
+233 C Recoil
+234 C Remorseful Cleric
+235 U Resolute Archangel
+236 C Retract
+237 C Return to Nature
+238 C Rewind
+239 C Rift Bolt
+240 C Rift Sower
+241 C Rigging Runner
+242 C Rise and Shine
+243 U River Heralds Boon
+244 C Riverwise Augur
+245 C Roadside Reliquary
+246 U Rodeo Pyromancers
+247 C Roil Cartographer
+248 U Ruination Guide
+249 C Ruination Rioter
+250 C Rule of Law
+251 C Rune of Sustenance
+252 C Sacred Cat
+253 U Sacred Wolf
+254 C Sakura-Tribe Scout
+255 C Salvage Titan
+256 U Scab-Clan Mauler
+257 C Scattershot Archer
+258 C Scrap Mastery
+259 C Searing Blood
+260 C Seed of Hope
+261 C Seething Song
+262 U Seismic Spike
+263 C Seize the Spoils
+264 U Selesnya Eulogist
+265 C Selesnya Sanctuary
+266 C Sentinels Eyes
+267 C Servant of the Conduit
+268 C Servo Exhibition
+269 U Setessan Oathsworn
+270 U Sheoldred the Apocalypse
+271 U Sightless Ghoul
+272 C Sign in Blood
+273 C Skaab Ruinator
+274 C Skirk Prospector
+275 C Skullwinder
+276 C Slippery Bogle
+277 C Smallpox
+278 C Sol Talisman
+279 U Song of the Dryads
+280 U Song of the Worldsoul
+281 C Songs of the Damned
+282 C Soulstone Sanctuary
+283 U Soultether Golem
+284 C Sower of Temptation
+285 C Spectral Arcanist
+286 C Spectral Interference
+287 C Sphinx of Enlightenment
+288 U Spider Umbra
+289 C Spike Jester
+290 C Spikeshot Elder
+291 C Spore Frog
+292 C Spyglass Siren
+293 C Staggering Insight
+294 C Staggershock
+295 U Stand Together
+296 U Stingerfling Spider
+297 U Stitch in Time
+298 C Stone Haven Outfitter
+299 C Stormbound Geist
+300 C Strategic Planning
+301 C Sudden Edict
+302 U Sultai Soothsayer
+303 C Summer Bloom
+304 U Sunblade Angel
+305 C Sundial of the Infinite
+306 U Surtland Elementalist
+307 C Surtland Flinger
+308 C Swiftblade Vindicator
+309 C Tainted Indulgence
+310 C Tarnished Citadel
+311 C Tempest Harvester
+312 C Temple Bell
+313 U Terminal Agony
+314 C The Last Ride
+315 C Thespians Stage
+316 C Thirst for Knowledge
+317 C Thirst for Meaning
+318 C Thousand-Faced Shadow
+319 C Thrashing Brontodon
+320 C Timeless Witness
+321 U Tin Street Market
+322 U Tower Gargoyle
+323 U Tower of Fortunes
+324 U Train of Thought
+325 U Treacherous Pit-Dweller
+326 U Treasury Thrull
+327 U Triton Shorestalker
+328 C Tyrants Scorn
+329 C Undead Butler
+330 C Underworld Connections
+331 C Unmake
+332 C Utter End
+333 C Vampire Nighthawk
+334 U Vengeful Reaper
+335 U Venomthrope
+336 C Veteran Armorer
+337 C Vexing Shusher
+338 C Vicious Rumors
+339 C Victim of Night
+340 C Victory Chimes
+341 U Vile Aggregate
+342 C Vile Manifestation
+343 C Voldaren Epicure
+344 U Volley Veteran
+345 C Vona Butcher of Magan
+346 C Warren Soultrader
+347 U Whirlwind
+348 C Wildfire
+349 C Winding Way
+350 C Witchs Oven
+351 U Woolly Thoctar
+352 C Worldsouls Rage
+353 C Wrench Mind
+354 C Young Wolf
+355 C Zetalpa Primal Dawn
+356 C Zhur-Taa Ancient
+357 C Zhur-Taa Goblin
+358 C Zo-Zu the Punisher
+359 U Zuran Orb
+360 R Drag to the Bottom
+361 U Stifle
+362 R Twist of Fate
 F1 L Forest
 F2 L Forest
 F3 L Forest

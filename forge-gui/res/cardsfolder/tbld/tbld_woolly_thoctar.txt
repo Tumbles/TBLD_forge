@@ -1,0 +1,5 @@
+Name:Woolly Thoctar
+ManaCost:G R W
+Types:Creature Beast
+PT:6/4
+Oracle:

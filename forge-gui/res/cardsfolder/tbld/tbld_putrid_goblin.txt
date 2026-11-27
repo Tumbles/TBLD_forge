@@ -1,0 +1,6 @@
+Name:Putrid Goblin
+ManaCost:1 B
+Types:Creature Zombie Goblin
+PT:2/2
+K:Persist
+Oracle:Persist (When this dies, if it had no -1/-1 counters, return it to play under its owner's control with a -1/-1 counter.)

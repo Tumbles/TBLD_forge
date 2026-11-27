@@ -1,0 +1,7 @@
+Name:Dreg Mangler
+ManaCost:1 B G
+Types:Creature Plant Zombie
+PT:3/3
+K:Haste
+K:Scavenge:3 B G
+Oracle:Haste\nScavenge 3BG (3BG, Exile this from your graveyard: Put a number of +1/+1 counters equal to this card's power on target creature. Can't be activated at flash speed.)

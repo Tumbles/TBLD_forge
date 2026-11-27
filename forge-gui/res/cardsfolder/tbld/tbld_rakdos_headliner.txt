@@ -1,0 +1,7 @@
+Name:Rakdos Headliner
+ManaCost:B R
+Types:Creature Devil
+PT:3/3
+K:Haste
+K:Echo:Discard<1/Card>
+Oracle:Haste\nEcho-Discard a card. (At your upkeep, if this came under your control since your last upkeep, sacrifice it unless you pay its echo cost.)

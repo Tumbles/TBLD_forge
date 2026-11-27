@@ -1,0 +1,9 @@
+Name:Mulldrifter
+ManaCost:4 U
+Types:Enchantment Creature Elemental
+PT:2/2
+K:Flying
+K:Evoke:2 U
+T:Mode$ ChangesZone | Origin$ Any | Destination$ Battlefield | ValidCard$ Card.Self | Execute$ TrigDraw | TriggerDescription$ When CARDNAME enters, draw two cards.
+SVar:TrigDraw:DB$ Draw | Defined$ You | NumCards$ 2
+Oracle:Flying\nWhen this enters, draw two cards.\nEvoke 2U (You may cast this for its evoke cost. If you do, its sacrificed when it enters.)

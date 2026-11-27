@@ -120,7 +120,7 @@ public class TbldPriorityAndPaymentTest extends AITest {
      */
     @Test(timeOut = 300000)
     public void autoPassSettingsAndYieldAll() throws Exception {
-        final TbldWebServer server = new TbldWebServer(2, () -> deck("Hill Giant", 24));
+        final TbldWebServer server = new TbldWebServer(2, () -> deck("Hound of Griselbrand", 24));
         final int port = server.start(0);
         TbldBot bot1 = null;
         TbldBot bot2 = null;

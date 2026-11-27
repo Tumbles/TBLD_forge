@@ -1,0 +1,7 @@
+Name:Pestilence Demon
+ManaCost:3 B B B
+Types:Creature Demon
+PT:7/6
+K:Flying
+A:AB$ DamageAll | Cost$ B | NumDmg$ 1 | ValidCards$ Creature | ValidPlayers$ Player | ValidDescription$ each creature and each player. | SpellDescription$ CARDNAME deals 1 damage to each creature and each player.
+Oracle:Flying\nB: This deals 1 damage to each creature and each player.

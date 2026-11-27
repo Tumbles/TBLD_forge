@@ -1,0 +1,7 @@
+Name:Scab-Clan Mauler
+ManaCost:R G
+Types:Creature Human Berserker
+PT:1/3
+K:Bloodthirst:2
+K:Trample
+Oracle:Bloodthirst 2 (If an opponent was dealt damage this turn, this enters with two +1/+1 counters.)\nTrample

@@ -1,0 +1,6 @@
+Name:Tower Gargoyle
+ManaCost:W U B
+Types:Artifact Creature Gargoyle
+PT:4/4
+K:Flying
+Oracle:Flying

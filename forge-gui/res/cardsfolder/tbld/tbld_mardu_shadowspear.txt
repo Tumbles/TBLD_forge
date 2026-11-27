@@ -1,0 +1,9 @@
+Name:Mardu Shadowspear
+ManaCost:B
+Types:Creature Human Warrior
+PT:1/2
+K:Dash:1 B
+T:Mode$ Attacks | ValidCard$ Card.Self | Execute$ TrigDrain | TriggerDescription$ Whenever CARDNAME attacks, each opponent loses 1 life.
+SVar:TrigDrain:DB$ LoseLife | Defined$ Player.Opponent | LifeAmount$ 1
+SVar:HasAttackEffect:TRUE
+Oracle:Whenever this attacks, each opponent loses 1 life.\nDash 1B (You may cast this for its dash cost. If you do, it gains haste, and it's returned from play to its owner's hand at the next end step.)

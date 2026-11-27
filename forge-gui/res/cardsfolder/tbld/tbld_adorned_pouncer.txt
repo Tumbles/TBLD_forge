@@ -1,0 +1,8 @@
+Name:Adorned Pouncer
+ManaCost:1 W
+Types:Creature Cat
+PT:1/1
+K:Double Strike
+K:Eternalize:3 W W
+DeckHas:Ability$Token
+Oracle:Double strike\nEternalize 3WW (3WW, Exile this from your graveyard: Create a token that’s a copy of this, except it’s a 4/4 black Zombie Cat. You can’t eternalize at flash speed.)

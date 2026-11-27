@@ -1,0 +1,6 @@
+Name:Firebolt
+ManaCost:R
+Types:Sorcery
+K:Flashback:4 R
+A:SP$ DealDamage | ValidTgts$ Any | NumDmg$ 2 | SpellDescription$ CARDNAME deals 2 damage to any target.
+Oracle:This deals 2 damage to any target.\nFlashback 4R (You may cast this from your graveyard for its flashback cost. Then exile it.)

@@ -1,0 +1,7 @@
+Name:Karametras Acolyte
+ManaCost:2 G
+Types:Creature Human Shaman
+PT:1/2
+A:AB$ Mana | Cost$ T | Produced$ G | Amount$ X | SpellDescription$ Add an amount of {G} equal to your devotion to green. (Each {G} in the mana costs of permanents you control counts towards your devotion to green.)
+SVar:X:Count$Devotion.Green
+Oracle:T: Add an amount of G equal to your devotion to green. (Each G in the mana costs of permanents you control counts toward your devotion to green.)

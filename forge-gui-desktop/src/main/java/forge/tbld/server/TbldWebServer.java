@@ -49,6 +49,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicReferenceArray;
+import java.util.function.IntFunction;
 import java.util.function.Supplier;
 
 /**
@@ -72,14 +73,20 @@ public final class TbldWebServer {
     private Channel serverChannel;
     private volatile boolean matchStarted;
     private volatile HostedMatch hostedMatch;
-    /** The deck every seat plays. */
-    private final Supplier<Deck> deck;
+    /** The deck each seat plays, by seat number (from 1). */
+    private final IntFunction<Deck> deck;
 
+    /** Seat 1 plays the red test deck, seat 2 the green one, and so on alternately. */
     public TbldWebServer(final int seatCount) {
-        this(seatCount, TbldWebServer::testDeck);
+        this(seatCount, (IntFunction<Deck>) seat -> seat % 2 == 1 ? testDeck() : greenTestDeck());
     }
 
+    /** Every seat plays this deck. */
     public TbldWebServer(final int seatCount, final Supplier<Deck> deck) {
+        this(seatCount, (IntFunction<Deck>) seat -> deck.get());
+    }
+
+    public TbldWebServer(final int seatCount, final IntFunction<Deck> deck) {
         this.seatCount = seatCount;
         this.deck = deck;
         this.channels = new AtomicReferenceArray<>(seatCount);
@@ -240,7 +247,7 @@ public final class TbldWebServer {
         final List<RegisteredPlayer> players = new ArrayList<>();
         final Map<RegisteredPlayer, IGuiGame> guis = new LinkedHashMap<>();
         for (final BrowserSeat s : seats) {
-            final RegisteredPlayer rp = new RegisteredPlayer(deck.get())
+            final RegisteredPlayer rp = new RegisteredPlayer(deck.apply(s.getSeatIndex()))
                     .setPlayer(new LobbyPlayerHuman("Player " + s.getSeatIndex()));
             players.add(rp);
             guis.put(rp, s.getGui());
@@ -255,16 +262,40 @@ public final class TbldWebServer {
         match.startMatch(rules, null, players, guis, null);
     }
 
-    /** A fixed mono-red deck for testing. Its Mountains are TBLD Mountain version 69. */
+    /** The red TBLD test deck (40 cards, as the earlier test deck). Its Mountains are TBLD Mountain version 69. */
     static Deck testDeck() {
-        final Deck d = new Deck("TBLD test deck");
+        final Deck d = new Deck("TBLD red test deck");
         d.getMain().add("Mountain|TBLD|69", 17);
-        d.getMain().add("Searing Touch", 4);
-        d.getMain().add("Shock", 4);
-        d.getMain().add("Raging Goblin", 4);
-        d.getMain().add("Gray Ogre", 4);
-        d.getMain().add("Hill Giant", 4);
-        d.getMain().add("Lava Axe", 3);
+        d.getMain().add("Rigging Runner", 2);
+        d.getMain().add("Goblin Wardriver", 3);
+        d.getMain().add("Voldaren Epicure", 2);
+        d.getMain().add("Harsh Mentor", 2);
+        d.getMain().add("Rodeo Pyromancers", 2);
+        d.getMain().add("Hound of Griselbrand", 2);
+        d.getMain().add("Volley Veteran", 1);
+        d.getMain().add("Searing Touch", 3);
+        d.getMain().add("Galvanic Blast", 2);
+        d.getMain().add("Firebolt", 2);
+        d.getMain().add("Searing Blood", 2);
+        return d;
+    }
+
+    /** The green TBLD test deck (40 cards). Its Forests are TBLD Forest version 11. */
+    static Deck greenTestDeck() {
+        final Deck d = new Deck("TBLD green test deck");
+        d.getMain().add("Forest|TBLD|11", 17);
+        d.getMain().add("Young Wolf", 3);
+        d.getMain().add("Deeproot Champion", 2);
+        d.getMain().add("Servant of the Conduit", 2);
+        d.getMain().add("Sacred Wolf", 3);
+        d.getMain().add("Jungleborn Pioneer", 2);
+        d.getMain().add("Thrashing Brontodon", 2);
+        d.getMain().add("Ironscale Hydra", 2);
+        d.getMain().add("Stingerfling Spider", 1);
+        d.getMain().add("Blanchwood Armor", 2);
+        d.getMain().add("Hunger of the Howlpack", 2);
+        d.getMain().add("Stand Together", 1);
+        d.getMain().add("Feed the Clan", 1);
         return d;
     }
 

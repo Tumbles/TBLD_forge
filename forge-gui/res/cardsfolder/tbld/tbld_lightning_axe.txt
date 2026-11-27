@@ -1,0 +1,9 @@
+Name:Lightning Axe
+ManaCost:R
+Types:Flash Sorcery
+K:AlternateAdditionalCost:Discard<1/Card>:5
+A:SP$ DealDamage | NumDmg$ 5 | ValidTgts$ Creature | SpellDescription$ CARDNAME deals 5 damage to target creature.
+SVar:AIPreference:DiscardCost$Card.cmcLE2
+DeckHas:Ability$Discard
+DeckHints:Keyword$Madness & Ability$Delirium
+Oracle:As an additional cost to cast this, discard a card or pay 5.\nThis deals 5 damage to target creature.

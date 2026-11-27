@@ -30,14 +30,14 @@ public class TbldFlashSupertypeTest extends AITest {
         Player p = game.getPlayers().get(1);
         Player opp = game.getPlayers().get(0);
         Card touch = addCardToZone("Searing Touch", p, ZoneType.Hand);
-        Card lavaAxe = addCardToZone("Lava Axe", p, ZoneType.Hand);
+        Card flameRift = addCardToZone("Flame Rift", p, ZoneType.Hand);
 
         // The opponent's upkeep: sorcery timing is not available to p.
         game.getPhaseHandler().devModeSet(PhaseType.UPKEEP, opp);
         AssertJUnit.assertFalse(p.canCastSorcery());
 
         AssertJUnit.assertTrue(touch.getFirstSpellAbility().canCastTiming(p));
-        AssertJUnit.assertFalse(lavaAxe.getFirstSpellAbility().canCastTiming(p));
+        AssertJUnit.assertFalse(flameRift.getFirstSpellAbility().canCastTiming(p));
     }
 
     @Test
