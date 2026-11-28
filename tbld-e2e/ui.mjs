@@ -503,6 +503,16 @@ check(!!pref, "choosing an auto-pass setting sends it");
 await page.click("#hold-label");
 pref = await waitFor(() => lastPref().holdPriority === true && lastPref(), "hold priority change");
 check(!!pref && pref.autoPass === "noActions", "turning hold priority on sends it with the other settings");
+// Auto stack abilities: on by default, sent with the other settings, switched off and on again, and remembered
+check(pref && pref.autoStack === true && await page.locator("#autostack").isChecked(), "auto stack abilities is on by default");
+check(await page.locator("#settings #autostack-label").isVisible(), "auto stack abilities is in the permanent settings");
+await page.click("#autostack-label");
+pref = await waitFor(() => lastPref().autoStack === false && lastPref(), "auto stack change");
+check(!!pref && pref.holdPriority === true && pref.autoPass === "noActions", "turning auto stack abilities off sends it with the other settings");
+check(await page.evaluate(() => localStorage.getItem("tbld.autoStack.seat1")) === "false", "the choice is remembered for the next connection");
+await page.click("#autostack-label");
+pref = await waitFor(() => lastPref().autoStack === true && lastPref(), "auto stack back on");
+check(!!pref, "turning it back on sends it");
 // the deck picker: the server's decks and the one in use; choosing another asks first, then tells the server
 send({ t: "hello", seat: 1, deck: "red", decks: [{ id: "red", label: "Red goblins and burn" }, { id: "ub-control", label: "Blue-black counterspells" }] });
 await settle();

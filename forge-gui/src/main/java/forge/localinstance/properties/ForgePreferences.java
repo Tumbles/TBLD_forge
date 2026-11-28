@@ -151,6 +151,8 @@ public class ForgePreferences extends AbstractPreferences<ForgePreferences.FPref
         YIELD_AUTO_PASS_COUNTS_MANA_ABILITIES ("false"),
         // TBLD: off, casting a spell or activating an ability passes priority
         YIELD_HOLD_PRIORITY ("true"),
+        // TBLD: on, the player's simultaneous triggered abilities go on the stack in the order they triggered, without asking
+        YIELD_AUTO_STACK_ABILITIES ("false"),
         YIELD_AVAILABLE_ACTIONS_BUDGET_MS ("0"),
         YIELD_SKIP_PHASE_DELAY ("false"),
         YIELD_SKIP_RESOLVE_DELAY ("false"),

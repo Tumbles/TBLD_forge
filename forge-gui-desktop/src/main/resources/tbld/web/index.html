@@ -434,6 +434,10 @@
         <label class="switch" id="hold-label" title="Keep priority after you cast a spell or activate an ability. Off: priority passes to your opponent.">
           <input type="checkbox" id="holdpriority"> Hold priority</label>
       </div>
+      <div class="set-row">
+        <label class="switch" id="autostack-label" title="Put your simultaneous triggered abilities on the stack in a default order, without asking. Off: you choose the order each time.">
+          <input type="checkbox" id="autostack"> Auto stack abilities</label>
+      </div>
       <div class="set-row" id="yields"></div>
     </div>
     <div class="panel" id="playtest" title="Temporary controls for playtesting; not part of the finished client">
@@ -699,6 +703,11 @@ const holdKey = "tbld.holdPriority.seat" + seat;
 const holdBox = document.getElementById("holdpriority");
 holdBox.checked = localStorage.getItem(holdKey) === "true";
 holdBox.onchange = () => { localStorage.setItem(holdKey, String(holdBox.checked)); sendPrefs(); };
+// Auto stack abilities (on by default): simultaneous triggers go on the stack in a default order, with no ordering window
+const stackKey = "tbld.autoStack.seat" + seat;
+const stackBox = document.getElementById("autostack");
+stackBox.checked = localStorage.getItem(stackKey) !== "false";
+stackBox.onchange = () => { localStorage.setItem(stackKey, String(stackBox.checked)); sendPrefs(); };
 // The deck this seat plays: the server lists the test decks and says which one is in use. Choosing
 // another starts a new game; the choice is remembered per seat in this browser.
 const deckKey = "tbld.deck.seat" + seat;
@@ -743,7 +752,7 @@ function loadStops() {
 }
 function expand(set) { return PHASES.filter(p => set.has(p.id)).flatMap(p => [p.id, ...(p.also || [])]); }
 function sendPrefs() {
-  send({ t: "pref", autoPass: autoPassBox.value, holdPriority: holdBox.checked, stops: { own: expand(stops.own), opponent: expand(stops.opponent) } });
+  send({ t: "pref", autoPass: autoPassBox.value, holdPriority: holdBox.checked, autoStack: stackBox.checked, stops: { own: expand(stops.own), opponent: expand(stops.opponent) } });
 }
 function toggleStop(which, id) {
   const s = stops[which];

@@ -2381,6 +2381,10 @@ public class PlayerControllerHuman extends PlayerController implements IGameCont
     public List<SpellAbility> orderSimultaneousSa(List<SpellAbility> activePlayerSAs) {
         if (activePlayerSAs.size() < 2)
             return activePlayerSAs;
+        // TBLD: "Auto stack abilities": this player doesn't want to choose, so they go on the stack as they triggered
+        if (yieldController.getBoolPref(FPref.YIELD_AUTO_STACK_ABILITIES)) {
+            return activePlayerSAs;
+        }
         boolean needPrompt = !activePlayerSAs.get(0).isTrigger();
 
         final String firstStr = activePlayerSAs.get(0).toString();

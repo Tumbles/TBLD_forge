@@ -93,6 +93,8 @@ public final class BrowserSeat implements IRemote {
     private volatile boolean autoPassCountsMana;
     /** Keep priority after casting a spell or activating an ability. Off, priority passes. Set by the browser. */
     private volatile boolean holdPriority = true;
+    /** "Auto stack abilities": simultaneous triggers go on the stack in the order they triggered, without asking. */
+    private volatile boolean autoStack = true;
     /**
      * The phases in which this player stops to get priority while the stack is empty: on their own
      * turn, and on an opponent's turn. In the other phases they pass. Null until the browser sends
@@ -451,6 +453,9 @@ public final class BrowserSeat implements IRemote {
             if (msg.has("holdPriority")) {
                 holdPriority = msg.get("holdPriority").getAsBoolean();
             }
+            if (msg.has("autoStack")) {
+                autoStack = msg.get("autoStack").getAsBoolean();
+            }
             if (msg.has("stops") && msg.get("stops").isJsonObject()) {
                 final JsonObject stops = msg.getAsJsonObject("stops");
                 stopsOwnTurn = phases(stops.get("own"));
@@ -490,6 +495,7 @@ public final class BrowserSeat implements IRemote {
             final IGameController controller = retired ? null : getController();
             if (controller != null) {
                 setPref(controller, FPref.YIELD_HOLD_PRIORITY, String.valueOf(holdPriority));
+                setPref(controller, FPref.YIELD_AUTO_STACK_ABILITIES, String.valueOf(autoStack));
                 // "Yield all" passes everything until the end of the turn: an opponent's spell or attack does not
                 // end it (Forge's defaults do); the player switches it off to respond
                 setPref(controller, FPref.YIELD_INTERRUPT_ON_OPPONENT_SPELL, "false");
