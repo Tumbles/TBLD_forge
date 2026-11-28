@@ -184,6 +184,12 @@
   .landstack > .card.tapped .face { pointer-events: auto; transform: translateY(calc(var(--ch) * .142)) rotate(90deg); }
   .landstack > .card.tapped .badges { inset: 28.4% 0 0; }
   .landstack > .card.tapped .tags { top: calc(28.4% + 4px); }
+  /* Every tapped card in the back row (a lone land, a land with an aura, an artifact) lies on the same
+     baseline as the tapped lands of a stack, so tapped cards line up whatever stands next to them. */
+  .row[data-row="back"] .card.tapped { pointer-events: none; }
+  .row[data-row="back"] .card.tapped .face { pointer-events: auto; transform: translateY(calc(var(--ch) * .142)) rotate(90deg); }
+  .row[data-row="back"] .card.tapped .badges { inset: 28.4% 0 0; }
+  .row[data-row="back"] .card.tapped .tags { top: calc(28.4% + 4px); }
   .paybtn { display: flex; } .paybtn:empty { display: none; }
   .landstack > .stackcount { position: absolute; left: 50%; top: calc(100% - 4px); transform: translateX(-50%); z-index: 30; }
 

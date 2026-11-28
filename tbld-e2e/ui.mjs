@@ -138,6 +138,17 @@ const topUntapped = await page.locator('#half-me .card[data-id="3"] .face').boun
 check(frontTapped && topUntapped && Math.abs((frontTapped.y + frontTapped.height) - (topUntapped.y + topUntapped.height)) < 1.5
   && Math.abs(frontTapped.x - topUntapped.x) < 1.5 && frontTapped.y > topUntapped.y + 10,
   "tapped lands lie along the bottom of their stack from the top untapped land, forming an L with it");
+// a lone tapped land, a tapped stack and a tapped artifact stand on one baseline (the bottom of the back row)
+const baseline = makeState();
+baseline.players[0].battlefield.push(card(90, "Forest", "Basic Land - Forest", { tapped: true }), card(91, "Bone Saw 2", "Artifact - Equipment", { tapped: true }));
+send({ t: "state", state: baseline });
+await settle(300);
+const bottoms = await Promise.all(["5", "90", "91"].map(async id => { const b = await page.locator('#half-me .card[data-id="' + id + '"] .face').boundingBox(); return b.y + b.height; }));
+check(Math.max(...bottoms) - Math.min(...bottoms) < 1.5, "tapped cards in the back row share a baseline: a stacked land, a lone land and an artifact (" + bottoms.map(b => Math.round(b)).join(", ") + ")");
+const loneUntapped = await page.locator('#half-me .card[data-id="11"] .face').boundingBox();
+check(Math.abs((loneUntapped.y + loneUntapped.height) - Math.max(...bottoms)) < 1.5, "an untapped card in the back row ends on the same baseline");
+send({ t: "state", state: makeState() });
+await settle(300);
 const ogre = await page.locator('#half-me .card[data-id="12"] .face').boundingBox();
 check(ogre && ogre.width > ogre.height, "a tapped attacker is sideways too");
 check(await count('#half-me .card[data-id="10"].sick .badge.sick') === 1, "a summoning-sick creature is marked");
