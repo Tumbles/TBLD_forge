@@ -146,6 +146,7 @@ Exhaustion
 Extirpate
 Eye Collector
 Facevaulter
+Faerie Miscreant
 Faithful Mending
 False Cure
 Fathom Feeder
@@ -156,77 +157,126 @@ Firebolt
 Firemane Avenger
 Fireminds Research
 Flayer Drone
+Flux Channeler
+Followed Footsteps
+Force Spike
 Forerunner of Slaughter
+Forgotten Creation
 Foul-Tongue Shriek
+Frazzle
+Freed from the Real
+Frogify
 Fungal Infection
 Fusion Elemental
+Future Sight
 Galvanic Blast
 Gelectrode
+Geralfs Masterpiece
+Geralfs Mindcrusher
 Geth Thane of Contracts
 Ghastly Demise
 Ghor-Clan Rampager
+Ghostly Wings
 Ghoulraiser
 Gift of Orzhova
 Glare of Subdual
 Glaze Fiend
 Gleam of Battle
 Glint-Sleeve Siphoner
+Glyph Keeper
 Gnarled Scarhide
 Gnawing Vermin
 Go Blank
 Goblin Deathraiders
 Goblin Wardriver
 Gonti Night Minister
+Grafted Identity
 Grasp of Darkness
 Grave Scrabbler
 Gray Merchant of Asphodel
 Greenweaver Druid
 Grip of Desolation
 Grove Rumbler
+Hard Evidence
 Hardened Tactician
 Harsh Mentor
 Haunted Dead
 Havoc Demon
 Herald of Kozilek
 Heroic Reinforcements
+High Fae Trickster
 High Priest of Penance
+Homunculus Horde
+Hope-Ender Coatl
 Horned Kavu
+Horribly Awry
 Hound of Griselbrand
 Hunger of the Howlpack
+Hunters Mark
 Hussar Patrol
 Hypersonic Dragon
 Ideas Unbound
 Illness in the Ranks
+Illusion of Choice
+Illusionary Armor
 Indulgent Aristocrat
 Infernal Tribute
 Infernal Tutor
 Infinite Obliteration
 Ink-Eyes Servant of Oni
 Innocent Blood
+Inspiration from Beyond
 Ironscale Hydra
+Isperias Skywatch
 Jeskai Ascendancy
 Jeskai Shrinekeeper
+Jump
 Jungleborn Pioneer
 Knowledge is Power
 Knucklebone Witch
 Kraul Whipcracker
+Lay Claim
 Lazav Wearer of Faces
 Lightning Helix
 Lilianas Mastery
 Lilianas Steward
+Lock and Load
+Logic Knot
 Lord of the Accursed
+Lucid Dreams
+Lullmage Mentor
+Lunar Force
 Macabre Waltz
+Magus of the Bazaar
+Mana Leak
+Mana Severance
 Marauding Blight-Priest
 Mardu Shadowspear
 Markov Dreadknight
 Marrow Chomper
+Mass Manipulation
 Massacre Girl
 Masterminds Acquisition
+Maximize Altitude
+Meeting of Minds
 Megrim
 Memoricide
+Memory Erosion
+Memory Lapse
+Memorys Journey
+Merfolk Looter
 Merfolk Mistbinder
+Merfolk Trickster
+Merrow Commerce
+Metallic Rebuke
+Micromancer
+Minister of Inquiries
+Miscalculation
+Mist Intruder
+Mnemonic Deluge
 Mob
 Moderation
+Monastery Siege
 Moonglove Winnower
 Moriok Scavenger
 Mortify

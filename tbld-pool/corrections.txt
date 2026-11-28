@@ -1,5 +1,11 @@
 # Corrections to Brett's card XML where a card's picture and its XML disagree (the picture is right).
-# "Name | field=value", applied by "import"; field is name (renames the card), cost, type, pt, text or color.
+# "Name | field=value", applied by "import"; field is name (renames the card), cost, type, pt, text or color;
+# text writes a line break as \n, as cards.txt does.
 # Import warns when the XML no longer needs a line, so it can be deleted once Brett fixes his XML.
 Fathom Feeder | cost=UB
 Brutal Brutal Subjugation | name=Brutal Subjugation
+Horribly Awry | cost=1U
+Horribly Awry | text=Devoid (This card has no color.)\nCounter target creature spell. If it's countered this way, exile it instead of putting it into a graveyard.
+Maximize Altitude | type=Flash Sorcery
+Maximize Altitude | text=Target creature gets +1/+2 and gains flying this turn.\nJump-start (You may cast this from your graveyard by discarding a card in addition to paying its other costs. Then exile this.)
+Memorys Journey | text=Target player shuffles up to four target cards from their graveyard into their library.\nFlashback G (You may cast this from your graveyard for its flashback cost. Then exile it.)

@@ -1,6 +1,6 @@
 Name:Horribly Awry
-ManaCost:U
+ManaCost:1 U
 Types:Flash Sorcery
 K:Devoid
-A:SP$ Counter | TargetType$ Spell | TgtPrompt$ Select target creature spell with mana value 2 or less | ValidTgts$ Creature.cmcLE2 | Destination$ Exile | SpellDescription$ Counter target creature spell with mana value 2 or less. If you do, exile it instead of putting it into a graveyard.
-Oracle:Devoid (This card has no color.)\nCounter target creature spell with mana value 2 or less. If you do, exile it instead of putting it into a graveyard.
+A:SP$ Counter | TargetType$ Spell | TgtPrompt$ Select target creature spell | ValidTgts$ Creature | Destination$ Exile | SpellDescription$ Counter target creature spell. If it's countered this way, exile it instead of putting it into a graveyard.
+Oracle:Devoid (This card has no color.)\nCounter target creature spell. If it's countered this way, exile it instead of putting it into a graveyard.

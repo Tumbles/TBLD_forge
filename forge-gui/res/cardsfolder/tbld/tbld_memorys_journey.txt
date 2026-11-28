@@ -2,7 +2,7 @@ Name:Memorys Journey
 ManaCost:1 U
 Types:Flash Sorcery
 K:Flashback:G
-A:SP$ TargetOnly | ValidTgts$ Player | SubAbility$ DBChangeZone | IsCurse$ True | SpellDescription$ Target player shuffles up to six target cards from their graveyard into their library.
-SVar:DBChangeZone:DB$ ChangeZone | TargetMin$ 0 | TargetMax$ 6 | TargetsWithDefinedController$ ParentTarget | Origin$ Graveyard | Destination$ Library | Shuffle$ True | ValidTgts$ Card
+A:SP$ TargetOnly | ValidTgts$ Player | SubAbility$ DBChangeZone | IsCurse$ True | SpellDescription$ Target player shuffles up to four target cards from their graveyard into their library.
+SVar:DBChangeZone:DB$ ChangeZone | TargetMin$ 0 | TargetMax$ 4 | TargetsWithDefinedController$ ParentTarget | Origin$ Graveyard | Destination$ Library | Shuffle$ True | ValidTgts$ Card
 AI:RemoveDeck:All
-Oracle:Target player shuffles up to six target cards from their graveyard into their library.\nFlashback G (You may cast this from your graveyard for its flashback cost. Then exile it.)
+Oracle:Target player shuffles up to four target cards from their graveyard into their library.\nFlashback G (You may cast this from your graveyard for its flashback cost. Then exile it.)

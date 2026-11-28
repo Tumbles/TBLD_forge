@@ -8906,9 +8906,9 @@ color=MRG
 tags=ADDED NEW
 
 [Horribly Awry]
-cost=U
+cost=1U
 type=Flash Sorcery
-text=Devoid (This card has no color.)\nCounter target creature spell with mana value 2 or less. If you do, exile it instead of putting it into a graveyard.
+text=Devoid (This card has no color.)\nCounter target creature spell. If it's countered this way, exile it instead of putting it into a graveyard.
 rarity=Uncommon
 color=U
 tags=COUNTERSPELL
@@ -11762,8 +11762,8 @@ color=G
 
 [Maximize Altitude]
 cost=U
-type=Sorcery
-text=Target creature gets +2/+0 and gains flying this turn.\nJump-start (You may cast this from your graveyard by discarding a card in addition to paying its other costs. Then exile this.)
+type=Flash Sorcery
+text=Target creature gets +1/+2 and gains flying this turn.\nJump-start (You may cast this from your graveyard by discarding a card in addition to paying its other costs. Then exile this.)
 rarity=Uncommon
 color=U
 
@@ -11873,7 +11873,7 @@ tags=COUNTERSPELL
 [Memorys Journey]
 cost=1U
 type=Flash Sorcery
-text=Target player shuffles up to six target cards from their graveyard into their library.\nFlashback G (You may cast this from your graveyard for its flashback cost. Then exile it.)
+text=Target player shuffles up to four target cards from their graveyard into their library.\nFlashback G (You may cast this from your graveyard for its flashback cost. Then exile it.)
 rarity=Uncommon
 color=MGU
 

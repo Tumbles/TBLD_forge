@@ -61,6 +61,8 @@ public abstract class TbldCardTest extends AITest {
         public List<Card> attackers = List.of();
         /** Blocks, blocker to attacker, declared in place of the AI's blocks; none unless set, null for the AI's. */
         public Map<Card, Card> blocks = Map.of();
+        /** The players for whom this player chose a vote (the AI chooses), in order. */
+        public final List<Player> votedFor = new ArrayList<>();
     }
 
     /** An AI player whose choices a test can override. */
@@ -125,6 +127,13 @@ public abstract class TbldCardTest extends AITest {
             final String want = choices.modes.remove(0);
             return options.stream().filter(o -> o.contains(want)).findFirst()
                     .orElseThrow(() -> new AssertionError("no keyword \"" + want + "\" among " + options));
+        }
+
+        @Override
+        public Object vote(final SpellAbility sa, final String prompt, final List<Object> options,
+                final com.google.common.collect.ListMultimap<Object, Player> votes, final Player forPlayer, final boolean optional) {
+            choices.votedFor.add(forPlayer);
+            return super.vote(sa, prompt, options, votes, forPlayer, optional);
         }
 
         @Override

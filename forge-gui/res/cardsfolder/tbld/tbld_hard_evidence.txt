@@ -2,6 +2,6 @@ Name:Hard Evidence
 ManaCost:U
 Types:Flash Sorcery
 A:SP$ Token | TokenScript$ u_0_3_crab | TokenOwner$ You | SubAbility$ DBInvestigate | SpellDescription$ Create a 0/3 blue Crab creature token.
-SVar:DBInvestigate:DB$ Investigate | SpellDescription$ Investigate.
+SVar:DBInvestigate:DB$ Token | TokenScript$ tbld_c_e_clue_scan | TokenOwner$ You | SpellDescription$ Investigate.
 DeckHas:Ability$Investigate|Token
 Oracle:Create a 0/3 blue Crab token.\nInvestigate. (Create a colorless Clue enchantment token with “2, Sacrifice this: Scan, then draw a card.”)

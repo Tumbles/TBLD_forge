@@ -21,7 +21,8 @@ public final class TbldVerified {
             TbldBlackCards4Test.VERIFIED,
             TbldMultiCards1Test.VERIFIED,
             TbldMultiCards2Test.VERIFIED,
-            TbldBlueCards1Test.VERIFIED);
+            TbldBlueCards1Test.VERIFIED,
+            TbldBlueCards2Test.VERIFIED);
 
     public static Set<String> all() {
         final Set<String> out = new TreeSet<>();

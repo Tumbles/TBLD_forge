@@ -362,7 +362,7 @@ public class TbldPool {
                 warnings.add("corrections.txt: can't read \"" + line + "\"");
                 continue;
             }
-            final String field = kv[0].trim(), value = kv[1].trim();
+            final String field = kv[0].trim(), value = unescape(kv[1].trim()); // text: "\n" for a line break
             final Entry e = cards.get(name);
             if (e == null) {
                 warnings.add("corrections.txt: \"" + name + "\" is not in the card XML (already fixed there?)");
