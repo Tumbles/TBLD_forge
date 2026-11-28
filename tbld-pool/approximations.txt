@@ -5,7 +5,6 @@ Wish | You may play the exiled card this turn only.
 Gift of Immortality | Returns only itself at the next end step, not every Aura that was attached.
 Nevermore | Superiority (opponents with lower life reveal their hands) is not done; the naming is.
 Warhorn Blast | The copy made when cast from exile uses the spell's copy rules; untested.
-Annul | Counters an activated ability only if its source is an artifact or enchantment (the text says any activated ability).
 Monastery Siege | Dragons gives ward 3 to your permanents but not to you.
 Mystic Reflection | The copying effect lasts only this turn (the text has no limit).
 Sidisis Faithful | The returned creature's name is not locked until your next turn.
@@ -19,3 +18,6 @@ Tocatli Honor Guard | Missing its second ability: creatures don't lose haste (fo
 Astral Cornucopia | Missing "T, Sacrifice this: Draw a card for each charge counter" (found by "verify").
 Sludge Crawler | The pump costs 2, not 2/C: Forge has no {2/C} symbol, so it can't be paid with a single C. Not counted as implemented.
 Fathom Feeder | Costs BR, as the card XML says; its picture says UB (its ability costs 3UB).
+Augury Raven | Foretell costs U, as its picture says; the card XML says 1U.
+Deep-Sea Kraken | No hexproof, as its picture says; the card XML gives it hexproof.
+Eldrazi Skyspawner | Makes its Spawn token when it enters, as its picture says; the card XML says when you cast it.

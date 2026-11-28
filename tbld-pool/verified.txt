@@ -7,18 +7,31 @@ Agony Warp
 Alms of the Vein
 Ambitions Cost
 Anax and Cymede
+Annul
+Aqueous Form
 Arbiter of Woe
+Arcane Artisan
+Arcane Flight
+Armored Skaab
 Army of the Damned
+As Foretold
 Ascended Lawmage
 Auger Spree
+Augur of Bolas
+Augury Raven
 Azorius Skyguard
 Azors Elocutors
 Bankrupt in Blood
+Baral Chief of Compliance
 Basilica Bell-Haunt
+Battlefield Thaumaturge
 Battlewise Hoplite
+Bazaar Trademage
 Beamsplitter Mage
 Bearer of Silence
 Beetleback Chief
+Beguiler of Wills
+Benthic Infiltrator
 Biovisionary
 Blanchwood Armor
 Blightning
@@ -32,43 +45,67 @@ Bloodthrone Vampire
 Bloodtithe Harvester
 Boltwing Marauder
 Bone Miser
+Boomerang
 Borborygmos Enraged
 Boros Challenger
+Breakthrough
+Brine Giant
 Butcher of the Horde
 Cabal Therapist
 Callous Bloodmage
 Campus Renovation
+Capsize
 Carrion Feeder
 Casualties of War
 Caustic Crawler
 Caustic Tar
+Chart a Course
 Chromanticore
+Circular Logic
+Citywatch Sphinx
 Cleaving Reaper
 Cling to Dust
 Collective Blessing
+Concentrate
+Condescend
 Conduit Goblin
+Confirm Suspicions
+Confound
 Corpsejack Menace
 Crackling Cyclops
 Cruel Celebrant
 Cruel Reality
 Cryptborn Horror
 Culling Drone
+Curious Inquiry
+Cyclonic Rift
 Cyclops Superconductor
 Daggerdrome Imp
 Dead Drop
 Dead Revels
 Debt to the Kami
+Deceiver Exarch
+Deep-Sea Kraken
+Deepfathom Skulker
 Deeproot Champion
+Deeproot Waters
 Defeat
 Defiant Bloodlord
+Deprive
+Depth Defiler
 Despark
 Despoiler of Souls
+Devious Cover-Up
 Diabolic Tutor
 Discordant Piper
+Disdainful Stroke
 Disfigure
 Dispossess
+Distant Melody
 Divest
+Divination
 Djinn Illuminatus
+Domineer
 Doom Foretold
 Double Cleave
 Drakestown Forgotten
@@ -76,25 +113,36 @@ Dramatic Rescue
 Dread Defiler
 Dread Shade
 Dream Devourer
+Dream Halls
+Dream Twist
 Dreg Mangler
 Dregscape Zombie
 Drossclaw
 Drown in Filth
+Drowned Secrets
+Drowner of Hope
 Dutiful Return
 Easy Prey
+Echo of Eons
 Ecstatic Electromancer
+Eel Umbra
 Eladamris Call
 Elas il-Kor Sadistic Pilgrim
+Eldrazi Skyspawner
 Electrosiphon
 Elite Guardmage
 Endless Ranks of the Dead
 Entomber Exarch
 Epic Experiment
 Ereboss Intervention
+Essence Capture
+Essence Scatter
 Eternal Taskmaster
 Ever After
 Evernight Shade
+Exclude
 Execute
+Exhaustion
 Extirpate
 Eye Collector
 Facevaulter

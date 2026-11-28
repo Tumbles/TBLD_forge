@@ -1,5 +1,5 @@
 Name:Annul
 ManaCost:U
 Types:Flash Sorcery
-A:SP$ Counter | TargetType$ Spell,Activated | TgtPrompt$ Select target artifact spell, enchantment spell, or activated ability | ValidTgts$ Artifact,Enchantment | SpellDescription$ Counter target artifact spell, enchantment spell, or activated ability.
+A:SP$ Counter | TargetType$ Spell.Artifact,Spell.Enchantment,Activated | TgtPrompt$ Select target artifact spell, enchantment spell, or activated ability | ValidTgts$ Card,Emblem | SpellDescription$ Counter target artifact spell, enchantment spell, or activated ability.
 Oracle:Counter target artifact spell, enchantment spell, or activated ability.

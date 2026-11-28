@@ -3,5 +3,5 @@ ManaCost:2 U
 Types:Sorcery
 A:SP$ Draw | NumCards$ 2 | ValidTgts$ Player | TgtPrompt$ Select target player | SubAbility$ DBDelTrig | SpellDescription$ Target player draws two cards. At the next end step, untap a permanent.
 SVar:DBDelTrig:DB$ DelayedTrigger | Mode$ Phase | Phase$ End of Turn | Execute$ TrigUntap | TriggerDescription$ At the next end step, untap a permanent.
-SVar:TrigUntap:DB$ Untap | UntapUpTo$ True | UntapType$ Permanent | Amount$ 1
+SVar:TrigUntap:DB$ Untap | UntapExactly$ True | UntapType$ Permanent | Amount$ 1
 Oracle:Target player draws two cards.\nAt the next end step, untap a permanent.

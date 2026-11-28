@@ -5,7 +5,7 @@ PT:2/1
 K:Devoid
 K:Ingest
 K:Flying
-T:Mode$ SpellCast | ValidCard$ Card.Self | Execute$ TrigToken | TriggerDescription$ When you cast CARDNAME, create a 1/1 colorless Eldrazi Spawn token. It has "Sacrifice this: Add C."
+T:Mode$ ChangesZone | Origin$ Any | Destination$ Battlefield | ValidCard$ Card.Self | Execute$ TrigToken | TriggerDescription$ When CARDNAME enters, create a 1/1 colorless Eldrazi Spawn token. It has "Sacrifice this: Add C."
 SVar:TrigToken:DB$ Token | TokenScript$ tbld_c_1_1_eldrazi_spawn_sac | TokenOwner$ You
 DeckHints:Type$Eldrazi
 DeckHas:Ability$Mana.Colorless|Token
