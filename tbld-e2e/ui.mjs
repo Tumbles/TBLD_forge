@@ -154,6 +154,33 @@ check(ogre && ogre.width > ogre.height, "a tapped attacker is sideways too");
 check(await count('#half-me .card[data-id="10"].sick .badge.sick') === 1, "a summoning-sick creature is marked");
 check(await count('#half-opp .card[data-id="41"].sick') === 0, "a creature that isn't sick is not marked");
 check((await page.locator('#half-opp .card[data-id="41"] .tags').textContent()).includes("blocking"), "a blocker is tagged as blocking");
+check((await page.locator('#half-opp .card[data-id="41"] .tags .tag.blocking').textContent()) === "blocking"
+  && (await page.locator('#half-opp .card[data-id="41"] .tags .tag.blocking').getAttribute("title")) === "blocking Gray Ogre",
+  "the blocking tag is short, and names the attacker on hover");
+// counters: one chip each, short text ("3 +1/+1") or a symbol with a hover label, never cut off
+const withCounters = makeState();
+withCounters.players[1].battlefield.find(c => c.id === 41).counters = { "+1/+1": 3, "Flying": 1, "Charge": 2, "-1/-1": 1 };
+send({ t: "state", state: withCounters });
+await settle(300);
+const chip = n => page.locator('#half-opp .card[data-id="41"] .cnt-chip[data-counter="' + n + '"]');
+check((await chip("+1/+1").textContent()) === "3 +1/+1" && (await chip("-1/-1").textContent()) === "-1/-1", "+1/+1 and -1/-1 counters are short text with their count");
+check((await chip("Flying").textContent()) === "✈" && (await chip("Flying").getAttribute("data-label")) === "1 Flying counter",
+  "a keyword counter is a symbol with its name as the label");
+check((await chip("Charge").textContent()) === "2 CH" && (await chip("Charge").getAttribute("data-label")) === "2 Charge counters",
+  "another long counter name is its initials with the count, and the full label");
+check(await page.locator('#half-opp .card[data-id="41"] .cnt-chip').evaluateAll(cs => cs.every(c => getComputedStyle(c).textOverflow !== "ellipsis" && c.scrollWidth <= c.clientWidth + 1)),
+  "no counter chip is cut off");
+{
+  const cardBox = await page.locator('#half-opp .card[data-id="41"] .face').boundingBox();
+  const ptBox = await page.locator('#half-opp .card[data-id="41"] .badge.pt').boundingBox();
+  const low = await chip("+1/+1").boundingBox();
+  check(low.x + low.width <= ptBox.x && low.x >= cardBox.x - 4, "the +1/+1 chip fits beside the power and toughness");
+}
+await chip("Flying").hover();
+check((await chip("Flying").evaluate(c => getComputedStyle(c, "::after").content)) === '"1 Flying counter"', "hovering a symbol chip shows its label");
+await page.screenshot({ path: path.join(here, "out/ui-counters.png"), clip: { x: 300, y: 80, width: 700, height: 300 } });
+send({ t: "state", state: makeState() });
+await settle(300);
 check((await page.locator('#half-opp .card[data-id="41"] .badge.pt').textContent()) === "3/3", "a damaged creature shows its toughness unchanged");
 check((await page.locator('#half-opp .card[data-id="41"] .badge.dmg').textContent()) === "2 dmg", "a damaged creature shows its damage");
 check(await page.locator("#half-me").evaluate(e => e.classList.contains("active")) && !(await page.locator("#half-opp").evaluate(e => e.classList.contains("active"))),

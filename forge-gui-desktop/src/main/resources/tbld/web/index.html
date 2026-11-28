@@ -143,13 +143,23 @@
   .badge.pt { right: -3px; bottom: -3px; font-size: 12px; }
   .badge.dmg { right: -3px; bottom: 18px; background: #7a1f1f; border-color: #c44; }
   .badge.sick { left: -3px; top: -3px; color: #b8c4ff; border-color: #5b6aa8; font-style: italic; }
-  .badge.cnt { left: -3px; bottom: -3px; max-width: calc(100% - 46px); overflow: hidden; text-overflow: ellipsis; background: #20402c; border-color: #3f9b62; }
+  /* Counters: one chip per kind, stacked upwards from the bottom-left corner. Text is kept short ("3 +1/+1") so nothing is cut off;
+     keyword and other long counters are a symbol, and hovering shows the label. */
+  .cnts { position: absolute; left: -3px; bottom: -3px; display: flex; flex-direction: column-reverse; align-items: flex-start; gap: 2px; }
+  .cnt-chip { position: relative; font-size: 11px; font-weight: 700; line-height: 1; padding: 3px 5px; border-radius: 6px; white-space: nowrap;
+    background: #20402c; border: 1px solid #3f9b62; pointer-events: auto; cursor: default; }
+  .cnt-chip.pos { background: #1d4a22; border-color: #4fc260; }
+  .cnt-chip.neg { background: #4a1d22; border-color: #d0545c; }
+  .cnt-chip.sym { background: #2b2748; border-color: #8f82e0; }
+  .cnt-chip.sym i { font-style: normal; font-size: 12px; }
+  .cnt-chip:hover::after { content: attr(data-label); position: absolute; left: 0; bottom: calc(100% + 4px); z-index: 9; padding: 3px 7px; border-radius: 6px;
+    font-size: 11px; font-weight: 600; background: #0d0f14; border: 1px solid #6b7386; color: var(--text); box-shadow: 0 2px 8px rgba(0, 0, 0, .7); }
   .badge.stackcount { background: #0d0f14; border-color: #6b7386; }
   .tags { position: absolute; left: 50%; transform: translateX(-50%); top: 4px; display: flex; flex-direction: column; align-items: center;
     gap: 2px; z-index: 5; pointer-events: none; }
   .card.tapped .tags { top: calc(14.2% + 4px); }
   .tag { font-size: 10px; padding: 1px 6px; border-radius: 8px; white-space: nowrap; font-weight: 600; text-transform: capitalize;
-    max-width: calc(var(--ch) * .68); overflow: hidden; text-overflow: ellipsis; box-shadow: 0 1px 3px rgba(0, 0, 0, .6); }
+    box-shadow: 0 1px 3px rgba(0, 0, 0, .6); }
   .tag.attacking { background: var(--danger); color: #1a0808; }
   .tag.blocking, .tag.blocked { background: var(--block); color: #07121e; }
   .tag.tapped-tag { display: none; }
@@ -499,11 +509,36 @@ function face(c) {
 }
 
 /** Combat status: [class, short tag shown on the card, full text shown in the preview]. */
+// Keyword counters (and a few others) are shown as a symbol, because their names are too long for a chip
+const COUNTER_SYMBOLS = { "Flying": "✈", "First Strike": "⚔", "Double Strike": "⚔⚔", "Deathtouch": "☠", "Decayed": "☣", "Exalted": "★",
+  "Haste": "»", "Hexproof": "◈", "Indestructible": "▣", "Lifelink": "♥", "Menace": "⋔", "Reach": "⇑", "Shadow": "◐", "Trample": "≫",
+  "Vigilance": "◉" };
+/**
+ * A counter chip: "3 +1/+1" and other names of up to four letters as text; everything else as a symbol
+ * (the initials when there is none), with the full label on hover.
+ */
+function counterChip(name, n) {
+  const symbol = COUNTER_SYMBOLS[name];
+  const words = name.split(/\s+/);
+  const pt = name === "+1/+1" || name === "-1/-1";
+  const text = pt || (name.length <= 4 && !symbol);
+  const chip = el("div", "cnt-chip" + (name === "+1/+1" ? " pos" : name === "-1/-1" ? " neg" : "") + (text ? "" : " sym"));
+  const count = n > 1 ? n + " " : "";
+  if (text) chip.textContent = count + name;
+  else {
+    chip.append(count);
+    chip.append(el("i", "", symbol || (words.length > 1 ? words[0][0] + words[1][0] : name.slice(0, 2)).toUpperCase()));
+  }
+  chip.dataset.counter = name;
+  chip.dataset.label = chip.title = n + " " + name + " counter" + (n > 1 ? "s" : "");
+  return chip;
+}
+
 function statusTags(c) {
   const tags = [];
   if (c.attacking !== undefined) tags.push(["attacking", "attacking", "attacking" + (c.attacking ? " " + c.attacking : "")]);
   if (c.blockedBy) tags.push(["blocked", "blocked", "blocked by " + c.blockedBy.join(", ")]);
-  if (c.blocking !== undefined) tags.push(["blocking", "blocking " + c.blocking, "blocking " + c.blocking]);
+  if (c.blocking !== undefined) tags.push(["blocking", "blocking", "blocking " + c.blocking]);
   return tags;
 }
 
@@ -551,10 +586,9 @@ function cardEl(c, ctx, extra = {}) {
     if (c.damage) b.append(el("div", "badge dmg", c.damage + " dmg"));
     if (ctx === "bf" && c.sick && isCreature) { const s = el("div", "badge sick", "zZ"); s.title = "Summoning sick"; b.append(s); }
     if (c.counters) {
-      const txt = Object.entries(c.counters).map(([k, v]) => (v > 1 ? v + "× " : "") + k).join(", ");
-      const cnt = el("div", "badge cnt", txt);
-      cnt.title = txt;
-      b.append(cnt);
+      const cnts = el("div", "cnts");
+      for (const [k, v] of Object.entries(c.counters)) cnts.append(counterChip(k, v));
+      b.append(cnts);
     }
     d.append(b);
     const tags = el("div", "tags");
