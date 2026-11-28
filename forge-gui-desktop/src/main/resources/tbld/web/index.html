@@ -270,6 +270,18 @@
   .switch input:checked::after { left: 14px; background: #fff; }
   .switch:has(input:checked) { color: var(--text); }
   #restart { font-size: 12px; padding: 4px 10px; }
+  /* "Always yield": a chip on each triggered ability on the stack, and the list of those switched on in the settings */
+  .ayield { margin-top: 5px; font: inherit; font-size: 10.5px; padding: 2px 8px; border-radius: 10px; cursor: pointer;
+    color: #b9a2ff; background: transparent; border: 1px solid rgba(170, 140, 255, .55); }
+  .ayield:hover { background: rgba(170, 140, 255, .14); }
+  .ayield.on { color: #120d22; background: #b9a2ff; border-color: #b9a2ff; font-weight: 700; }
+  #yields { display: none; flex-wrap: wrap; align-items: center; gap: 5px; }
+  #yields.some { display: flex; }
+  #yields .yl { color: var(--muted); margin-right: 2px; }
+  #yields .ychip { font: inherit; font-size: 11px; padding: 2px 4px 2px 8px; border-radius: 10px; cursor: pointer; color: var(--text);
+    background: rgba(150, 110, 255, .16); border: 1px solid rgba(170, 140, 255, .55); display: flex; align-items: center; gap: 4px; }
+  #yields .ychip .x { color: #b9a2ff; font-weight: 700; padding: 0 3px; }
+  #yields .ychip:hover .x { color: #fff; }
 
   /* ---- hover preview ---- */
   #preview { position: fixed; z-index: 100; pointer-events: none; display: none; width: min(300px, 26vw); }
@@ -384,6 +396,7 @@
           <input type="checkbox" id="holdpriority"> Hold priority</label>
         <button class="btn" id="restart">Restart</button>
       </div>
+      <div class="set-row" id="yields"></div>
     </div>
   </aside>
 </div>
@@ -821,6 +834,7 @@ function render() {
   document.getElementById("status").textContent = (state.gameOver ? "Game over. " : "") + "Turn " + state.turn + ", " + state.phase;
   renderPhaseBar();
   renderStack();
+  renderYields();
   renderDecision();
   hideStalePreview();
   renderLog();
@@ -916,8 +930,8 @@ function landStack(group) {
   st.style.width = `calc(${n - 1} * 13px + var(--ch))`;
   st.style.setProperty("--tap-x", Math.max(0, n - t - 1) * 13 + "px");
   const nodes = group.map((c, i) => { const x = cardEl(c, "bf"); x.style.setProperty("--i", i < t ? t - 1 - i : i - t); return x; });
-  // Only a stack of 7 or more lands shows its count, under the stack
-  if (n >= 7) {
+  // Only a stack of 4 or more lands shows its count, under the stack
+  if (n >= 4) {
     const count = st.querySelector(":scope > .stackcount") || el("div", "badge stackcount");
     count.textContent = "×" + n;
     nodes.push(count);
@@ -1104,6 +1118,34 @@ function renderChosen() {
   box.replaceChildren(el("div", "zone-label", "Chosen (click one to undo)"), row, clear);
 }
 
+// "Always yield" (as on MTGO): the player passes priority whenever that source's triggered ability is on top of the
+// stack. Shown at once; the game confirms it with its next snapshot.
+function setAlwaysYield(key, on, name, text) {
+  send({ t: "act", m: "alwaysYield", key, on });
+  for (const s of state.stack) if (s.yieldKey === key) s.alwaysYield = on;
+  const list = (state.alwaysYields || []).filter(y => y.key !== key);
+  if (on) list.push({ key, name, text });
+  state.alwaysYields = list;
+  renderStack();
+  renderYields();
+  requestAnimationFrame(drawArrows);
+}
+
+function renderYields() {
+  const box = document.getElementById("yields");
+  const list = state.alwaysYields || [];
+  box.classList.toggle("some", list.length > 0);
+  if (!list.length) { box.replaceChildren(); return; }
+  box.replaceChildren(el("span", "yl", "Always yield:"), ...list.map(y => {
+    const c = el("button", "ychip");
+    c.dataset.key = y.key;
+    c.title = (y.text || y.name) + "\nClick to stop yielding to it.";
+    c.append(el("span", "", y.name || "Ability"), el("span", "x", "×"));
+    c.onclick = () => setAlwaysYield(y.key, false);
+    return c;
+  }));
+}
+
 function renderStack() {
   const st = document.getElementById("stack");
   if (!state.stack.length) { st.replaceChildren(el("div", "empty", "(empty)")); return; }
@@ -1124,6 +1166,13 @@ function stackItem(s, top, targetable) {
   if (src && !src.hidden) info.append(el("div", "si-name", src.name));
   if (s.ability || !src) info.append(el("div", "si-text", s.text));
   if (s.targets) info.append(el("div", "si-targets", "Targets: " + s.targets.join(", ")));
+  if (s.yieldKey) {
+    const y = el("button", "ayield" + (s.alwaysYield ? " on" : ""), s.alwaysYield ? "Always yield ✓" : "Always yield");
+    y.title = s.alwaysYield ? "You pass priority whenever this ability is on top of the stack. Click to stop."
+      : "Pass priority whenever " + (src && !src.hidden ? src.name + "’s" : "this") + " ability is on top of the stack, until you switch it off";
+    y.onclick = e => { e.stopPropagation(); setAlwaysYield(s.yieldKey, !s.alwaysYield, src && !src.hidden ? src.name : "", s.text); };
+    info.append(y);
+  }
   d.append(info);
   if (src) hoverable(d, src);
   return d;

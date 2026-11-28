@@ -1732,10 +1732,16 @@ public class PlayerControllerHuman extends PlayerController implements IGameCont
         final MagicStack stack = getGame().getStack();
 
         // TBLD: without "hold priority", casting a spell or activating an ability passes priority,
-        // unless something triggered and went on the stack above it (Crackling Cyclops's trigger, say)
+        // unless something triggered and went on the stack above it (Crackling Cyclops's trigger, say).
+        // A trigger the player always yields to doesn't count: they pass over it, and over their own
+        // spell once it has resolved.
         if (passAfterPlay) {
-            passAfterPlay = false;
             final SpellAbilityStackInstance top = stack.peek();
+            if (!isMacroActive() && top != null && top.isTrigger() && shouldAutoYield(top.getSpellAbility().yieldKey())) {
+                getGui().awaitNextInput();
+                return null;
+            }
+            passAfterPlay = false;
             if (!isMacroActive() && top != null && top.getActivatingPlayer() == player && !top.isTrigger()) {
                 getGui().awaitNextInput();
                 return null;

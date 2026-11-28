@@ -158,6 +158,20 @@ final class TbldBot implements WebSocket.Listener {
     /** A stack item that targeted this player carried this player's id in its targetPlayers. */
     volatile boolean sawTargetIdOnStack;
 
+    // "Always yield"
+    /** Switch "Always yield" on for each of this player's triggered abilities when it first gets priority over one. */
+    volatile boolean alwaysYieldOwnTriggers;
+    /** Stack ids of the triggered abilities this player switched "Always yield" on at. */
+    final Set<Integer> yieldSetOn = ConcurrentHashMap.newKeySet();
+    /** Stack ids of triggered abilities that were always yielded to from the moment they were seen. */
+    final Set<Integer> autoYieldedTriggers = ConcurrentHashMap.newKeySet();
+    /** {@link #promptsAfterCast} when the first of {@link #autoYieldedTriggers} was seen. */
+    volatile int promptsAfterCastAtFirstAutoYield = -1;
+    /** Priority prompts with a triggered ability this player always yields to on top of the stack. */
+    volatile int promptsOverYieldedTrigger;
+    /** The snapshot's list of always-yielded abilities named this source. */
+    final Set<String> alwaysYieldsListed = ConcurrentHashMap.newKeySet();
+
     TbldBot(final HttpClient http, final int port, final int seat, final boolean aggressive) throws Exception {
         this(http, port, seat, aggressive, 0);
     }
@@ -345,6 +359,16 @@ final class TbldBot implements WebSocket.Listener {
                         }
                     }
                 }
+                final int sid = item.get("id").getAsInt();
+                if (item.has("alwaysYield") && item.get("alwaysYield").getAsBoolean() && !yieldSetOn.contains(sid)
+                        && autoYieldedTriggers.add(sid) && promptsAfterCastAtFirstAutoYield < 0) {
+                    promptsAfterCastAtFirstAutoYield = promptsAfterCast;
+                }
+            }
+        }
+        if (s.has("alwaysYields")) {
+            for (final JsonElement y : s.getAsJsonArray("alwaysYields")) {
+                alwaysYieldsListed.add(y.getAsJsonObject().get("name").getAsString());
             }
         }
         if (yieldTurn >= 0 && s.has("yieldAll")) {
@@ -435,6 +459,12 @@ final class TbldBot implements WebSocket.Listener {
     /** Bookkeeping for each priority prompt: what followed a cast, and prompts while yielding. */
     private void notePriorityPrompt() {
         final JsonObject s = state;
+        if (s != null && s.has("stack") && !s.getAsJsonArray("stack").isEmpty()) {
+            final JsonObject top = s.getAsJsonArray("stack").get(0).getAsJsonObject();
+            if (top.has("alwaysYield") && top.get("alwaysYield").getAsBoolean()) {
+                promptsOverYieldedTrigger++;
+            }
+        }
         if (castPending) {
             castPending = false;
             floatCastPending = false;
@@ -770,6 +800,26 @@ final class TbldBot implements WebSocket.Listener {
 
         // Priority
         final boolean priority = "OK".equals(label1) && okEnabled && !label2.isEmpty();
+        // "Always yield" to this player's own triggered ability on top of the stack, as a person would from its tile
+        if (priority && alwaysYieldOwnTriggers && !state.getAsJsonArray("stack").isEmpty()) {
+            final JsonObject top = state.getAsJsonArray("stack").get(0).getAsJsonObject();
+            if (top.has("yieldKey") && !top.get("alwaysYield").getAsBoolean() && top.has("controller")
+                    && top.get("controller").getAsInt() == state.get("me").getAsInt() && yieldSetOn.add(top.get("id").getAsInt())) {
+                if (actions.size() < 2000) {
+                    actions.add("t" + turn() + " always yield to " + top.get("text").getAsString());
+                }
+                final JsonObject o = new JsonObject();
+                o.addProperty("t", "act");
+                o.addProperty("m", "alwaysYield");
+                o.addProperty("key", top.get("yieldKey").getAsString());
+                o.addProperty("on", true);
+                // Switching it on passes the priority this player holds, so these buttons are spent
+                spentButtons = buttons;
+                buttons = null;
+                send(o);
+                return;
+            }
+        }
         // "Yield all" script, on an opponent's turn: first yield for the rest of a turn; on a later turn,
         // yield and switch it straight off again
         if (priority && yieldScript && !myTurn() && turn() >= 3) {

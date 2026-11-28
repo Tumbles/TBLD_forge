@@ -99,16 +99,21 @@ await settle(300);
 check(await count('#half-me [data-row="creatures"] .card[data-id="10"]') === 1, "creatures are in the front row");
 check(await count('#half-me [data-row="back"] .card[data-id="11"]') === 1, "a noncreature, nonland permanent is in the back row");
 check(await count('#half-me [data-row="back"] .landstack') === 1, "matching lands are stacked, tapped and untapped together");
-check(await count('#half-me .landstack .stackcount') === 0, "a stack of fewer than 7 lands shows no count");
-const sevenLands = makeState();
-sevenLands.players[0].battlefield.push(mountain(6), mountain(7));
-send({ t: "state", state: sevenLands });
-await settle(300);
-const sevenBox = await page.locator('#half-me .landstack').first().boundingBox();
+const fiveBox = await page.locator('#half-me .landstack').first().boundingBox();
 const countBox = await page.locator('#half-me .landstack .stackcount').boundingBox();
-check((await page.locator('#half-me .landstack .stackcount').textContent()) === "×7" && countBox.y > sevenBox.y + sevenBox.height - 6
-  && Math.abs((countBox.x + countBox.width / 2) - (sevenBox.x + sevenBox.width / 2)) < 2, "a stack of 7 lands shows its count under the stack");
+check((await page.locator('#half-me .landstack .stackcount').textContent()) === "×5" && countBox.y > fiveBox.y + fiveBox.height - 6
+  && Math.abs((countBox.x + countBox.width / 2) - (fiveBox.x + fiveBox.width / 2)) < 2, "a stack of 5 lands shows its count under the stack");
 await page.screenshot({ path: path.join(here, "out/ui-land-count.png") });
+const fourLands = makeState();
+fourLands.players[0].battlefield = fourLands.players[0].battlefield.filter(c => c.id !== 5);
+send({ t: "state", state: fourLands });
+await settle(300);
+check((await page.locator('#half-me .landstack .stackcount').textContent()) === "×4", "a stack of 4 lands shows its count");
+const threeLands = makeState();
+threeLands.players[0].battlefield = threeLands.players[0].battlefield.filter(c => c.id !== 4 && c.id !== 5);
+send({ t: "state", state: threeLands });
+await settle(300);
+check(await count('#half-me .landstack .stackcount') === 0, "a stack of fewer than 4 lands shows no count");
 send({ t: "state", state: makeState() });
 await settle(300);
 const stackIds = await page.locator('#half-me .landstack .card').evaluateAll(xs => xs.map(x => x.dataset.id));
@@ -225,6 +230,31 @@ const spellH = (await page.locator("#stack .stack-item.spell .card").boundingBox
 const abilityH = (await page.locator("#stack .stack-item.ability .card").boundingBox()).height;
 check(spellH > abilityH * 1.5, "spells are shown larger than abilities");
 check((await page.locator("#stack .stack-item.spell .si-targets").textContent()).includes("Gray Ogre"), "a stack item lists its targets");
+
+// "Always yield" on a triggered ability: shown on the trigger only, sent with its key, shown at once, listed in the settings
+const goblinKey = "Battlefield: Raging Goblin (10): When it attacks, it deals 1 damage.";
+const withKey = (on, yields = []) => { const st = makeState({ alwaysYields: yields }); Object.assign(st.stack[1], { yieldKey: goblinKey, alwaysYield: on }); return st; };
+send({ t: "state", state: withKey(false) });
+await settle();
+check(await count("#stack .stack-item .ayield") === 1 && (await count('#stack .stack-item[data-stack="101"] .ayield')) === 1, "only the triggered ability offers Always yield");
+check(!(await visible("#yields")), "the settings list no abilities while none is yielded to");
+let ny = received.length;
+await page.click('#stack .stack-item[data-stack="101"] .ayield');
+check(!!(await waitFor(() => received.slice(ny).find(m => m.t === "act" && m.m === "alwaysYield" && m.key === goblinKey && m.on === true), "always yield on")),
+  "Always yield tells the game, with the ability's key");
+check(!received.slice(ny).some(m => m.t === "act" && m.m === "stack"), "clicking Always yield does not select the stack item");
+check(await count('#stack .stack-item[data-stack="101"] .ayield.on') === 1, "Always yield shows as on at once");
+check(await visible("#yields") && (await page.locator("#yields .ychip").textContent()).includes("Raging Goblin"), "the settings list the ability at once");
+await page.screenshot({ path: path.join(here, "out/ui-always-yield.png") });
+send({ t: "state", state: withKey(true, [{ key: goblinKey, name: "Raging Goblin", text: "When it attacks, it deals 1 damage." }]) });
+await settle();
+ny = received.length;
+await page.click("#yields .ychip");
+check(!!(await waitFor(() => received.slice(ny).find(m => m.t === "act" && m.m === "alwaysYield" && m.key === goblinKey && m.on === false), "always yield off")),
+  "the list switches Always yield off");
+check(!(await visible("#yields")) && (await count('#stack .stack-item[data-stack="101"] .ayield.on')) === 0, "switched off, it leaves the list and the stack shows it off");
+send({ t: "state", state: makeState() });
+await settle();
 
 // the stack takes the sidebar below the decision panel and scrolls; the log is a popup
 const box = sel => page.locator(sel).evaluate(e => ({ h: e.clientHeight, sh: e.scrollHeight, top: e.getBoundingClientRect().top }));

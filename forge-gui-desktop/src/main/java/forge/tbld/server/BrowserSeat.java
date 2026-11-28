@@ -124,6 +124,9 @@ public final class BrowserSeat implements IRemote {
     private volatile Map<Integer, PlayerView> visiblePlayers = Map.of();
     private volatile Map<Integer, StackItemView> visibleStack = Map.of();
 
+    /** The triggered abilities this player chose "Always yield" for, by Forge's yield key: the source's name and the ability's text. */
+    private final Map<String, String[]> alwaysYields = new ConcurrentHashMap<>();
+
     /** {@code channel} supplies this seat's current browser connection, or null while disconnected. */
     public BrowserSeat(final int seatIndex, final Supplier<Channel> channel) {
         this.seatIndex = seatIndex;
@@ -590,6 +593,26 @@ public final class BrowserSeat implements IRemote {
                     pch.autoPassCancel();
                 }
             }
+            case "alwaysYield" -> {
+                // "Always yield" (as on MTGO): pass priority whenever this source's triggered ability is on top of
+                // the stack, until switched off. Forge's per-card auto-yield; switching it on while the player holds
+                // priority over that ability passes now.
+                final String key = msg.has("key") ? msg.get("key").getAsString() : "";
+                final boolean on = !msg.has("on") || msg.get("on").getAsBoolean();
+                if (on) {
+                    // Only for a triggered ability the player can see on the stack
+                    for (final StackItemView si : visibleStack.values()) {
+                        if (si.isTrigger() && key.equals(si.getKey())) {
+                            alwaysYields.put(key, new String[] {
+                                    si.getSourceCard() == null ? "" : si.getSourceCard().getName(), si.getText() });
+                            controller.applyYieldUpdate(new YieldUpdate.CardAutoYield(key, true));
+                            break;
+                        }
+                    }
+                } else if (alwaysYields.remove(key) != null) {
+                    controller.applyYieldUpdate(new YieldUpdate.CardAutoYield(key, false));
+                }
+            }
             case "undo" -> controller.undoLastAction();
             case "concede" -> controller.concede();
             default -> { }
@@ -1007,6 +1030,11 @@ public final class BrowserSeat implements IRemote {
                 s.addProperty("text", si.getText());
                 s.addProperty("ability", si.isAbility());
                 s.addProperty("trigger", si.isTrigger());
+                // A triggered ability can be set to "Always yield"; the key names it (its source and its ability)
+                if (si.isTrigger() && si.getKey() != null) {
+                    s.addProperty("yieldKey", si.getKey());
+                    s.addProperty("alwaysYield", controller != null && controller.shouldAutoYield(si.getKey()));
+                }
                 if (si.getActivatingPlayer() != null) {
                     s.addProperty("controller", si.getActivatingPlayer().getId());
                 }
@@ -1047,6 +1075,20 @@ public final class BrowserSeat implements IRemote {
             }
         }
         j.add("stack", st);
+
+        // The triggered abilities this player always yields to, so the settings can list them and switch them off.
+        // Forge forgets them when a game ends.
+        final JsonArray yields = new JsonArray();
+        for (final Map.Entry<String, String[]> e : alwaysYields.entrySet()) {
+            if (controller != null && controller.shouldAutoYield(e.getKey())) {
+                final JsonObject y = new JsonObject();
+                y.addProperty("key", e.getKey());
+                y.addProperty("name", e.getValue()[0]);
+                y.addProperty("text", e.getValue()[1]);
+                yields.add(y);
+            }
+        }
+        j.add("alwaysYields", yields);
 
         final JsonArray log = new JsonArray();
         if (gv.getGameLog() != null) {

@@ -73,6 +73,50 @@ public class TbldWebTriggersTest extends AITest {
         }
     }
 
+    /**
+     * "Always yield" (as on MTGO) to Crackling Cyclops's trigger: switched on at the trigger, it passes priority over it
+     * then and every later time, and with hold priority off the player also passes over their own spell once the
+     * trigger has resolved. The snapshot lists the ability so it can be switched off.
+     */
+    @Test(timeOut = 300000)
+    public void alwaysYieldPassesOverATrigger() throws Exception {
+        final TbldWebServer server = new TbldWebServer(2, TbldWebTriggersTest::cyclopsDeck);
+        final int port = server.start(0);
+        TbldBot bot1 = null;
+        TbldBot bot2 = null;
+        try {
+            final HttpClient http = HttpClient.newHttpClient();
+            bot1 = new TbldBot(http, port, 1, true);
+            bot1.setPref("holdPriority", new JsonPrimitive(false));
+            bot1.alwaysYieldOwnTriggers = true;
+            bot2 = new TbldBot(http, port, 2, false);
+            final long deadline = System.currentTimeMillis() + 240000;
+            // Until a cast whose trigger was already yielded to has run its course (the next prompt after it)
+            while (System.currentTimeMillis() < deadline && !(bot1.gameOver && bot2.gameOver)
+                    && !(bot1.promptsAfterCastAtFirstAutoYield >= 0 && bot1.promptsAfterCast > bot1.promptsAfterCastAtFirstAutoYield)) {
+                Thread.sleep(100);
+            }
+            final String report = "\n" + bot1.summary() + "\n" + bot2.summary();
+            AssertJUnit.assertTrue("errors: " + bot1.errors + bot2.errors + report, bot1.errors.isEmpty() && bot2.errors.isEmpty());
+            AssertJUnit.assertFalse("seat 1 never switched Always yield on" + report, bot1.yieldSetOn.isEmpty());
+            AssertJUnit.assertTrue("the snapshot did not list Crackling Cyclops as always yielded to" + report,
+                    bot1.alwaysYieldsListed.contains("Crackling Cyclops"));
+            AssertJUnit.assertFalse("no later Cyclops trigger was yielded to" + report, bot1.autoYieldedTriggers.isEmpty());
+            AssertJUnit.assertTrue("the cast with a yielded trigger never finished" + report,
+                    bot1.promptsAfterCast > bot1.promptsAfterCastAtFirstAutoYield);
+            AssertJUnit.assertEquals("seat 1 got priority over a trigger it always yields to" + report, 0, bot1.promptsOverYieldedTrigger);
+            AssertJUnit.assertEquals("seat 1 (hold priority off) got priority over its own spell" + report, 0, bot1.heldAfterCast);
+        } finally {
+            if (bot1 != null) {
+                bot1.close();
+            }
+            if (bot2 != null) {
+                bot2.close();
+            }
+            server.stop();
+        }
+    }
+
     /** Jungleborn Pioneers and their Merfolk, for Stand Together's two targets. */
     private static Deck standTogetherDeck() {
         final Deck d = new Deck("Two targets test deck");
