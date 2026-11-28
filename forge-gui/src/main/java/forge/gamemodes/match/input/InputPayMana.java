@@ -358,6 +358,10 @@ public abstract class InputPayMana extends InputSyncronizedBase {
                     if (!restrictionsMet || chosen.getPayCosts().hasManaCost()) {
                         // force refresh in case too much mana got spent
                         invalidateAutoPayManaSources();
+                    } else if (autoPayManaSources == null || chosen.getHostCard().isEmblem()) {
+                        // TBLD: Auto was not payable because it never spends a person's emblem. Once the
+                        // person has used the emblem's mana, what is left may be payable, so check again.
+                        invalidateAutoPayManaSources();
                     }
                 }
             } finally {
