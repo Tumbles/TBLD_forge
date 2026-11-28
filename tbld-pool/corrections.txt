@@ -32,3 +32,7 @@ Eureka | type=Sorcery
 Eureka | text=Starting with you, each player may put a nonsorcery card from their hand into play. Repeat this process until no one puts a card into play.\nCycling 2 (2, Discard this: Draw a card.)
 Explore | text=You may play an additional land this turn.\nDraw a card.
 Fallow Earth | type=Sorcery
+Fortifying Draught | text=Gain 2 life. Target creature gets +X/+X this turn, where X is the amount of life you gained this turn.
+Grapple with the Past | text=Mill three cards, then you may return a creature or land card from your graveyard to your hand.
+Greenbelt Rampager | text=When this creature enters, pay EE (two energy counters). If you can't, return this to its owner's hand and you get E.
+Herald of the Pantheon | text=Enchantment spells you cast cost 1 less.\nWhenever you cast an enchantment spell, gain 1 life.

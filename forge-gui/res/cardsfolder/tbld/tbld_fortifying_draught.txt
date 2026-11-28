@@ -1,8 +1,8 @@
 Name:Fortifying Draught
 ManaCost:G
 Types:Flash Sorcery
-A:SP$ GainLife | LifeAmount$ 3 | SubAbility$ DBPump | SpellDescription$ Gain 3 life. Target creature gets +X/+X this turn, where X is the amount of life you gained this turn.
+A:SP$ GainLife | LifeAmount$ 2 | SubAbility$ DBPump | SpellDescription$ Gain 2 life. Target creature gets +X/+X this turn, where X is the amount of life you gained this turn.
 SVar:DBPump:DB$ Pump | ValidTgts$ Creature | NumAtt$ +X | NumDef$ +X
 SVar:X:Count$LifeYouGainedThisTurn
 DeckHas:Ability$LifeGain
-Oracle:Gain 3 life. Target creature gets +X/+X this turn, where X is the amount of life you gained this turn.
+Oracle:Gain 2 life. Target creature gets +X/+X this turn, where X is the amount of life you gained this turn.

@@ -6995,7 +6995,7 @@ tags=ADDED NEW
 [Fortifying Draught]
 cost=G
 type=Flash Sorcery
-text=Gain 3 life. Target creature gets +X/+X this turn, where X is the amount of life you gained this turn.
+text=Gain 2 life. Target creature gets +X/+X this turn, where X is the amount of life you gained this turn.
 rarity=Uncommon
 color=G
 
@@ -8061,7 +8061,7 @@ tags=WIPE
 [Grapple with the Past]
 cost=1G
 type=Flash Sorcery
-text=Target player mills three cards, then returns up to one creature or land card from their graveyard to their hand.
+text=Mill three cards, then you may return a creature or land card from your graveyard to your hand.
 rarity=Uncommon
 color=G
 
@@ -8156,7 +8156,7 @@ tags=ADDED NEW ENERGY
 cost=G
 type=Creature - Elephant
 pt=3/4
-text=Trample\nWhen this enters, you get EE (two energy counters). Then you may pay any amount of E. Gain twice that much life.
+text=When this creature enters, pay EE (two energy counters). If you can't, return this to its owner's hand and you get E.
 rarity=Common
 color=G
 tags=ADDED NEW ENERGY
@@ -8646,7 +8646,7 @@ color=MGU
 cost=1G
 type=Creature - Centaur Shaman
 pt=2/2
-text=2G: Exile target creature card from a graveyard, then populate. (Create a token that's a copy of a creature token you control.)
+text=Enchantment spells you cast cost 1 less.\nWhenever you cast an enchantment spell, gain 1 life.
 rarity=Common
 color=G
 tags=ADDED NEW RAMP

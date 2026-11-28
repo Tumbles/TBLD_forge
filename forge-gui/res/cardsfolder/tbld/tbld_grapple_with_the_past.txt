@@ -1,7 +1,7 @@
 Name:Grapple with the Past
 ManaCost:1 G
 Types:Flash Sorcery
-A:SP$ Mill | NumCards$ 3 | ValidTgts$ Player | TgtPrompt$ Select target player | SubAbility$ DBChangeZone | SpellDescription$ Target player mills three cards, then returns up to one creature or land card from their graveyard to their hand.
-SVar:DBChangeZone:DB$ ChangeZone | Origin$ Graveyard | Destination$ Hand | DefinedPlayer$ Targeted | Chooser$ Targeted | ChangeType$ Creature,Land | ChangeNum$ 1 | Hidden$ True
+A:SP$ Mill | NumCards$ 3 | Defined$ You | SubAbility$ DBChangeZone | SpellDescription$ Mill three cards, then you may return a creature or land card from your graveyard to your hand.
+SVar:DBChangeZone:DB$ ChangeZone | Origin$ Graveyard | Destination$ Hand | ChangeType$ Creature,Land | ChangeNum$ 1 | Hidden$ True
 DeckHas:Ability$Graveyard
-Oracle:Target player mills three cards, then returns up to one creature or land card from their graveyard to their hand.
+Oracle:Mill three cards, then you may return a creature or land card from your graveyard to your hand.

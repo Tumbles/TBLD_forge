@@ -202,24 +202,33 @@ Fathom Feeder
 Feed the Clan
 Feed the Pack
 Fell Stinger
+Fertile Ground
 Festering Goblin
+Fierce Empath
 Firebolt
 Firemane Avenger
 Fireminds Research
+Fists of Ironwood
 Flayer Drone
 Flux Channeler
 Followed Footsteps
 Force Spike
 Forerunner of Slaughter
+Forerunner of the Heralds
 Forgotten Creation
+Fortifying Draught
 Foul-Tongue Shriek
 Frazzle
 Freed from the Real
 Frogify
+From Beyond
+Frontier Siege
 Fungal Infection
 Fusion Elemental
 Future Sight
+Gaeas Gift
 Galvanic Blast
+Gelatinous Genesis
 Gelectrode
 Geralfs Masterpiece
 Geralfs Mindcrusher
@@ -228,12 +237,17 @@ Ghastly Demise
 Ghor-Clan Rampager
 Ghostly Wings
 Ghoulraiser
+Ghoultree
+Giant Growth
 Gift of Orzhova
+Gilded Goose
 Glare of Subdual
 Glaze Fiend
 Gleam of Battle
 Glint-Sleeve Siphoner
+Gluttonous Slime
 Glyph Keeper
+Gnarlback Rhino
 Gnarled Scarhide
 Gnawing Vermin
 Go Blank
@@ -241,22 +255,31 @@ Goblin Deathraiders
 Goblin Wardriver
 Gonti Night Minister
 Grafted Identity
+Grapple with the Past
 Grasp of Darkness
 Grave Scrabbler
 Gray Merchant of Asphodel
+Greenbelt Rampager
 Greenweaver Druid
 Grip of Desolation
+Groundswell
 Grove Rumbler
 Hard Evidence
 Hardened Tactician
 Harsh Mentor
+Harvest Season
 Haunted Dead
 Havoc Demon
 Herald of Kozilek
+Herald of the Pantheon
 Heroic Reinforcements
+Hidden Herbalists
 High Fae Trickster
 High Priest of Penance
+Highspire Infusion
 Homunculus Horde
+Honored Hydra
+Hooting Mandrills
 Hope-Ender Coatl
 Horned Kavu
 Horribly Awry
@@ -264,11 +287,13 @@ Hound of Griselbrand
 Hunger of the Howlpack
 Hunters Mark
 Hussar Patrol
+Hydras Growth
 Hypersonic Dragon
 Ideas Unbound
 Illness in the Ranks
 Illusion of Choice
 Illusionary Armor
+Impervious Greatwurm
 Indulgent Aristocrat
 Infernal Tribute
 Infernal Tutor
@@ -282,6 +307,9 @@ Jeskai Ascendancy
 Jeskai Shrinekeeper
 Jump
 Jungleborn Pioneer
+Kalonian Tusker
+Karametras Acolyte
+Kavu Climber
 Knowledge is Power
 Knucklebone Witch
 Kraul Whipcracker
@@ -290,20 +318,27 @@ Lazav Wearer of Faces
 Lightning Helix
 Lilianas Mastery
 Lilianas Steward
+Llanowar Stalker
 Lock and Load
 Logic Knot
+Longtusk Cub
 Lord of the Accursed
+Lotus Cobra
 Lucid Dreams
 Lullmage Mentor
 Lunar Force
 Macabre Waltz
 Magus of the Bazaar
+Magus of the Library
+Magus of the Vineyard
+Mammoth Growth
 Mana Leak
 Mana Severance
 Marauding Blight-Priest
 Mardu Shadowspear
 Markov Dreadknight
 Marrow Chomper
+Marwyn the Nurturer
 Mass Manipulation
 Massacre Girl
 Masterminds Acquisition
@@ -326,28 +361,43 @@ Mist Intruder
 Mnemonic Deluge
 Mob
 Moderation
+Moments Peace
 Monastery Siege
+Monstrify
+Monstrous Onslaught
+Monstrous Vortex
 Moonglove Winnower
 Moonsnare Specialist
 Moriok Scavenger
 Mortify
+Mossborn Hydra
 Muddle the Mixture
 Mulldrifter
 Murk Strider
+Mycoloth
 Mystic Reflection
 Mystical Teachings
+Natural State
+Natures Lore
+Natures Spiral
 Neutralizing Blast
 New Perspectives
 Nim Lasher
 Ninja of the Deep Hours
 Nivmagus Elemental
+Noose Constrictor
 Novijen Sages
+Nullmage Shepherd
 Nullpriest of Oblivion
+Nyleas Colossus
+Nyxborn Hydra
 Nyxborn Triton
 Oathsworn Vampire
 Obeka Brute Chronologist
 Ochran Assassin
 Okiba-Gang Shinobi
+On the Trail
+Oran-Rief Ooze
 Ordeal of Erebos
 Ordeal of Thassa
 Orzhov Enforcer
