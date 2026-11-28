@@ -15,7 +15,8 @@ public final class TbldVerified {
     /** The VERIFIED list of each test that plays cards; add a new card test here. */
     static final List<List<String>> LISTS = List.of(
             TbldTestDecksTest.VERIFIED,
-            TbldBlackCards1Test.VERIFIED);
+            TbldBlackCards1Test.VERIFIED,
+            TbldBlackCards2Test.VERIFIED);
 
     public static Set<String> all() {
         final Set<String> out = new TreeSet<>();

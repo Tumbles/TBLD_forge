@@ -54,16 +54,66 @@ Eternal Taskmaster
 Ever After
 Evernight Shade
 Execute
+Extirpate
+Eye Collector
+Facevaulter
+False Cure
 Feed the Clan
+Fell Stinger
+Festering Goblin
 Firebolt
+Foul-Tongue Shriek
+Fungal Infection
 Galvanic Blast
+Geth Thane of Contracts
+Ghastly Demise
+Ghoulraiser
+Glaze Fiend
+Glint-Sleeve Siphoner
+Gnarled Scarhide
+Gnawing Vermin
+Go Blank
 Goblin Wardriver
+Gonti Night Minister
+Grasp of Darkness
+Grave Scrabbler
+Gray Merchant of Asphodel
 Greenweaver Druid
+Grip of Desolation
 Harsh Mentor
+Haunted Dead
+Havoc Demon
 Hound of Griselbrand
 Hunger of the Howlpack
+Illness in the Ranks
+Indulgent Aristocrat
+Infernal Tutor
+Infinite Obliteration
+Ink-Eyes Servant of Oni
+Innocent Blood
 Ironscale Hydra
 Jungleborn Pioneer
+Knucklebone Witch
+Lilianas Mastery
+Lilianas Steward
+Lord of the Accursed
+Macabre Waltz
+Marauding Blight-Priest
+Mardu Shadowspear
+Markov Dreadknight
+Massacre Girl
+Masterminds Acquisition
+Megrim
+Memoricide
+Mob
+Moonglove Winnower
+Moriok Scavenger
+Nim Lasher
+Nullpriest of Oblivion
+Oathsworn Vampire
+Okiba-Gang Shinobi
+Ordeal of Erebos
+Orzhov Enforcer
 Rigging Runner
 Sacred Wolf
 Searing Blood

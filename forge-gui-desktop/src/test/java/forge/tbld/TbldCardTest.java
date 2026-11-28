@@ -102,6 +102,18 @@ public abstract class TbldCardTest extends AITest {
             return out;
         }
 
+        /** A choice between abilities ("choose one" of GenericChoice, such as germinate): the next of the modes. */
+        @Override
+        public SpellAbility chooseSingleSpellForEffect(final List<SpellAbility> spells, final SpellAbility sa, final String title,
+                final Map<String, Object> params) {
+            if (choices.modes.isEmpty()) {
+                return super.chooseSingleSpellForEffect(spells, sa, title, params);
+            }
+            final String want = choices.modes.remove(0);
+            return spells.stream().filter(p -> p.getDescription().contains(want)).findFirst()
+                    .orElseThrow(() -> new AssertionError("no choice \"" + want + "\" among " + spells));
+        }
+
         @Override
         public String chooseCardName(final SpellAbility sa, final Predicate<forge.card.ICardFace> cpp, final String valid, final String message) {
             return choices.cardName != null ? choices.cardName : super.chooseCardName(sa, cpp, valid, message);
@@ -350,8 +362,11 @@ public abstract class TbldCardTest extends AITest {
     /** Puts cards on top of the library, so the last one named is drawn first. */
     protected void library(final Player p, final String... names) {
         for (final String n : names) {
-            addCardToZone(n, p, ZoneType.Library);
+            final Card c = createCard(n, p);
+            c.setGameTimestamp(game.getNextTimestamp());
+            p.getZone(ZoneType.Library).add(c, 0);
         }
+        game.copyLastState();
     }
 
     /**
@@ -381,12 +396,12 @@ public abstract class TbldCardTest extends AITest {
 
     /** Casts the card's first spell ability with these targets (on the first part of it that targets). */
     protected void cast(final Card c, final forge.game.GameObject... targets) {
-        cast(c.getController(), c.getFirstSpellAbility(), targeting(targets));
+        cast(c.getController(), current(c).getFirstSpellAbility(), targeting(targets));
     }
 
     /** Activates the card's ability whose description contains the text, with these targets. */
     protected void activate(final Card c, final String text, final forge.game.GameObject... targets) {
-        cast(c.getController(), ability(c, text), targeting(targets));
+        cast(c.getController(), ability(current(c), text), targeting(targets));
     }
 
     /** The card's activated (or other non-spell) ability whose description contains the text. */
@@ -427,8 +442,13 @@ public abstract class TbldCardTest extends AITest {
 
     /** The card's spell with this alternative cost (flashback, escape, spectacle, ...) from where it is now. */
     protected SpellAbility alternative(final Card c, final Predicate<SpellAbility> which) {
-        return current(c).getAllPossibleAbilities(c.getOwner(), false).stream().filter(which).findFirst()
-                .orElseThrow(() -> new AssertionError(c + " has no such alternative cost"));
+        return alternative(c.getOwner(), c, which);
+    }
+
+    /** The spell or ability of the card, for this player, that matches (casting another player's card, say). */
+    protected SpellAbility alternative(final Player p, final Card c, final Predicate<SpellAbility> which) {
+        return current(c).getAllPossibleAbilities(p, false).stream().filter(which).findFirst()
+                .orElseThrow(() -> new AssertionError(c + " has no such spell or ability for " + p));
     }
 
     /** The card's first spell with all its optional costs (kicker, buyback, ...) paid. */
