@@ -47,8 +47,8 @@ public abstract class TbldCardTest extends AITest {
         public Boolean confirm;
         /** Charm modes, each named by a part of its description, used in order. */
         public final List<String> modes = new ArrayList<>();
-        /** Targets for triggered abilities: each targeting part takes those it can target. */
-        public List<GameEntity> targets;
+        /** Targets for triggered abilities (cards, players or spells): each targeting part takes those it can target. */
+        public List<? extends forge.game.GameObject> targets;
         /** Cards (or players) picked first for effects: choosing, sacrificing, discarding, searching. */
         public Predicate<GameEntity> prefer;
         /** The card name chosen for "choose a card name". */
@@ -339,11 +339,11 @@ public abstract class TbldCardTest extends AITest {
     }
 
     /** Each targeting part of the spell ability takes those of the targets it can target. */
-    static void setTargets(final SpellAbility sa, final List<GameEntity> targets) {
+    static void setTargets(final SpellAbility sa, final List<? extends forge.game.GameObject> targets) {
         for (SpellAbility s = sa; s != null; s = s.getSubAbility()) {
             if (s.usesTargeting()) {
                 s.resetTargets();
-                for (final GameEntity e : targets) {
+                for (final forge.game.GameObject e : targets) {
                     if (s.canTarget(e) && s.getTargets().size() < s.getMaxTargets()) {
                         s.getTargets().add(e);
                     }

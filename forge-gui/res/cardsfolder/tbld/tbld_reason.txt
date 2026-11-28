@@ -2,15 +2,10 @@ Name:Reason
 ManaCost:2 U U
 Types:Flash Enchantment Creature Elemental
 PT:2/2
-Name:Reason
-ManaCost:2 U U
-Types:Flash Enchantment Creature Elemental
-PT:2/2
 K:Evoke:U ExileFromHand<1/Card.nonLand+Other/nonland card>
 T:Mode$ ChangesZone | Origin$ Any | Destination$ Battlefield | ValidCard$ Card.Self | Execute$ TrigCharm | TriggerDescription$ When CARDNAME enters, ABILITY
 SVar:TrigCharm:DB$ Charm | Choices$ DBCounter,DBCounters
 SVar:DBCounter:DB$ Counter | TargetType$ Spell | ValidTgts$ Card.nonFlash | TgtPrompt$ Select target nonflash spell | SpellDescription$ Counter target nonflash spell.
 SVar:DBCounters:DB$ PutCounter | ValidTgts$ Creature | TgtPrompt$ Select target creature | CounterType$ P1P1 | CounterNum$ 1 | SubAbility$ DBFlying | SpellDescription$ Put a +1/+1 counter and a flying counter on target creature.
 SVar:DBFlying:DB$ PutCounter | Defined$ Targeted | CounterType$ Flying | CounterNum$ 1
-Oracle:When this enters, choose one —\n• Counter target nonflash spell.\n• Put a +1/+1 counter and a flying counter on target creature.\nEvoke—U, Exile a nonland card from your hand.
 Oracle:When this enters, choose one —\n• Counter target nonflash spell.\n• Put a +1/+1 counter and a flying counter on target creature.\nEvoke—U, Exile a nonland card from your hand.

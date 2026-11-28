@@ -13585,10 +13585,10 @@ color=C
 tags=CHANGED NEW
 
 [Novijen Sages]
-cost=U
+cost=2UU
 type=Creature - Human Advisor Mutant
 pt=0/0
-text=Graft 4 (This enters with four +1/+1 counters. Whenever another creature enters, you may move a +1/+1 counter from this onto it.)\n1, Remove a +1/+1 counter from a creature you control: Draw a card.
+text=Graft 4 (This enters play with four +1/+1 counters. Whenever another creature enters play, you may move a +1/+1 counter from this onto it.)\n1, Remove two +1/+1 counters from among creatures you control: Draw a card.
 rarity=Uncommon
 color=U
 tags=PLUSCOUNTER
@@ -14394,7 +14394,7 @@ tags=PLUSCOUNTER
 cost=2/U2/U2/U
 type=Creature - Dinosaur Illusion
 pt=6/6
-text=Trample\nWhen this becomes the target of a spell or ability, sacrifice it.
+text=(This has mana value 6.)\nTrample\nWhen this becomes the target of a spell or ability, sacrifice it.
 rarity=Uncommon
 color=UC
 tags=CHANGED NEW 2BRID
@@ -15422,7 +15422,7 @@ color=MUB
 [Psychic Surgery]
 cost=U
 type=Enchantment
-text=Whenever an opponent shuffles their library, they reveal the top two cards of their library and exile one of them of your choice. Then put the rest on top of that library in any order.\n7U: Target player shuffles their library.
+text=Whenever an opponent shuffles their library, they reveal the top two cards of their library and exile one of them of your choice.\n7U: Target player shuffles their library.
 rarity=Uncommon
 color=U
 
@@ -15677,7 +15677,7 @@ tags=ADDED NEW SPIRIT
 cost=6UU
 type=Flash Creature - Beast
 pt=5/4
-text=Flying\nYou may look at the top card of your library at any time. You may cast the top card of your library if it’s a sorcery card.\n2: Exile the top card of your library.
+text=Affinity for artifacts (This costs 1 less for each artifact you control.)\nFlying
 rarity=Uncommon
 color=U
 tags=ADDED NEW
@@ -16276,7 +16276,7 @@ color=U
 [Retraction Helix]
 cost=U
 type=Flash Sorcery
-text=This turn, target creature gains “T: Return target permanent to its owner’s hand.”
+text=This turn, target creature gains “T: Return target nonland permanent to its owner’s hand.”
 rarity=Uncommon
 color=U
 
@@ -16469,7 +16469,7 @@ back=Mana Rite
 cost=1U
 type=Creature - Merfolk Scout
 pt=1/2
-text=When this enters, target creature you control explores. (Reveal the top card of your library. Put it into your hand if it’s a land. Otherwise, put a +1/+1 counter on this, then put the card back on top or into your graveyard.)
+text=When this enters, target creature you control explores. (Reveal the top card of your library. Put that card into your hand if it’s a land. Otherwise, put a +1/+1 counter on this creature, then put the card back or put it into your graveyard.)
 rarity=Uncommon
 color=U
 tags=MERFOLK PLUSCOUNTER
@@ -17825,7 +17825,7 @@ tags=ADDED NEW UTILITY
 cost=1UUU
 type=Creature - Merfolk Wizard
 pt=2/2
-text=Prowess\nWhen this enters, return target sorcery or noncreature artifact card from your graveyard to your hand.
+text=Prowess\nWhen this enters, return target noncreature artifact or sorcery card from your graveyard to your hand.
 rarity=Uncommon
 color=U
 tags=MERFOLK

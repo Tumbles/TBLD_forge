@@ -1,8 +1,8 @@
 Name:Novijen Sages
-ManaCost:U
+ManaCost:2 U U
 Types:Creature Human Advisor Mutant
 PT:0/0
 K:Graft:4
-A:AB$ Draw | Cost$ 1 RemoveAnyCounter<1/P1P1/Creature.YouCtrl/a creature you control> | NumCards$ 1 | SpellDescription$ Draw a card.
+A:AB$ Draw | Cost$ 1 RemoveAnyCounter<2/P1P1/Creature.YouCtrl/creatures you control> | NumCards$ 1 | SpellDescription$ Draw a card.
 DeckHas:Ability$Counters
-Oracle:Graft 4 (This enters with four +1/+1 counters. Whenever another creature enters, you may move a +1/+1 counter from this onto it.)\n1, Remove a +1/+1 counter from a creature you control: Draw a card.
+Oracle:Graft 4 (This enters play with four +1/+1 counters. Whenever another creature enters play, you may move a +1/+1 counter from this onto it.)\n1, Remove two +1/+1 counters from among creatures you control: Draw a card.

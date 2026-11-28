@@ -3625,7 +3625,8 @@ public class CardFactoryUtil {
             final String[] k = keyword.split(":");
             final String manacost = k[1];
 
-            final String effect = "AB$ ChangeZone | Cost$ " + manacost + " Discard<1/CARDNAME>"
+            // TBLD: transmute exiles the card from the hand instead of discarding it
+            final String effect = "AB$ ChangeZone | Cost$ " + manacost + " ExileFromHand<1/CARDNAME>"
                     + " | PrecostDesc$ Transmute | CostDesc$ " + ManaCostParser.parse(manacost) + " | ActivationZone$ Hand"
                     + " | Origin$ Library | Destination$ Hand | ChangeType$ Card.cmcEQTransmuteX"
                     + " | SorcerySpeed$ True | StackDescription$ SpellDescription | SpellDescription$ ("

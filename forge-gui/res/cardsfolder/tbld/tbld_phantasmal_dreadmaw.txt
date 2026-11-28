@@ -6,4 +6,4 @@ K:Trample
 T:Mode$ BecomesTarget | ValidTarget$ Card.Self | TriggerZones$ Battlefield | Execute$ TrigSac | TriggerDescription$ When CARDNAME becomes the target of a spell or ability, sacrifice it.
 SVar:TrigSac:DB$ Sacrifice
 SVar:Targeting:Dies
-Oracle:Trample\nWhen this becomes the target of a spell or ability, sacrifice it.
+Oracle:(This has mana value 6.)\nTrample\nWhen this becomes the target of a spell or ability, sacrifice it.

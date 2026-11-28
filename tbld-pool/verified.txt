@@ -278,32 +278,57 @@ Mob
 Moderation
 Monastery Siege
 Moonglove Winnower
+Moonsnare Specialist
 Moriok Scavenger
 Mortify
+Muddle the Mixture
+Mulldrifter
+Murk Strider
+Mystic Reflection
+Mystical Teachings
+Neutralizing Blast
+New Perspectives
 Nim Lasher
+Ninja of the Deep Hours
 Nivmagus Elemental
+Novijen Sages
 Nullpriest of Oblivion
+Nyxborn Triton
 Oathsworn Vampire
 Obeka Brute Chronologist
 Ochran Assassin
 Okiba-Gang Shinobi
 Ordeal of Erebos
+Ordeal of Thassa
 Orzhov Enforcer
+Out of Air
 Palace Siege
 Perilous Predicament
+Persistent Petitioners
+Pestermite
 Pestilence
+Phantasmal Dreadmaw
+Phantom Carriage
 Phyrexian Negator
+Pieces of the Puzzle
 Piper of the Swarm
 Pitiless Carnage
 Pitiless Horde
 Plunge into Darkness
 Poison the Cup
+Precognitive Perception
 Priest of the Blood Rite
+Prophet of Distortion
+Prosperous Thief
+Psychic Surgery
 Pulse Tracker
 Putrid Goblin
 Putrid Leech
 Qarsi Sadist
+Quasiduplicate
 Queens Agent
+Qumulox
+Radical Idea
 Raiders Spoils
 Rakdos Headliner
 Rancid Rats
@@ -313,27 +338,48 @@ Ravens Crime
 Razorfin Hunter
 Reapers Talisman
 Reaping the Graves
+Reason
 Reaver Drone
 Recoil
+Retraction Helix
 Return Upon the Tide
 Revenge of the Rats
+Rewind
 Riddle Gate Gargoyle
 Rigging Runner
 Righteous Authority
+Rise and Shine
+River Herald Scout
+Riverwise Augur
+Roil Cartographer
+Rooftop Storm
 Rot Hulk
 Rubblebelt Rioters
+Ruination Guide
 Ruination Rioter
 Sacred Wolf
+Sage of Hours
+Sailor of Means
+Salvage Drone
 Salvage Slasher
 Sanctum Seeker
 Scab-Clan Mauler
 Scheming Symmetry
+Scholar of the Ages
 Scion of the Swarm
+Scroll Thief
 Scrounge
+Sea-Dasher Octopus
+Seagraf Skaab
 Searing Blood
 Searing Touch
 Serrated Scorpion
 Servant of the Conduit
+Shipwreck Dowser
+Shoal Serpent
+Shoreline Looter
+Show and Tell
+Shriekgeist
 Shrieking Affliction
 Shrivel
 Sibsig Muckdraggers
@@ -341,14 +387,18 @@ Sifter of Skulls
 Sightless Ghoul
 Sign in Blood
 Silent Skimmer
+Skaab Ruinator
 Skinrender
 Skirsdag High Priest
 Skulduggery
+Sleep of the Dead
+Slimebind
 Slippery Bogle
 Smallpox
 Smothering Abomination
 Song of the Dryads
 Souldrinker
+Sower of Temptation
 Spike Jester
 Spoils of the Vault
 Staggering Insight

@@ -195,7 +195,7 @@ public enum Keyword {
     TRAINING("Training", SimpleKeyword.class, false, "Whenever this creature attacks with another creature with greater power, put a +1/+1 counter on this creature."),
     TRAMPLE("Trample", Trample.class, true, "This creature can deal excess combat damage to the player or planeswalker it's attacking."),
     TRANSFIGURE("Transfigure", KeywordWithCost.class, false, "%s, Sacrifice this creature: Search your library for a creature card with the same mana value as this creature and put that card onto the battlefield, then shuffle. Transfigure only as a sorcery."),
-    TRANSMUTE("Transmute", KeywordWithCost.class, false, "%s, Discard this card: Search your library for a card with the same mana value as this card, reveal it, and put it into your hand, then shuffle. Transmute only as a sorcery."),
+    TRANSMUTE("Transmute", KeywordWithCost.class, false, "%s, Exile this from your hand: Search your library for a card with the same mana value as this, reveal it, and put it into your hand. Can't transmute at flash speed."),
     TRIBUTE("Tribute", KeywordWithAmount.class, false, "As this creature enters, an opponent of your choice may put {%d:+1/+1 counter} on it."),
     TYPECYCLING("TypeCycling", KeywordWithCostAndType.class, false, "%s, Discard this card: Search your library for %s, reveal it, put it into your hand, then shuffle."),
     UMBRA_ARMOR("Umbra armor", SimpleKeyword.class, true, "If enchanted permanent would be destroyed, instead remove all damage marked on it and destroy this Aura."),
