@@ -53,6 +53,10 @@ public abstract class TbldCardTest extends AITest {
         public Predicate<GameEntity> prefer;
         /** The card name chosen for "choose a card name". */
         public String cardName;
+        /** The type chosen for "choose a type" (a permanent type, a creature type); the AI chooses when null. */
+        public String type;
+        /** The types the last "choose a type" question offered. */
+        public List<String> offeredTypes = List.of();
         /** The number chosen for "choose a number", and for how often a keyword cost is paid (replicate, multikicker). */
         public Integer number;
         /** The X paid for a spell cast by an effect (madness), instead of the AI's choice. */
@@ -136,6 +140,13 @@ public abstract class TbldCardTest extends AITest {
                 final com.google.common.collect.ListMultimap<Object, Player> votes, final Player forPlayer, final boolean optional) {
             choices.votedFor.add(forPlayer);
             return super.vote(sa, prompt, options, votes, forPlayer, optional);
+        }
+
+        @Override
+        public String chooseSomeType(final String kindOfType, final SpellAbility sa, final java.util.Collection<String> validTypes,
+                final boolean isOptional) {
+            choices.offeredTypes = new ArrayList<>(validTypes);
+            return choices.type != null ? choices.type : super.chooseSomeType(kindOfType, sa, validTypes, isOptional);
         }
 
         @Override

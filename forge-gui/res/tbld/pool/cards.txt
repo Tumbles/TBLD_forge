@@ -2011,7 +2011,7 @@ tags=SACOUTLET
 cost=1G
 type=Creature - Wurm
 pt=*/*
-text=Indomitable (This can’t be blocked by creatures with power 2 or less.)\nThis creature’s power and toughness are each equal to the number of creature cards in your graveyard.
+text=This creature’s power and toughness are each equal to the number of creature cards in your graveyard.
 rarity=Uncommon
 color=G
 
@@ -2303,7 +2303,7 @@ related=The Monarch
 cost=5G
 type=Flash Creature - Phyrexian Cleric
 pt=3/3
-text=When this enters, choose one -\n• Search your library for a creature card, reveal it, and put it into your hand.\n• Put target noncreature permanent on the bottom of its owner's library.
+text=When this enters, choose one -\n• Search your library for a creature card, reveal it, and put it on top of your library.\n• Put target noncreature permanent on the bottom of its owner's library.
 rarity=Uncommon
 color=G
 
@@ -3511,7 +3511,7 @@ tags=XCOST
 [Creeping Renaissance]
 cost=3GG
 type=Sorcery
-text=Choose a permanent type. Return all cards of the chosen type from your graveyard to your hand.\nFlashback 6GG (You may cast this from your graveyard for its flashback cost. Then exile it.)
+text=Choose a permanent type. Return all cards of the chosen type from your graveyard to your hand.\nFlashback 7GG (You may cast this from your graveyard for its flashback cost. Then exile it.)
 rarity=Uncommon
 color=G
 
@@ -5760,8 +5760,8 @@ tags=RAMP ELF
 
 [Eureka]
 cost=2GG
-type=Flash Sorcery
-text=Starting with you, each player may put a nonsorcery card from their hand into play. Repeat this process until no one puts a card into play.
+type=Sorcery
+text=Starting with you, each player may put a nonsorcery card from their hand into play. Repeat this process until no one puts a card into play.\nCycling 2 (2, Discard this: Draw a card.)
 rarity=Uncommon
 color=G
 
@@ -5867,7 +5867,7 @@ color=R
 [Explore]
 cost=1G
 type=Sorcery
-text=You may play an additional land this turn.\nLook at the top two cards of your library and put one of them onto the bottom.\nDraw a card.
+text=You may play an additional land this turn.\nDraw a card.
 rarity=Common
 color=G
 tags=WEEB RAMP
@@ -5990,7 +5990,7 @@ tags=UTILITY WIPE
 
 [Fallow Earth]
 cost=2G
-type=Flash Sorcery
+type=Sorcery
 text=Put target land on top of its owner’s library.\nCycling—Sacrifice a land.
 rarity=Uncommon
 color=G

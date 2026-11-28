@@ -1,6 +1,7 @@
 Name:Eureka
 ManaCost:2 G G
-Types:Flash Sorcery
+Types:Sorcery
+K:Cycling:2
 A:SP$ Repeat | RepeatSubAbility$ DBForget | RepeatCheckSVar$ PutCount | SubAbility$ DBCleanup | StackDescription$ SpellDescription | SpellDescription$ Starting with you, each player may put a nonsorcery card from their hand into play. Repeat this process until no one puts a card into play.
 SVar:DBForget:DB$ Cleanup | ClearImprinted$ True | SubAbility$ DBRepeatChoice
 SVar:DBRepeatChoice:DB$ RepeatEach | StartingWith$ You | RepeatSubAbility$ DBChoose | RepeatPlayers$ Player
@@ -10,4 +11,4 @@ SVar:PutCount:Count$Valid Card.IsImprinted
 AI:RemoveDeck:Random
 SVar:NeedsToPlayVar:Y GE1
 SVar:Y:Count$ValidHand Permanent.YouCtrl+cmcGE5
-Oracle:Starting with you, each player may put a nonsorcery card from their hand into play. Repeat this process until no one puts a card into play.
+Oracle:Starting with you, each player may put a nonsorcery card from their hand into play. Repeat this process until no one puts a card into play.\nCycling 2 (2, Discard this: Draw a card.)

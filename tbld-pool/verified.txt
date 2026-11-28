@@ -4,37 +4,51 @@
 Abzan Ascendancy
 Aether Snap
 Agony Warp
+Aid from the Cowl
 Alms of the Vein
+Alpha Authority
 Ambitions Cost
 Anax and Cymede
+Ancestral Mask
 Annul
+Apex Altisaur
 Aqueous Form
+Arachnoform
 Arbiter of Woe
+Arbor Elf
+Arborback Stomper
 Arcane Artisan
 Arcane Flight
+Archweaver
 Armored Skaab
 Army of the Damned
 As Foretold
 Ascended Lawmage
+Aspect of Hydra
 Auger Spree
 Augur of Bolas
 Augury Raven
+Avenger of Zendikar
 Azorius Skyguard
 Azors Elocutors
 Bankrupt in Blood
 Baral Chief of Compliance
 Basilica Bell-Haunt
+Basking Rootwalla
 Battlefield Thaumaturge
 Battlewise Hoplite
 Bazaar Trademage
 Beamsplitter Mage
 Bearer of Silence
+Become Immense
 Beetleback Chief
 Beguiler of Wills
 Benthic Infiltrator
 Biovisionary
+Birthing Hulk
 Blanchwood Armor
 Blightning
+Blisterpod
 Blood Fountain
 Blood Pet
 Blood Scrivener
@@ -43,13 +57,18 @@ Bloodcrazed Paladin
 Bloodgift Demon
 Bloodthrone Vampire
 Bloodtithe Harvester
+Blossoming Defense
+Boar Umbra
 Boltwing Marauder
 Bone Miser
+Boneyard Wurm
 Boomerang
 Borborygmos Enraged
 Boros Challenger
 Breakthrough
 Brine Giant
+Brood Monitor
+Brutalizer Exarch
 Butcher of the Horde
 Cabal Therapist
 Callous Bloodmage
@@ -59,30 +78,44 @@ Carrion Feeder
 Casualties of War
 Caustic Crawler
 Caustic Tar
+Centaur Battlemaster
+Charging Badger
 Chart a Course
 Chromanticore
 Circular Logic
 Citywatch Sphinx
 Cleaving Reaper
 Cling to Dust
+Coiling Stalker
 Collective Blessing
+Colossification
+Commune with Spirits
+Composer of Spring
 Concentrate
 Condescend
 Conduit Goblin
 Confirm Suspicions
 Confound
+Copperhorn Scout
 Corpsejack Menace
 Crackling Cyclops
+Creeping Renaissance
 Cruel Celebrant
 Cruel Reality
+Crush of Wurms
 Cryptborn Horror
+Cryptolith Rite
 Culling Drone
+Cultivate
 Curious Inquiry
 Cyclonic Rift
 Cyclops Superconductor
 Daggerdrome Imp
 Dead Drop
 Dead Revels
+Deadbridge Goliath
+Deadly Recluse
+Death-Hood Cobra
 Debt to the Kami
 Deceiver Exarch
 Deep-Sea Kraken
@@ -90,6 +123,7 @@ Deepfathom Skulker
 Deeproot Champion
 Deeproot Waters
 Defeat
+Defend the Hearth
 Defiant Bloodlord
 Deprive
 Depth Defiler
@@ -108,6 +142,7 @@ Djinn Illuminatus
 Domineer
 Doom Foretold
 Double Cleave
+Dragonsguard Elite
 Drakestown Forgotten
 Dramatic Rescue
 Dread Defiler
@@ -121,36 +156,51 @@ Drossclaw
 Drown in Filth
 Drowned Secrets
 Drowner of Hope
+Drudge Beetle
+Dubious Challenge
 Dutiful Return
 Easy Prey
 Echo of Eons
 Ecstatic Electromancer
 Eel Umbra
+Eidolon of Blossoms
 Eladamris Call
 Elas il-Kor Sadistic Pilgrim
 Eldrazi Skyspawner
 Electrosiphon
+Elemental Resonance
 Elite Guardmage
+Elves of Deep Shadow
+Elvish Branchbender
+Elvish Vanguard
+Elvish Visionary
+Emergent Sequence
 Endless Ranks of the Dead
+Enter the Unknown
 Entomber Exarch
+Epic Confrontation
 Epic Experiment
 Ereboss Intervention
 Essence Capture
 Essence Scatter
 Eternal Taskmaster
+Eureka
 Ever After
 Evernight Shade
 Exclude
 Execute
 Exhaustion
+Explore
 Extirpate
 Eye Collector
 Facevaulter
 Faerie Miscreant
 Faithful Mending
+Fallow Earth
 False Cure
 Fathom Feeder
 Feed the Clan
+Feed the Pack
 Fell Stinger
 Festering Goblin
 Firebolt

@@ -1,6 +1,6 @@
 Name:Fallow Earth
 ManaCost:2 G
-Types:Flash Sorcery
+Types:Sorcery
 A:SP$ ChangeZone | ValidTgts$ Land | Origin$ Battlefield | Destination$ Library | LibraryPosition$ 0 | SpellDescription$ Put target land on top of its owner's library.
 K:Cycling:Sac<1/Land/land>
 Oracle:Put target land on top of its owner’s library.\nCycling—Sacrifice a land.
