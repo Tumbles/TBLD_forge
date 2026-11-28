@@ -207,6 +207,40 @@ const centered = sel => page.locator(sel).evaluate(row => {
 check(await centered('#half-me [data-row="back"]'), "lands and other permanents are centered in their row");
 check(await centered('#half-opp [data-row="back"]'), "a lone land is centered too");
 
+// identical permanents are stacked like lands; a stack splits when its copies differ
+const groupsIn = row => page.locator('#half-me [data-row="' + row + '"]').evaluate(r => [...r.children]
+  .filter(k => k.matches(".card, .landstack, .attach-group"))
+  .map(k => [...(k.matches(".card") ? [k] : k.querySelectorAll(":scope > .card"))].map(c => +c.dataset.id).sort((a, b) => a - b)));
+const goblin = (id, extra = {}) => creature(id, "Goblin", 1, 1, { token: true, ...extra });
+const stacking = makeState();
+stacking.players[0].battlefield = [
+  goblin(201), goblin(202), goblin(204, { sick: true }),
+  goblin(205, { counters: { "+1/+1": 1 } }), goblin(206, { counters: { "+1/+1": 1 } }),
+  goblin(207, { attacking: "Player 2" }), goblin(208, { attacking: "Player 2" }), goblin(209, { attacking: "Player 2", blockedBy: ["Hill Giant"] }),
+  goblin(210, { power: 3 }), goblin(211, { fx: "abc" }), goblin(212, { damage: 1 }), goblin(213, { tapped: true }),
+  goblin(215, { counters: { "+1/+1": 1, Flying: 1 } }), goblin(216, { counters: { Flying: 1, "+1/+1": 1 } }),
+  card(301, "Treasure", "Artifact - Treasure", { token: true }), card(302, "Treasure", "Artifact - Treasure", { token: true }),
+  card(303, "Treasure", "Artifact - Treasure", { token: true, tapped: true }), card(304, "Clue", "Artifact - Clue", { token: true })];
+send({ t: "state", state: stacking });
+await settle(300);
+check(JSON.stringify(await groupsIn("creatures")) === JSON.stringify([[201, 202, 213], [204], [205, 206], [207, 208], [209], [210], [211], [212], [215, 216]]),
+  "identical creatures are stacked, tapped with untapped; a stack splits on summoning sickness, counters, attacking or blocking differently, power and what a card has been given: "
+  + JSON.stringify(await groupsIn("creatures")));
+check(JSON.stringify(await groupsIn("back")) === JSON.stringify([[301, 302, 303], [304]]), "identical artifacts are stacked too: " + JSON.stringify(await groupsIn("back")));
+check(await count('#half-me [data-row="creatures"] .landstack') === 4 && await count('#half-me [data-row="back"] .landstack') === 1, "stacks use the land stack layout");
+check(await page.locator('#half-me [data-row="creatures"] .landstack').evaluateAll(sts => sts.every(st => [...st.querySelectorAll(".badge.pt")].filter(b => b.offsetParent !== null).length === 1)),
+  "only the top copy of a stack shows its power and toughness");
+await page.mouse.move(5, 5);
+await page.screenshot({ path: path.join(here, "out/ui-stacked-permanents.png") });
+// something attached keeps its host out of the stack
+const attachedState = makeState();
+attachedState.players[0].battlefield = [goblin(201), goblin(202), goblin(203), card(310, "Bone Saw", "Artifact - Equipment", { attachedTo: 203 })];
+send({ t: "state", state: attachedState });
+await settle(300);
+check(JSON.stringify(await groupsIn("creatures")) === JSON.stringify([[201, 202], [203, 310]]), "a creature with equipment attached is not stacked with its twins: " + JSON.stringify(await groupsIn("creatures")));
+send({ t: "state", state: makeState() });
+await settle(300);
+
 // pictures
 const mountainImg = await page.locator('#half-me .card[data-id="1"] img.art').evaluate(i => i.complete && i.naturalWidth > 0).catch(() => false);
 check(mountainImg, "an official card shows its picture");
@@ -616,54 +650,57 @@ check((await page.locator("#dialog .pile-box.dest .card").evaluateAll(n => n.map
 await page.click("#dialog .primary");
 check(JSON.stringify((await replyFor(4))?.v) === "[1,0,2]", "the order is answered");
 
-// ordering simultaneous abilities: one row, left to right in the order they resolve, dragged into place
+// ordering simultaneous abilities: a list from the top, the first to resolve; the tiles are dragged into place
 const sas = [
   { sa: 301, text: "Crackling Cyclops - Whenever you cast a noncreature spell, Crackling Cyclops gets +3/+0 until end of turn." },
   { sa: 302, text: "Jungleborn Pioneer - When Jungleborn Pioneer enters the battlefield, create a 1/1 Merfolk token." },
   { sa: 303, text: "Servant of the Conduit - When Servant of the Conduit enters the battlefield, you get EE." }];
-const tileOrder = () => page.locator("#dialog .sa-row .sa-tile").evaluateAll(n => n.map(x => x.dataset.index).join(","));
-const tileBoxes = () => page.locator("#dialog .sa-row .sa-tile").evaluateAll(n => n.map(x => { const r = x.getBoundingClientRect(); return { x: r.x, y: r.y, w: r.width, h: r.height }; }));
+const tileOrder = () => page.locator("#dialog .sa-col .sa-tile").evaluateAll(n => n.map(x => x.dataset.index).join(","));
+const tileBoxes = () => page.locator("#dialog .sa-col .sa-tile").evaluateAll(n => n.map(x => { const r = x.getBoundingClientRect(); return { x: r.x, y: r.y, w: r.width, h: r.height }; }));
 call("order", ["Select order for simultaneous abilities", "Resolve first", 0, 0, sas, [], null, false, true], 11);
 await settle();
 let tiles = await tileBoxes();
-check(tiles.length === 3 && tiles.every((t, i) => Math.abs(t.y - tiles[0].y) < 2 && (i === 0 || t.x > tiles[i - 1].x + tiles[i - 1].w - 1)),
-  "simultaneous abilities are in one row, left to right");
+check(tiles.length === 3 && tiles.every((t, i) => Math.abs(t.x - tiles[0].x) < 2 && (i === 0 || t.y > tiles[i - 1].y + tiles[i - 1].h - 1)),
+  "simultaneous abilities are in one column, from the top down");
 const rankTexts = () => page.locator("#dialog .sa-tile .sa-rank").allTextContents();
 check(JSON.stringify(await rankTexts()) === JSON.stringify(["Resolves first", "Resolves 2nd", "Resolves last"]), "each ability says when it resolves");
 check((await page.locator("#dialog .sa-tile").first().textContent()).includes("goes on the stack last, on top")
-  && (await page.locator("#dialog .sa-tile").last().textContent()).includes("goes on the stack first"), "the ends say which goes on the stack first and last");
-check((await page.locator("#dialog .hint").textContent()).includes("leftmost goes on the stack last"), "a hint explains the order");
+  && (await page.locator("#dialog .sa-tile").last().textContent()).includes("goes on the stack first"), "the top and bottom say which goes on the stack last and first");
+check((await page.locator("#dialog .hint").textContent()).includes("top one goes on the stack last"), "a hint explains the order");
+check((await page.locator("#dialog .sa-tile .order-btns button").allTextContents()).every(t => t === "▲" || t === "▼")
+  && await count('#dialog .order-btns button:text-is("◀")') === 0 && await count('#dialog .order-btns button:text-is("▶")') === 0,
+  "the arrows point up and down, not left and right");
 await page.screenshot({ path: path.join(here, "out/ui-popup-order-abilities.png") });
 // a click changes nothing
 await page.click('#dialog .sa-tile[data-index="1"] .sa-text');
 check(await tileOrder() === "0,1,2", "clicking an ability changes nothing");
-// drag the first ability past the last one
+// drag the first ability below the last one
 {
   const b = tiles[0], last = tiles[2];
   await page.mouse.move(b.x + b.w / 2, b.y + 14);
   await page.mouse.down();
-  await page.mouse.move(last.x + last.w / 2 + 30, b.y + 20, { steps: 10 });
+  await page.mouse.move(b.x + b.w / 2, last.y + last.h / 2 + 30, { steps: 10 });
   check(await count("#dialog .sa-tile.dragging") === 1 && await count("#dialog .drop-mark") === 1, "dragging lifts the ability and shows where it will land");
   const dragged = await page.locator("#dialog .sa-tile.dragging").boundingBox();
-  check(Math.abs(dragged.x - (b.x + (last.x + last.w / 2 + 30 - (b.x + b.w / 2)))) < 3, "the dragged ability follows the pointer");
+  check(Math.abs(dragged.y - (b.y + (last.y + last.h / 2 + 30 - (b.y + 14)))) < 3, "the dragged ability follows the pointer");
   await page.mouse.up();
   await settle();
 }
-check(await tileOrder() === "1,2,0" && await count("#dialog .drop-mark") === 0, "dropping it after the last ability moves it to the end");
+check(await tileOrder() === "1,2,0" && await count("#dialog .drop-mark") === 0, "dropping it below the last ability moves it to the end");
 check(JSON.stringify(await rankTexts()) === JSON.stringify(["Resolves first", "Resolves 2nd", "Resolves last"])
   && (await page.locator("#dialog .sa-tile").first().getAttribute("data-index")) === "1", "the labels follow the new order");
-// and back to the front, from the right
+// and back to the top, from below
 tiles = await tileBoxes();
 {
   const b = tiles[2], first = tiles[0];
   await page.mouse.move(b.x + b.w / 2, b.y + 14);
   await page.mouse.down();
-  await page.mouse.move(first.x + 20, b.y + 14, { steps: 10 });
+  await page.mouse.move(b.x + b.w / 2, first.y - 10, { steps: 10 });
   await page.mouse.up();
   await settle();
 }
-check(await tileOrder() === "0,1,2", "dragging the last ability to the front moves it first");
-await page.click('#dialog .sa-tile[data-index="0"] .order-btns button:text-is("▶")');
+check(await tileOrder() === "0,1,2", "dragging the last ability to the top moves it first");
+await page.click('#dialog .sa-tile[data-index="0"] .order-btns button:text-is("▼")');
 check(await tileOrder() === "1,0,2", "the arrows still work");
 await page.click("#dialog .primary");
 check(JSON.stringify((await replyFor(11))?.v) === "[1,0,2]", "the order is answered, first to resolve first");
@@ -672,18 +709,18 @@ check(JSON.stringify((await replyFor(11))?.v) === "[1,0,2]", "the order is answe
 call("order", ["Reorder simultaneous abilities", "Resolve first", 0, 0, [], sas, null, false, true], 12);
 await settle();
 tiles = await tileBoxes();
-check(tiles.length === 3 && tiles.every(t => Math.abs(t.y - tiles[0].y) < 2) && await count("#dialog .pile-box:not(.dest)") === 0,
-  "a reorder question is the same row, with nothing to choose");
+check(tiles.length === 3 && tiles.every(t => Math.abs(t.x - tiles[0].x) < 2) && await count("#dialog .pile-box:not(.dest)") === 0,
+  "a reorder question is the same column, with nothing to choose");
 {
   const b = tiles[0], last = tiles[2];
   await page.mouse.move(b.x + b.w / 2, b.y + 14);
   await page.mouse.down();
-  await page.mouse.move(last.x + last.w, b.y + 14, { steps: 10 });
+  await page.mouse.move(b.x + b.w / 2, last.y + last.h, { steps: 10 });
   await page.mouse.up();
   await settle();
 }
 await page.click("#dialog .primary");
-check(JSON.stringify((await replyFor(12))?.v) === "[1,2,0]", "a reordered row is answered");
+check(JSON.stringify((await replyFor(12))?.v) === "[1,2,0]", "a reordered column is answered");
 
 // cards in an order question can be dragged too
 call("order", ["Arrange cards to be put on top of your library", "Top of library", 0, 0, three, null, null, false, false], 13);

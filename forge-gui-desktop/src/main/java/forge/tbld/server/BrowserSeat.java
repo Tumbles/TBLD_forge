@@ -786,6 +786,17 @@ public final class BrowserSeat implements IRemote {
     }
 
     /**
+     * A short fingerprint of what the card currently does, abilities and keywords it was given included.
+     * It is the same for identical copies and differs once one has gained something (such as flying until
+     * end of turn), so the client keeps those apart when it stacks identical permanents.
+     */
+    public static String effectsKey(final CardView cv) {
+        final CardStateView s = cv.getCurrentState();
+        final String text = s == null || s.getAbilityText() == null ? "" : s.getAbilityText();
+        return Integer.toHexString(text.hashCode());
+    }
+
+    /**
      * The picture of the card an effect was made by. Forge gives an effect its source's image key,
      * such as "c:Searing Touch|TBLD|1"; keys of other kinds (tokens and the like) have no picture here.
      */
@@ -880,6 +891,7 @@ public final class BrowserSeat implements IRemote {
         j.addProperty("sick", cv.isSick());
         j.addProperty("damage", cv.getDamage());
         j.addProperty("faceDown", cv.isFaceDown());
+        j.addProperty("fx", effectsKey(cv));
         if (cv.getCounters() != null && !cv.getCounters().isEmpty()) {
             final JsonObject counters = new JsonObject();
             for (final CounterType ct : cv.getCounters().elementSet()) {
