@@ -540,6 +540,11 @@ public final class BrowserSeat implements IRemote {
         }
     }
 
+    /** Always yield covers every card of the source's name with the same ability. */
+    private static String nameKey(final StackItemView si) {
+        return PlayerControllerHuman.yieldNameKey(si.getSourceCard() == null ? "" : si.getSourceCard().getName(), si.getKey());
+    }
+
     /** The phases named in a JSON array. Unknown names are ignored. */
     private static Set<PhaseType> phases(final JsonElement names) {
         final Set<PhaseType> result = EnumSet.noneOf(PhaseType.class);
@@ -602,7 +607,7 @@ public final class BrowserSeat implements IRemote {
                 if (on) {
                     // Only for a triggered ability the player can see on the stack
                     for (final StackItemView si : visibleStack.values()) {
-                        if (si.isTrigger() && key.equals(si.getKey())) {
+                        if (si.isTrigger() && key.equals(nameKey(si))) {
                             alwaysYields.put(key, new String[] {
                                     si.getSourceCard() == null ? "" : si.getSourceCard().getName(), si.getText() });
                             controller.applyYieldUpdate(new YieldUpdate.CardAutoYield(key, true));
@@ -1032,8 +1037,9 @@ public final class BrowserSeat implements IRemote {
                 s.addProperty("trigger", si.isTrigger());
                 // A triggered ability can be set to "Always yield"; the key names it (its source and its ability)
                 if (si.isTrigger() && si.getKey() != null) {
-                    s.addProperty("yieldKey", si.getKey());
-                    s.addProperty("alwaysYield", controller != null && controller.shouldAutoYield(si.getKey()));
+                    final String nameKey = nameKey(si);
+                    s.addProperty("yieldKey", nameKey);
+                    s.addProperty("alwaysYield", controller != null && controller.shouldAutoYield(nameKey));
                 }
                 if (si.getActivatingPlayer() != null) {
                     s.addProperty("controller", si.getActivatingPlayer().getId());

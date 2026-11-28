@@ -143,7 +143,7 @@
   .badge.pt { right: -3px; bottom: -3px; font-size: 12px; }
   .badge.dmg { right: -3px; bottom: 18px; background: #7a1f1f; border-color: #c44; }
   .badge.sick { left: -3px; top: -3px; color: #b8c4ff; border-color: #5b6aa8; font-style: italic; }
-  .badge.cnt { left: -3px; bottom: -3px; background: #20402c; border-color: #3f9b62; }
+  .badge.cnt { left: -3px; bottom: -3px; max-width: calc(100% - 46px); overflow: hidden; text-overflow: ellipsis; background: #20402c; border-color: #3f9b62; }
   .badge.stackcount { background: #0d0f14; border-color: #6b7386; }
   .tags { position: absolute; left: 50%; transform: translateX(-50%); top: 4px; display: flex; flex-direction: column; align-items: center;
     gap: 2px; z-index: 5; pointer-events: none; }
@@ -523,7 +523,9 @@ function cardEl(c, ctx, extra = {}) {
     if (ctx === "bf" && c.sick && isCreature) { const s = el("div", "badge sick", "zZ"); s.title = "Summoning sick"; b.append(s); }
     if (c.counters) {
       const txt = Object.entries(c.counters).map(([k, v]) => (v > 1 ? v + "× " : "") + k).join(", ");
-      b.append(el("div", "badge cnt", txt));
+      const cnt = el("div", "badge cnt", txt);
+      cnt.title = txt;
+      b.append(cnt);
     }
     d.append(b);
     const tags = el("div", "tags");

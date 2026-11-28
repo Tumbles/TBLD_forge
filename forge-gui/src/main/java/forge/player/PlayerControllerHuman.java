@@ -1737,7 +1737,7 @@ public class PlayerControllerHuman extends PlayerController implements IGameCont
         // spell once it has resolved.
         if (passAfterPlay) {
             final SpellAbilityStackInstance top = stack.peek();
-            if (!isMacroActive() && top != null && top.isTrigger() && shouldAutoYield(top.getSpellAbility().yieldKey())) {
+            if (!isMacroActive() && top != null && top.isTrigger() && shouldAutoYield(yieldNameKey(top.getSpellAbility().getHostCard().getName(), top.getSpellAbility().yieldKey()))) {
                 getGui().awaitNextInput();
                 return null;
             }
@@ -4048,10 +4048,18 @@ public class PlayerControllerHuman extends PlayerController implements IGameCont
         final GameView gameView = getGui().getGameView();
         if (gameView == null) return false;
         final StackItemView top = gameView.peekStack();
-        if (top != null) return !isMacroActive() && top.isAbility() && shouldAutoYield(top.getKey());
+        if (top != null) {
+            return !isMacroActive() && top.isAbility() && (shouldAutoYield(top.getKey())
+                    || top.isTrigger() && top.getSourceCard() != null && shouldAutoYield(yieldNameKey(top.getSourceCard().getName(), top.getKey())));
+        }
         final PlayerView turnPlayer = gameView.getPlayerTurn();
         final PhaseType phase = gameView.getPhase();
         return turnPlayer != null && phase != null && isUiSetToSkipPhase(turnPlayer, phase);
+    }
+
+    /** TBLD "Always yield" key: a source's name and its ability, for every card of that name (Forge's own keys name one card). */
+    public static String yieldNameKey(final String sourceName, final String yieldKey) {
+        return sourceName + ": " + AutoYieldStore.abilitySuffix(yieldKey);
     }
 
     public void autoPassUntilEndOfTurn() {
