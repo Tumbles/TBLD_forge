@@ -13,9 +13,9 @@ Vodalian Mindsinger | You keep control as long as you control Vodalian Mindsinge
 Aether Snap | Removes counters from permanents but not from players.
 Defeat | Every opponent discards if you attacked this turn (the text: each opponent that was attacked).
 Sludge Crawler | Its pump costs 2 (the text says 2/C, two or colorless).
-Beamsplitter Mage | Copies the spell for one other creature (the text says up to two).
 Bountiful Promenade | You add the mana yourself (the text says a player of your choice).
 Voldaren Epicure | Makes Forge's Blood token (1, T, Discard a card, Sacrifice this: Draw a card), as its reminder text says; Brett's Blood token in tokens.xml has no T and can't be activated at flash speed.
 Tocatli Honor Guard | Missing its second ability: creatures don't lose haste (found by "verify": fewer ability lines than paragraphs).
 Astral Cornucopia | Missing "T, Sacrifice this: Draw a card for each charge counter" (found by "verify").
 Sludge Crawler | The pump costs 2, not 2/C: Forge has no {2/C} symbol, so it can't be paid with a single C. Not counted as implemented.
+Fathom Feeder | Costs BR, as the card XML says; its picture says UB (its ability costs 3UB).

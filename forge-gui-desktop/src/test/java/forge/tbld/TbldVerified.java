@@ -18,7 +18,8 @@ public final class TbldVerified {
             TbldBlackCards1Test.VERIFIED,
             TbldBlackCards2Test.VERIFIED,
             TbldBlackCards3Test.VERIFIED,
-            TbldBlackCards4Test.VERIFIED);
+            TbldBlackCards4Test.VERIFIED,
+            TbldMultiCards1Test.VERIFIED);
 
     public static Set<String> all() {
         final Set<String> out = new TreeSet<>();

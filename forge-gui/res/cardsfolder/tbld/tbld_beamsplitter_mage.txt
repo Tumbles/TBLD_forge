@@ -2,7 +2,7 @@ Name:Beamsplitter Mage
 ManaCost:U R
 Types:Creature Vedalken Wizard
 PT:2/2
-T:Mode$ SpellCast | ValidCard$ Instant,Sorcery | ValidActivatingPlayer$ You | IsSingleTarget$ True | TargetsValid$ Card.Self | CanTargetOtherCondition$ Creature.YouCtrl | Execute$ TrigCopy | TriggerZones$ Battlefield | TriggerDescription$ Whenever you cast an instant or sorcery that targets only CARDNAME, if you control one or more other creatures that spell could target, choose one of those creatures. Copy that spell. The copy targets the chosen creature.
-SVar:TrigCopy:DB$ CopySpellAbility | Defined$ TriggeredSpellAbility | Controller$ You | CopyForEachCanTarget$ Creature.YouCtrl | ChooseOnlyOne$ True
+T:Mode$ SpellCast | ValidCard$ Sorcery | ValidActivatingPlayer$ You | IsSingleTarget$ True | TargetsValid$ Card.Self | CanTargetOtherCondition$ Creature.YouCtrl | Execute$ TrigCopy | TriggerZones$ Battlefield | TriggerDescription$ Whenever you cast a sorcery spell that targets only CARDNAME, if you control one or more other creatures that spell could target, choose up to two of them. For each chosen creature, copy that spell. The copy targets that creature.
+SVar:TrigCopy:DB$ CopySpellAbility | Defined$ TriggeredSpellAbility | Controller$ You | CopyForEachCanTarget$ Creature.YouCtrl | ChooseUpTo$ 2
 DeckHints:Type$Instant|Sorcery
 Oracle:Whenever you cast a sorcery spell that targets only this, if you control one or more other creatures that spell could target, choose up to two of them. For each chosen creature, copy that spell. The copy targets that creature.

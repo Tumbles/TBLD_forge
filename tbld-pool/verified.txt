@@ -1,31 +1,59 @@
 # Cards whose abilities an automated in-game test plays (the VERIFIED lists of the card tests, collected in
 # forge.tbld.TbldVerified). "java tbld-pool/TbldPool.java verify" counts only these, and cards with no
 # abilities, as implemented. TbldCardPoolTest fails unless this list and the tests' lists are the same.
+Abzan Ascendancy
 Aether Snap
+Agony Warp
 Alms of the Vein
 Ambitions Cost
+Anax and Cymede
 Arbiter of Woe
 Army of the Damned
+Ascended Lawmage
+Auger Spree
+Azorius Skyguard
+Azors Elocutors
 Bankrupt in Blood
+Basilica Bell-Haunt
+Battlewise Hoplite
+Beamsplitter Mage
 Bearer of Silence
+Beetleback Chief
+Biovisionary
 Blanchwood Armor
+Blightning
 Blood Fountain
 Blood Pet
 Blood Scrivener
+Blood Spatter Analysis
 Bloodcrazed Paladin
 Bloodgift Demon
 Bloodthrone Vampire
+Bloodtithe Harvester
+Boltwing Marauder
 Bone Miser
+Borborygmos Enraged
+Boros Challenger
+Butcher of the Horde
 Cabal Therapist
 Callous Bloodmage
+Campus Renovation
 Carrion Feeder
+Casualties of War
 Caustic Crawler
 Caustic Tar
+Chromanticore
 Cleaving Reaper
 Cling to Dust
+Collective Blessing
+Conduit Goblin
+Corpsejack Menace
 Crackling Cyclops
+Cruel Celebrant
 Cruel Reality
+Cryptborn Horror
 Culling Drone
+Cyclops Superconductor
 Daggerdrome Imp
 Dead Drop
 Dead Revels
@@ -33,22 +61,35 @@ Debt to the Kami
 Deeproot Champion
 Defeat
 Defiant Bloodlord
+Despark
 Despoiler of Souls
 Diabolic Tutor
 Discordant Piper
 Disfigure
 Dispossess
 Divest
+Djinn Illuminatus
+Doom Foretold
+Double Cleave
 Drakestown Forgotten
+Dramatic Rescue
 Dread Defiler
 Dread Shade
 Dream Devourer
+Dreg Mangler
 Dregscape Zombie
 Drossclaw
+Drown in Filth
 Dutiful Return
 Easy Prey
+Ecstatic Electromancer
+Eladamris Call
+Elas il-Kor Sadistic Pilgrim
+Electrosiphon
+Elite Guardmage
 Endless Ranks of the Dead
 Entomber Exarch
+Epic Experiment
 Ereboss Intervention
 Eternal Taskmaster
 Ever After
@@ -57,17 +98,27 @@ Execute
 Extirpate
 Eye Collector
 Facevaulter
+Faithful Mending
 False Cure
+Fathom Feeder
 Feed the Clan
 Fell Stinger
 Festering Goblin
 Firebolt
+Firemane Avenger
+Fireminds Research
+Flayer Drone
+Forerunner of Slaughter
 Foul-Tongue Shriek
 Fungal Infection
+Fusion Elemental
 Galvanic Blast
+Gelectrode
 Geth Thane of Contracts
 Ghastly Demise
+Ghor-Clan Rampager
 Ghoulraiser
+Gift of Orzhova
 Glaze Fiend
 Glint-Sleeve Siphoner
 Gnarled Scarhide

@@ -118,6 +118,15 @@ public class CopySpellAbilityEffect extends SpellAbilityEffect {
                                 copies.add(copy);
                             }
                         }
+                    } else if (sa.hasParam("ChooseUpTo")) { // TBLD Beamsplitter Mage: up to N of them, a copy for each
+                        final int max = AbilityUtils.calculateAmount(card, sa.getParam("ChooseUpTo"), sa);
+                        for (final GameEntity choice : controller.getController().chooseEntitiesForEffect(all, 0, max, null, sa,
+                                "Choose up to " + max, null, null)) {
+                            SpellAbility copy = CardFactory.copySpellAbilityAndPossiblyHost(sa, chosenSA, controller);
+                            if (changeToLegalTarget(copy, choice, targetedSA)) {
+                                copies.add(copy);
+                            }
+                        }
                     } else {
                         for (final GameEntity ge : all) {
                             SpellAbility copy = CardFactory.copySpellAbilityAndPossiblyHost(sa, chosenSA, controller);

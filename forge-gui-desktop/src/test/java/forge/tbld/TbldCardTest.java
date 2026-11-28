@@ -116,6 +116,17 @@ public abstract class TbldCardTest extends AITest {
                     .orElseThrow(() -> new AssertionError("no choice \"" + want + "\" among " + spells));
         }
 
+        /** A keyword chosen for a pump ("your choice of vigilance, lifelink, or haste"): the next of the modes. */
+        @Override
+        public String chooseKeywordForPump(final List<String> options, final SpellAbility sa, final String prompt, final Card tgtCard) {
+            if (choices.modes.isEmpty()) {
+                return super.chooseKeywordForPump(options, sa, prompt, tgtCard);
+            }
+            final String want = choices.modes.remove(0);
+            return options.stream().filter(o -> o.contains(want)).findFirst()
+                    .orElseThrow(() -> new AssertionError("no keyword \"" + want + "\" among " + options));
+        }
+
         @Override
         public String chooseCardName(final SpellAbility sa, final Predicate<forge.card.ICardFace> cpp, final String valid, final String message) {
             return choices.cardName != null ? choices.cardName : super.chooseCardName(sa, cpp, valid, message);
