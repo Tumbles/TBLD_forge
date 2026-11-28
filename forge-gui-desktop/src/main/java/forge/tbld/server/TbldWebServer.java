@@ -1,5 +1,6 @@
 package forge.tbld.server;
 
+import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import forge.deck.Deck;
@@ -55,7 +56,9 @@ import java.util.function.Supplier;
 /**
  * A web server for playing Forge in a browser. It serves the web client at {@code /} and accepts
  * one WebSocket connection per seat at {@code /ws?seat=N}. When every seat has connected, it
- * starts a match. A browser can ask for the match to be abandoned and a new one started.
+ * starts a match. A browser can ask for the match to be abandoned and a new one started, and can
+ * choose its seat's test deck ({@link TbldTestDecks}): {@code &deck=ID} in the WebSocket URI before
+ * the match starts, or {@code {t:"deck", id}}, which starts a new match.
  */
 public final class TbldWebServer {
 
@@ -73,8 +76,10 @@ public final class TbldWebServer {
     private Channel serverChannel;
     private volatile boolean matchStarted;
     private volatile HostedMatch hostedMatch;
-    /** The deck each seat plays, by seat number (from 1). */
+    /** The deck each seat plays, by seat number (from 1), unless the seat chose one. */
     private final IntFunction<Deck> deck;
+    /** The id of the test deck each seat chose ({@link TbldTestDecks}), or null, indexed by seat number minus one. */
+    private final AtomicReferenceArray<String> chosenDecks;
 
     /** Seat 1 plays the red test deck, seat 2 the green one, and so on alternately. */
     public TbldWebServer(final int seatCount) {
@@ -90,6 +95,7 @@ public final class TbldWebServer {
         this.seatCount = seatCount;
         this.deck = deck;
         this.channels = new AtomicReferenceArray<>(seatCount);
+        this.chosenDecks = new AtomicReferenceArray<>(seatCount);
         this.seats = newSeats();
     }
 
@@ -247,7 +253,7 @@ public final class TbldWebServer {
         final List<RegisteredPlayer> players = new ArrayList<>();
         final Map<RegisteredPlayer, IGuiGame> guis = new LinkedHashMap<>();
         for (final BrowserSeat s : seats) {
-            final RegisteredPlayer rp = new RegisteredPlayer(deck.apply(s.getSeatIndex()))
+            final RegisteredPlayer rp = new RegisteredPlayer(deckFor(s.getSeatIndex()))
                     .setPlayer(new LobbyPlayerHuman("Player " + s.getSeatIndex()));
             players.add(rp);
             guis.put(rp, s.getGui());
@@ -264,39 +270,43 @@ public final class TbldWebServer {
 
     /** The red TBLD test deck (40 cards, as the earlier test deck). Its Mountains are TBLD Mountain version 69. */
     public static Deck testDeck() {
-        final Deck d = new Deck("TBLD red test deck");
-        d.getMain().add("Mountain|TBLD|69", 17);
-        d.getMain().add("Rigging Runner", 2);
-        d.getMain().add("Goblin Wardriver", 3);
-        d.getMain().add("Voldaren Epicure", 2);
-        d.getMain().add("Harsh Mentor", 2);
-        d.getMain().add("Crackling Cyclops", 2);
-        d.getMain().add("Hound of Griselbrand", 2);
-        d.getMain().add("Volley Veteran", 1);
-        d.getMain().add("Searing Touch", 3);
-        d.getMain().add("Galvanic Blast", 2);
-        d.getMain().add("Firebolt", 2);
-        d.getMain().add("Searing Blood", 2);
-        return d;
+        return TbldTestDecks.red();
     }
 
     /** The green TBLD test deck (40 cards). Its Forests are TBLD Forest version 11. */
     public static Deck greenTestDeck() {
-        final Deck d = new Deck("TBLD green test deck");
-        d.getMain().add("Forest|TBLD|11", 17);
-        d.getMain().add("Young Wolf", 3);
-        d.getMain().add("Deeproot Champion", 2);
-        d.getMain().add("Servant of the Conduit", 2);
-        d.getMain().add("Sacred Wolf", 3);
-        d.getMain().add("Jungleborn Pioneer", 2);
-        d.getMain().add("Greenweaver Druid", 2);
-        d.getMain().add("Ironscale Hydra", 2);
-        d.getMain().add("Stingerfling Spider", 1);
-        d.getMain().add("Blanchwood Armor", 2);
-        d.getMain().add("Hunger of the Howlpack", 2);
-        d.getMain().add("Stand Together", 1);
-        d.getMain().add("Feed the Clan", 1);
-        return d;
+        return TbldTestDecks.green();
+    }
+
+    /** The deck a seat (numbered from 1) plays: the test deck it chose, or its default. */
+    private Deck deckFor(final int seat) {
+        final TbldTestDecks.Entry chosen = TbldTestDecks.byId(chosenDecks.get(seat - 1));
+        return chosen != null ? chosen.deck().get() : deck.apply(seat);
+    }
+
+    /** The id of the test deck a seat (numbered from 1) plays, or "" if it plays some other deck. */
+    private String deckIdFor(final int seat) {
+        final String chosen = chosenDecks.get(seat - 1);
+        if (TbldTestDecks.byId(chosen) != null) {
+            return chosen;
+        }
+        final TbldTestDecks.Entry e = TbldTestDecks.byDeckName(deck.apply(seat).getName());
+        return e == null ? "" : e.id();
+    }
+
+    /** The test deck a WebSocket URI asks for ({@code deck=ID}), or null. */
+    private static String deckParam(final String uri) {
+        final List<String> param = new QueryStringDecoder(uri).parameters().get("deck");
+        return param == null || param.isEmpty() || TbldTestDecks.byId(param.get(0)) == null ? null : param.get(0);
+    }
+
+    /** Sets the test deck a seat (numbered from 1) plays and starts a new match with it. Unknown ids are ignored. */
+    public void chooseDeck(final int seat, final String id) {
+        if (TbldTestDecks.byId(id) == null || seat < 1 || seat > seatCount) {
+            return;
+        }
+        chosenDecks.set(seat - 1, id);
+        restart();
     }
 
     /** The seat index (from 0) that a WebSocket URI asks for, or -1. */
@@ -325,9 +335,23 @@ public final class TbldWebServer {
                 }
                 ctx.channel().attr(SEAT).set(index);
                 channels.set(index, ctx.channel());
+                // A browser names the deck it last chose; it applies from the next match that starts
+                final String asked = deckParam(hc.requestUri());
+                if (asked != null && !matchStarted) {
+                    chosenDecks.set(index, asked);
+                }
                 final JsonObject hello = new JsonObject();
                 hello.addProperty("t", "hello");
                 hello.addProperty("seat", index + 1);
+                hello.addProperty("deck", deckIdFor(index + 1));
+                final JsonArray decks = new JsonArray();
+                for (final TbldTestDecks.Entry e : TbldTestDecks.ALL) {
+                    final JsonObject o = new JsonObject();
+                    o.addProperty("id", e.id());
+                    o.addProperty("label", e.label());
+                    decks.add(o);
+                }
+                hello.add("decks", decks);
                 ctx.channel().writeAndFlush(new TextWebSocketFrame(hello.toString()));
                 seats.get(index).resend();
                 maybeStartMatch();
@@ -343,8 +367,14 @@ public final class TbldWebServer {
                 if (index != null) {
                     try {
                         final JsonObject json = JsonParser.parseString(frame.text()).getAsJsonObject();
-                        if (json.has("t") && "restart".equals(json.get("t").getAsString())) {
+                        final String type = json.has("t") ? json.get("t").getAsString() : "";
+                        if ("restart".equals(type)) {
                             final Thread t = new Thread(TbldWebServer.this::restart, "tbld-restart");
+                            t.setDaemon(true);
+                            t.start();
+                        } else if ("deck".equals(type) && json.has("id")) {
+                            final String id = json.get("id").getAsString();
+                            final Thread t = new Thread(() -> chooseDeck(index + 1, id), "tbld-restart");
                             t.setDaemon(true);
                             t.start();
                         } else {

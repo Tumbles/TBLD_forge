@@ -29,7 +29,7 @@ await page.route("http://tbld.test/pics/**", route => {
   const file = path.join(here, "../forge-gui/res/tbld/pics", decodeURIComponent(new URL(route.request().url()).pathname.slice("/pics/".length)));
   return fs.existsSync(file) ? route.fulfill({ contentType: file.endsWith(".png") ? "image/png" : "image/jpeg", body: fs.readFileSync(file) }) : route.fulfill({ status: 404, body: "" });
 });
-await page.routeWebSocket("ws://tbld.test/ws?seat=1", ws => {
+await page.routeWebSocket(/^ws:\/\/tbld\.test\/ws\?seat=1(&|$)/, ws => {
   server = ws;
   ws.onMessage(m => received.push(JSON.parse(m)));
 });
@@ -431,6 +431,20 @@ check(!!pref, "choosing an auto-pass setting sends it");
 await page.click("#hold-label");
 pref = await waitFor(() => lastPref().holdPriority === true && lastPref(), "hold priority change");
 check(!!pref && pref.autoPass === "noActions", "turning hold priority on sends it with the other settings");
+// the deck picker: the server's decks and the one in use; choosing another asks first, then tells the server
+send({ t: "hello", seat: 1, deck: "red", decks: [{ id: "red", label: "Red goblins and burn" }, { id: "ub-control", label: "Blue-black counterspells" }] });
+await settle();
+check(await page.locator("#deck").inputValue() === "red" && (await count("#deck option")) === 2, "the deck picker lists the server's decks and shows the one in use");
+page.once("dialog", d => d.dismiss());
+await page.selectOption("#deck", "ub-control");
+await settle();
+check(await page.locator("#deck").inputValue() === "red" && !received.find(m => m.t === "deck"), "declining the new game keeps the deck");
+page.once("dialog", d => d.accept());
+await page.selectOption("#deck", "ub-control");
+check(!!(await waitFor(() => received.find(m => m.t === "deck" && m.id === "ub-control"), "a deck choice")), "choosing a deck tells the server");
+check(await page.evaluate(() => localStorage.getItem("tbld.deck.seat1")) === "ub-control", "the chosen deck is remembered for the next connection");
+send({ t: "state", state: makeState() });
+await settle();
 const apBox = await page.locator("#autopass-label").boundingBox();
 const yBox = await page.locator("#yield-label").boundingBox();
 check(apBox && yBox && Math.abs(apBox.y - yBox.y) < 12 && yBox.x > apBox.x, "Yield all sits beside Auto-pass");

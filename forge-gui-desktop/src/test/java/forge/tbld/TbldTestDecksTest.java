@@ -19,12 +19,15 @@ import forge.game.spellability.SpellAbility;
 import forge.game.zone.ZoneType;
 import forge.item.PaperCard;
 import forge.tbld.server.TbldPictures;
+import forge.tbld.server.TbldTestDecks;
 import forge.tbld.server.TbldWebServer;
 import org.testng.AssertJUnit;
 import org.testng.annotations.Test;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.function.Consumer;
 
 /**
@@ -122,14 +125,23 @@ public class TbldTestDecksTest extends AITest {
 
     @Test
     public void testDecksHoldOnlyVerifiedCardsWithPictures() {
-        for (final Deck d : List.of(TbldWebServer.testDeck(), TbldWebServer.greenTestDeck())) {
+        // The red and green decks' cards are verified here; the other test decks' cards by the card tests
+        final List<Deck> own = List.of(TbldWebServer.testDeck(), TbldWebServer.greenTestDeck());
+        final Set<String> verified = TbldVerified.all();
+        final Set<String> ids = new HashSet<>();
+        for (final TbldTestDecks.Entry entry : TbldTestDecks.ALL) {
+            AssertJUnit.assertTrue("two test decks with id " + entry.id(), ids.add(entry.id()));
+            final Deck d = entry.deck().get();
+            final boolean isOwn = own.stream().anyMatch(o -> o.getName().equals(d.getName()));
+            AssertJUnit.assertEquals(d.getName() + " size", 40, d.getMain().countAll());
             for (final Map.Entry<PaperCard, Integer> e : d.getMain()) {
                 final PaperCard pc = e.getKey();
                 AssertJUnit.assertEquals(pc.getName(), "TBLD", pc.getEdition());
                 AssertJUnit.assertNotNull(pc.getName() + " (version " + pc.getArtIndex() + ") has no picture",
                         TbldPictures.urlFor(pc.getName(), pc.getArtIndex()));
                 if (!pc.getRules().getType().isBasicLand()) {
-                    AssertJUnit.assertTrue(pc.getName() + " is in a test deck but not verified here", VERIFIED.contains(pc.getName()));
+                    AssertJUnit.assertTrue(pc.getName() + " is in " + d.getName() + " but not verified",
+                            isOwn ? VERIFIED.contains(pc.getName()) : verified.contains(pc.getName()));
                 }
             }
         }
