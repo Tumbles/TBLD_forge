@@ -21,6 +21,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
+import java.util.regex.Pattern;
 
 /**
  * A scripted player that plays through the web server's WebSocket protocol, the same way the
@@ -69,6 +70,8 @@ final class TbldBot implements WebSocket.Listener {
 
     // What happened in the game, for the test's assertions
     final List<String> errors = new CopyOnWriteArrayList<>();
+    /** Texts the server sent with an object id ("Mountain (45)"): players don't see ids except in the game log. */
+    final List<String> textsWithIds = new CopyOnWriteArrayList<>();
     final List<String> actions = new CopyOnWriteArrayList<>();
     volatile boolean gameOver;
     volatile int maxTurn;
@@ -245,13 +248,32 @@ final class TbldBot implements WebSocket.Listener {
             final String text = partial.toString();
             partial.setLength(0);
             try {
-                handle(JsonParser.parseString(text).getAsJsonObject());
+                final JsonObject msg = JsonParser.parseString(text).getAsJsonObject();
+                findIds(msg);
+                handle(msg);
             } catch (final RuntimeException e) {
                 errors.add("seat " + seat + ": " + e + " on " + text);
             }
         }
         webSocket.request(1);
         return null;
+    }
+
+    private static final Pattern OBJECT_ID = Pattern.compile("(?<=\\S) [(\\[]H?\\d+[)\\]]");
+
+    /** Notes every text of the message that shows an object id, except the game log and the keys that name an ability. */
+    private void findIds(final JsonElement e) {
+        if (e.isJsonPrimitive() && e.getAsJsonPrimitive().isString()) {
+            if (OBJECT_ID.matcher(e.getAsString()).find() && textsWithIds.size() < 20) {
+                textsWithIds.add("seat " + seat + ": " + e.getAsString());
+            }
+        } else if (e.isJsonArray()) {
+            e.getAsJsonArray().forEach(this::findIds);
+        } else if (e.isJsonObject()) {
+            e.getAsJsonObject().entrySet().stream()
+                    .filter(f -> !List.of("log", "key", "yieldKey").contains(f.getKey()))
+                    .forEach(f -> findIds(f.getValue()));
+        }
     }
 
     @Override

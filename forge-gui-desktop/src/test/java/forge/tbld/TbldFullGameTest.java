@@ -48,6 +48,8 @@ public class TbldFullGameTest extends AITest {
                     defender.unassignWorked);
             AssertJUnit.assertTrue("no creature died" + report, attacker.creatureDied || defender.creatureDied);
             AssertJUnit.assertTrue("no instant or sorcery resolved" + report, attacker.spellResolved || defender.spellResolved);
+            AssertJUnit.assertTrue("a text showed an object id: " + attacker.textsWithIds + defender.textsWithIds,
+                    attacker.textsWithIds.isEmpty() && defender.textsWithIds.isEmpty());
             AssertJUnit.assertFalse("a player saw the other's hand", attacker.sawOpponentHand || defender.sawOpponentHand);
         } finally {
             if (attacker != null) {

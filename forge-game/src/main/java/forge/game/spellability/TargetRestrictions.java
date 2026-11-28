@@ -569,6 +569,11 @@ public class TargetRestrictions implements IHasForgeParams {
                     num++;
                 }
             }
+            if (this.tgtZone.size() == 1) {
+                // Only spells and abilities on the stack can be targeted, picked by stack item (TargetSelection):
+                // the cards on the stack do not count again, as canTarget(Card) ignores what the spell targets
+                return num;
+            }
         }
         // TODO this may count some SA twice
         return num + getAllCandidates(sa).size();

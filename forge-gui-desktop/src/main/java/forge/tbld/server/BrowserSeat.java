@@ -59,6 +59,7 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.function.Supplier;
+import java.util.regex.Pattern;
 
 /**
  * One player's seat in one match. The engine's calls on this player's GUI arrive here as
@@ -274,7 +275,7 @@ public final class BrowserSeat implements IRemote {
         final JsonObject state = new JsonObject();
         state.addProperty("t", "state");
         state.add("state", snapshot());
-        final String stateJson = state.toString();
+        final String stateJson = withoutIds(state).toString();
         lastState = stateJson;
         write(stateJson);
 
@@ -293,7 +294,7 @@ public final class BrowserSeat implements IRemote {
         if (rid != null) {
             call.addProperty("rid", rid);
         }
-        final String callJson = call.toString();
+        final String callJson = withoutIds(call).toString();
         if (DEBUG && (method == ProtocolMethod.setSelection || method == ProtocolMethod.updateButtons
                 || method == ProtocolMethod.showPromptMessage)) {
             System.out.println("[tbld] seat " + seatIndex + " " + (callJson.length() > 300 ? callJson.substring(0, 300) : callJson));
@@ -637,6 +638,40 @@ public final class BrowserSeat implements IRemote {
     };
 
     // ------------------------------------------------------------------ encoding
+
+    /** Forge names an object in its texts with its id: "Mountain (45)", "Lightning Bolt [45]", "Face-down card (H7)". */
+    private static final Pattern OBJECT_ID = Pattern.compile("(?<=\\S) [(\\[]H?\\d+[)\\]]");
+
+    /** Fields that name an object by its exact text, or that are the game log, where the ids stay. */
+    private static final Set<String> KEEPS_IDS = Set.of("log", "key", "yieldKey");
+
+    /** The text without object ids: players don't see them (Brett, 2026-11-28); only the game log keeps them. */
+    public static String withoutIds(final String text) {
+        return text == null ? null : OBJECT_ID.matcher(text).replaceAll("");
+    }
+
+    /** The message, changed in place, with the ids left out of every text in it except the game log's. */
+    public static JsonElement withoutIds(final JsonElement e) {
+        if (e.isJsonPrimitive() && e.getAsJsonPrimitive().isString()) {
+            final String text = e.getAsString();
+            final String shown = withoutIds(text);
+            return shown.equals(text) ? e : new JsonPrimitive(shown);
+        }
+        if (e.isJsonArray()) {
+            final JsonArray arr = e.getAsJsonArray();
+            for (int i = 0; i < arr.size(); i++) {
+                arr.set(i, withoutIds(arr.get(i)));
+            }
+        } else if (e.isJsonObject()) {
+            final JsonObject obj = e.getAsJsonObject();
+            for (final String key : new ArrayList<>(obj.keySet())) {
+                if (!KEEPS_IDS.contains(key)) {
+                    obj.add(key, withoutIds(obj.get(key)));
+                }
+            }
+        }
+        return e;
+    }
 
     private JsonElement encode(final Object o) {
         if (o == null) {
