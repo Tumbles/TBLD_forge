@@ -61,6 +61,7 @@ public class TbldPool {
     static final Path TOOL = ROOT.resolve("tbld-pool");
     static final Path PIC_MANIFEST = TOOL.resolve("pictures.txt");
     static final Path SOURCES = TOOL.resolve("sources.properties");
+    static final Path CORRECTIONS = TOOL.resolve("corrections.txt");
     static final Path CARDSFOLDER = RES.resolve("cardsfolder");
     static final Path SCRIPTS = CARDSFOLDER.resolve("tbld");
     static final Path REFERENCE = TOOL.resolve("reference/cardsfolder");
@@ -225,6 +226,7 @@ public class TbldPool {
         final List<String> warnings = new ArrayList<>();
         final Map<String, Entry> cards = parseXml(Paths.get(src.getProperty("cards")), false, warnings);
         final Map<String, Entry> tokens = parseXml(Paths.get(src.getProperty("tokens")), true, warnings);
+        applyCorrections(cards, warnings);
         final Map<String, Entry> oldCards = readPool(CARDS_FILE);
         final Map<String, Entry> oldTokens = readPool(TOKENS_FILE);
         writePool(CARDS_FILE, "card pool", cards);
@@ -240,7 +242,9 @@ public class TbldPool {
         }
         warnings.forEach(w -> System.out.println("Warning: " + w));
         if (!args.contains("--no-pics")) {
-            importPictures(Paths.get(src.getProperty("pictures")), cards, tokens);
+            final List<Path> extra = Arrays.stream(src.getProperty("pictures.extra", "").split(";"))
+                .map(String::trim).filter(s -> !s.isEmpty()).map(Paths::get).toList();
+            importPictures(Paths.get(src.getProperty("pictures")), extra, cards, tokens);
         }
         final Map<String, Script> scripts = readScripts();
         final List<String> outdated = new ArrayList<>();
@@ -338,6 +342,43 @@ public class TbldPool {
         return out;
     }
 
+    /**
+     * Applies tbld-pool/corrections.txt: "Name | field=value" lines for cards whose picture and XML
+     * disagree (the picture is right). The field is name (renames the card) or one of FIELDS.
+     * A correction the XML no longer needs is reported, so it can be deleted.
+     */
+    static void applyCorrections(final Map<String, Entry> cards, final List<String> warnings) throws IOException {
+        if (!Files.exists(CORRECTIONS)) {
+            return;
+        }
+        for (final String line : Files.readAllLines(CORRECTIONS, StandardCharsets.UTF_8)) {
+            if (line.isBlank() || line.startsWith("#")) {
+                continue;
+            }
+            final String[] p = line.split("\\|", 2);
+            final String name = p[0].trim();
+            final String[] kv = p.length < 2 ? new String[0] : p[1].trim().split("=", 2);
+            if (kv.length < 2 || !("name".equals(kv[0].trim()) || FIELDS.contains(kv[0].trim()))) {
+                warnings.add("corrections.txt: can't read \"" + line + "\"");
+                continue;
+            }
+            final String field = kv[0].trim(), value = kv[1].trim();
+            final Entry e = cards.get(name);
+            if (e == null) {
+                warnings.add("corrections.txt: \"" + name + "\" is not in the card XML (already fixed there?)");
+            } else if ("name".equals(field)) {
+                final Entry renamed = new Entry(value);
+                renamed.f.putAll(e.f);
+                cards.remove(name);
+                cards.put(value, renamed);
+            } else if (value.equals(e.get(field))) {
+                warnings.add("corrections.txt: " + name + "'s " + field + " is already " + value + " in the card XML");
+            } else {
+                e.f.put(field, value);
+            }
+        }
+    }
+
     static String stripTbld(final String n) {
         return n.startsWith("TBLD ") ? n.substring(5) : n;
     }
@@ -385,8 +426,14 @@ public class TbldPool {
     /** Recorded with each picture's source hash: changing how pictures are made converts them all again. */
     static final String PICTURE_FORMAT = "/jpeg90-375";
 
-    /** Pictures are stored as JPEG files (quality 0.9, at most 375 x 523) to keep the repository small. */
-    static void importPictures(final Path dir, final Map<String, Entry> cards, final Map<String, Entry> tokens) throws Exception {
+    /**
+     * Pictures are stored as JPEG files (quality 0.9, at most 375 x 523) to keep the repository small.
+     * The folders in "pictures.extra" only fill gaps: a card or back face with no picture in the main
+     * folder. There, a picture wider than tall of a double-faced card shows both faces side by side; its
+     * left half is the card's picture and its right half its back face's.
+     */
+    static void importPictures(final Path dir, final List<Path> extraDirs, final Map<String, Entry> cards, final Map<String, Entry> tokens)
+            throws Exception {
         final Map<String, String> manifest = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
         if (Files.exists(PIC_MANIFEST)) {
             for (final String l : Files.readAllLines(PIC_MANIFEST, StandardCharsets.UTF_8)) {
@@ -396,23 +443,15 @@ public class TbldPool {
                 }
             }
         }
-        final List<Path> files;
-        try (Stream<Path> s = Files.list(dir)) {
-            files = s.filter(p -> p.getFileName().toString().toLowerCase(Locale.ROOT).matches(".*\\.(png|jpe?g)$")).sorted().toList();
-        }
         final Map<String, String> wanted = new TreeMap<>(String.CASE_INSENSITIVE_ORDER); // target file -> source file name
         final Map<String, Path> sourceOf = new ConcurrentHashMap<>();
+        final Map<String, Integer> halfOf = new ConcurrentHashMap<>(); // target -> 1 left half, 2 right half of its source
         final List<String> unmatched = new ArrayList<>();
         final Map<String, String> byKey = new TreeMap<>();
         Stream.concat(cards.keySet().stream(), tokens.keySet().stream()).forEach(n -> byKey.putIfAbsent(key(n), n));
-        for (final Path f : files) {
-            final String base = f.getFileName().toString().replaceFirst("\\.[^.]+$", "");
-            final Matcher em = EMBLEM_PIC.matcher(base);
-            String name = em.matches() ? "Player " + em.group(1) : base.startsWith("TBLD ") ? base.substring(5) : null;
-            if (name != null && !(cards.containsKey(name) || tokens.containsKey(name))) {
-                name = byKey.get(key(name)); // "TBLD Séance.png" is the picture of Seance
-            }
-            if (name == null || !(cards.containsKey(name) || tokens.containsKey(name))) {
+        for (final Path f : pictureFiles(dir)) {
+            final String name = pictureName(f, cards, tokens, byKey);
+            if (name == null) {
                 unmatched.add(f.getFileName().toString());
                 continue;
             }
@@ -424,16 +463,46 @@ public class TbldPool {
             wanted.put(target, f.getFileName().toString());
             sourceOf.put(target, f);
         }
+        int filled = 0;
+        for (final Path d : extraDirs) {
+            for (final Path f : pictureFiles(d)) {
+                final String name = pictureName(f, cards, tokens, byKey);
+                if (name == null) {
+                    continue;
+                }
+                final String source = d.getFileName() + "/" + f.getFileName();
+                final String target = "TBLD " + name + ".jpg";
+                final String back = cards.containsKey(name) ? cards.get(name).get("back") : "";
+                final String backTarget = "TBLD " + back + ".jpg";
+                final boolean bothFaces = !back.isEmpty() && tokens.containsKey(back)
+                    && !(wanted.containsKey(target) && wanted.containsKey(backTarget)) && isWide(f);
+                if (bothFaces) {
+                    for (final String t : List.of(target, backTarget)) {
+                        if (!wanted.containsKey(t)) {
+                            wanted.put(t, source);
+                            sourceOf.put(t, f);
+                            halfOf.put(t, t.equals(target) ? 1 : 2);
+                            filled++;
+                        }
+                    }
+                } else if (!wanted.containsKey(target)) {
+                    wanted.put(target, source);
+                    sourceOf.put(target, f);
+                    filled++;
+                }
+            }
+        }
         Files.createDirectories(PICS);
         final Map<String, String> newManifest = new ConcurrentHashMap<>();
         final AtomicInteger converted = new AtomicInteger();
         wanted.keySet().parallelStream().forEach(target -> {
             try {
                 final Path src = sourceOf.get(target);
-                final String hash = sha1(src) + PICTURE_FORMAT;
+                final int half = halfOf.getOrDefault(target, 0);
+                final String hash = sha1(src) + PICTURE_FORMAT + (half == 1 ? "/left" : half == 2 ? "/right" : "");
                 final Path out = PICS.resolve(target);
                 if (!hash.equals(manifest.get(target)) || !Files.exists(out)) {
-                    toJpeg(src, out);
+                    toJpeg(src, out, half);
                     converted.incrementAndGet();
                 }
                 newManifest.put(target, hash);
@@ -454,11 +523,33 @@ public class TbldPool {
             b.append(t).append('\t').append(wanted.get(t)).append('\t').append(newManifest.get(t)).append('\n');
         }
         Files.writeString(PIC_MANIFEST, b.toString(), StandardCharsets.UTF_8);
-        System.out.printf("Pictures: %d in the repo, %d converted now, %d removed. %d files in the picture folder match no card:%n",
-            newManifest.size(), converted.get(), removed, unmatched.size());
+        System.out.printf("Pictures: %d in the repo (%d from pictures.extra), %d converted now, %d removed. %d files in the picture folder match no card:%n",
+            newManifest.size(), filled, converted.get(), removed, unmatched.size());
         System.out.println("  " + String.join(", ", unmatched));
         final List<String> missing = cards.values().stream().filter(e -> !e.isBasic() && !newManifest.containsKey("TBLD " + e.name + ".jpg")).map(e -> e.name).toList();
         System.out.printf("%d cards (not counting basic lands) have no picture.%n", missing.size());
+    }
+
+    static List<Path> pictureFiles(final Path dir) throws IOException {
+        try (Stream<Path> s = Files.list(dir)) {
+            return s.filter(p -> p.getFileName().toString().toLowerCase(Locale.ROOT).matches(".*\\.(png|jpe?g)$")).sorted().toList();
+        }
+    }
+
+    /** The card or token a picture file shows, or null. */
+    static String pictureName(final Path f, final Map<String, Entry> cards, final Map<String, Entry> tokens, final Map<String, String> byKey) {
+        final String base = f.getFileName().toString().replaceFirst("\\.[^.]+$", "");
+        final Matcher em = EMBLEM_PIC.matcher(base);
+        String name = em.matches() ? "Player " + em.group(1) : base.startsWith("TBLD ") ? base.substring(5) : null;
+        if (name != null && !(cards.containsKey(name) || tokens.containsKey(name))) {
+            name = byKey.get(key(name)); // "TBLD Séance.png" is the picture of Seance
+        }
+        return name != null && (cards.containsKey(name) || tokens.containsKey(name)) ? name : null;
+    }
+
+    static boolean isWide(final Path f) throws IOException {
+        final BufferedImage in = ImageIO.read(f.toFile());
+        return in != null && in.getWidth() > in.getHeight();
     }
 
     static String sha1(final Path p) throws IOException {
@@ -469,10 +560,14 @@ public class TbldPool {
         }
     }
 
-    static void toJpeg(final Path src, final Path out) throws IOException {
-        final BufferedImage in = ImageIO.read(src.toFile());
+    /** half: 0 the whole picture, 1 its left half, 2 its right half. */
+    static void toJpeg(final Path src, final Path out, final int half) throws IOException {
+        BufferedImage in = ImageIO.read(src.toFile());
         if (in == null) {
             throw new IOException("not a picture: " + src);
+        }
+        if (half != 0) {
+            in = in.getSubimage(half == 2 ? in.getWidth() / 2 : 0, 0, in.getWidth() / 2, in.getHeight());
         }
         // Large pictures are scaled down to the usual 375 x 523 (the client shows cards at most 300 pixels wide)
         final double scale = Math.min(1.0, Math.min(375.0 / Math.min(in.getWidth(), in.getHeight()), 523.0 / Math.max(in.getWidth(), in.getHeight())));

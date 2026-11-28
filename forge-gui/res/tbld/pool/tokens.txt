@@ -1,4 +1,4 @@
-# TBLD tokens, emblems and back faces, written by "java tbld-pool/TbldPool.java import" from Brett's Cockatrice export.
+# TBLD tokens, emblems and back faces, written by "java tbld-pool/TbldPool.java import" from Brett's Cockatrice card files.
 # Do not edit: change the cards in Brett's files and import again.
 
 [Adorned Pouncer Token]

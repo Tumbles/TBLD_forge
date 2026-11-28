@@ -1,4 +1,4 @@
-# TBLD card pool, written by "java tbld-pool/TbldPool.java import" from Brett's Cockatrice export.
+# TBLD card pool, written by "java tbld-pool/TbldPool.java import" from Brett's Cockatrice card files.
 # Do not edit: change the cards in Brett's files and import again.
 
 [10th Street Valiant]
@@ -2290,7 +2290,7 @@ rarity=Uncommon
 color=G
 tags=CHANGED NEW RAMP ELDRAZI
 
-[Brutal Brutal Subjugation]
+[Brutal Subjugation]
 cost=4BBBB
 type=Sorcery
 text=Destroy all creatures.\nYou become the monarch. (The monarch draws a card at their end step. Whenever the monarch is dealt combat damage by a creature, its controller becomes the monarch.)
@@ -6063,7 +6063,7 @@ color=U
 tags=CHANGED NEW
 
 [Fathom Feeder]
-cost=BR
+cost=UB
 type=Creature - Eldrazi
 pt=1/1
 text=Devoid (This card has no color.)\nDeathtouch\nIngest (Whenever this deals combat damage to a player, they exile the top two cards of their library.)\n3UB: Draw two cards, then exile a card from your hand. Each opponent exiles the top two cards of their library.

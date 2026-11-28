@@ -1,0 +1,5 @@
+# Corrections to Brett's card XML where a card's picture and its XML disagree (the picture is right).
+# "Name | field=value", applied by "import"; field is name (renames the card), cost, type, pt, text or color.
+# Import warns when the XML no longer needs a line, so it can be deleted once Brett fixes his XML.
+Fathom Feeder | cost=UB
+Brutal Brutal Subjugation | name=Brutal Subjugation

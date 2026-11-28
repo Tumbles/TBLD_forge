@@ -2,6 +2,7 @@ TBLD 10th Street Valiant.jpg	TBLD 10th Street Valiant.png	7acd601d26a99bbf/jpeg9
 TBLD A Renegade Transcends Flesh.jpg	TBLD A Renegade Transcends Flesh.png	038c0b48e87f38e2/jpeg90-375
 TBLD Abandoned Mansion.jpg	TBLD Abandoned Mansion.png	10cc6201c37b6a1e/jpeg90-375
 TBLD Abbot of Keral Keep.jpg	TBLD Abbot of Keral Keep.png	258eddd91815f6a8/jpeg90-375
+TBLD Absolution of Flesh.jpg	For Reddit/TBLD Absolution of Flesh.png	10ace4355b4e0329/jpeg90-375
 TBLD Absolution.jpg	TBLD Absolution.png	4dc801326a7811ce/jpeg90-375
 TBLD Absurdity.jpg	TBLD Absurdity.png	d3b89e88cdf165d0/jpeg90-375
 TBLD Abyssal Leviathan.jpg	TBLD Abyssal Leviathan.jpg	98d304a976bd6b54/jpeg90-375
@@ -253,6 +254,7 @@ TBLD Boros Garrison.jpg	TBLD Boros Garrison.png	056fec33203f3051/jpeg90-375
 TBLD Bountiful Promenade.jpg	TBLD Bountiful Promenade.png	dcbd95944a2995e9/jpeg90-375
 TBLD Bounty_Barren.jpg	TBLD Bounty_Barren.jpg	dcbeea55fccf4fc9/jpeg90-375
 TBLD Box of Mysteries.jpg	TBLD Box of Mysteries.png	52b80068cc2ac8e8/jpeg90-375
+TBLD Braids Dementia Caster.jpg	For Reddit/TBLD Braids Dementia Caster.png	14b525942084edfc/jpeg90-375
 TBLD Brain Drain.jpg	TBLD Brain Drain.png	f5a819d0eb7477ff/jpeg90-375
 TBLD Brainblast.jpg	TBLD Brainblast.jpg	c1fe0249acc55f6b/jpeg90-375
 TBLD Brainstone.jpg	TBLD Brainstone.jpg	abff753e29aab006/jpeg90-375
@@ -262,6 +264,7 @@ TBLD Brazen Poltergeist.jpg	TBLD Brazen Poltergeist.png	aec948b6b1b251e5/jpeg90-
 TBLD Breakbot.jpg	TBLD Breakbot.png	858cf44ed6e76242/jpeg90-375
 TBLD Breakthrough.jpg	TBLD Breakthrough.jpg	e29880d37a6d4b4e/jpeg90-375
 TBLD Breath of Fury.jpg	TBLD Breath of Fury.png	c8e3d64b2259e369/jpeg90-375
+TBLD Breathetaker Wraith.jpg	For Reddit/TBLD Breathetaker Wraith.png	9ef7954ca9917a1e/jpeg90-375
 TBLD Briar Scarp.jpg	TBLD Briar Scarp.png	16f483d100d22f1a/jpeg90-375
 TBLD Bridle the Insolent.jpg	TBLD Bridle the Insolent.jpg	3e134657bab4a76d/jpeg90-375
 TBLD Brightening.jpg	TBLD Brightening.png	9f8cc9c8fc8097b2/jpeg90-375
@@ -274,6 +277,7 @@ TBLD Broken Angel.jpg	TBLD Broken Angel.png	94ad1c4e24991a3b/jpeg90-375
 TBLD Bronze Bell Shrine.jpg	TBLD Bronze Bell Shrine.png	231db58f8879d74a/jpeg90-375
 TBLD Bronze Guardian.jpg	TBLD Bronze Guardian.png	f48e29aa7c35827f/jpeg90-375
 TBLD Brood Monitor.jpg	TBLD Brood Monitor.png	f8d1aed0f40ba1b0/jpeg90-375
+TBLD Brutal Subjugation.jpg	TBLD Brutal Subjugation.png	ca8fb2e37a7a9a07/jpeg90-375
 TBLD Brutalizer Exarch.jpg	TBLD Brutalizer Exarch.png	bae8eeeb69f8cbef/jpeg90-375
 TBLD Budding Chick.jpg	TBLD Budding Chick.png	ae6302d81cba3624/jpeg90-375
 TBLD Burgeoning Weedbeast.jpg	TBLD Burgeoning Weedbeast.png	a73c91833a3465d3/jpeg90-375
@@ -322,6 +326,8 @@ TBLD Chain of Lightning.jpg	TBLD Chain of Lightning.jpg	d1979377b6878633/jpeg90-
 TBLD Chamber of Secrets.jpg	TBLD Chamber of Secrets.png	3a2e34f897fed17d/jpeg90-375
 TBLD Chandra Hotshot Pyromancer.jpg	TBLD Chandra Hotshot Pyromancer.jpg	1e0a019b74aa7218/jpeg90-375
 TBLD Changeling Weirder.jpg	TBLD Changeling Weirder.png	8baca5179a9bb1ba/jpeg90-375
+TBLD Chapel Shieldgeist.jpg	Split Cards/TBLD Chaplain of Alms.png	2904c9aeb4ec2f90/jpeg90-375/right
+TBLD Chaplain of Alms.jpg	Split Cards/TBLD Chaplain of Alms.png	2904c9aeb4ec2f90/jpeg90-375/left
 TBLD Charcoal Diamond.jpg	TBLD Charcoal Diamond.png	f3c42852c62da3ac/jpeg90-375
 TBLD Charging Badger.jpg	TBLD Charging Badger.png	c8fb1a81ea8d84be/jpeg90-375
 TBLD Charmed Domain.jpg	TBLD Charmed Domain.png	37771f31e9f26246/jpeg90-375
@@ -424,6 +430,7 @@ TBLD Corsairs Cove.jpg	TBLD Corsairs Cove.jpg	4feb13bbf32911d4/jpeg90-375
 TBLD Cosmic Break.jpg	TBLD Cosmic Break.png	c5d3babdc23fd6f6/jpeg90-375
 TBLD Cosmic Intervention.jpg	TBLD Cosmic Intervention.png	8d824b5e2b67fb5f/jpeg90-375
 TBLD Count on Luck.jpg	TBLD Count on Luck.png	e5addadaecfb2025/jpeg90-375
+TBLD Counterflagerate.jpg	For Reddit/TBLD Counterflagerate.png	cc52ac232f0febf5/jpeg90-375
 TBLD Court Guildmage.jpg	TBLD Court Guildmage.png	77475e1bdda4afe8/jpeg90-375
 TBLD Court Huntsman.jpg	TBLD Court Huntsman.png	9c6edce38e66662d/jpeg90-375
 TBLD Crab.jpg	TBLD Crab.jpg	f1b9740cecc441a1/jpeg90-375
@@ -451,6 +458,7 @@ TBLD Crush of Wurms.jpg	TBLD Crush of Wurms.png	80f0c6cb4f6ac104/jpeg90-375
 TBLD Crush to Bits.jpg	TBLD Crush to Bits.jpg	b85bd245a6bd5295/jpeg90-375
 TBLD Crushing Assault.jpg	TBLD Crushing Assault.png	ebf93a9aba2404ea/jpeg90-375
 TBLD Cryptborn Horror.jpg	TBLD Cryptborn Horror.png	f179bb2a0b1cd1b5/jpeg90-375
+TBLD Cryptic Lich.jpg	For Reddit/TBLD Cryptic Lich.png	9faeae79d1e8ccb4/jpeg90-375
 TBLD Cryptolith Rite.jpg	TBLD Cryptolith Rite.png	23ad75a5042a1463/jpeg90-375
 TBLD Crystal Prism.jpg	TBLD Crystal Prism.png	130096f98713811e/jpeg90-375
 TBLD Crystal Vein.jpg	TBLD Crystal Vein.jpg	3c96f4719a7e7c68/jpeg90-375
@@ -492,6 +500,7 @@ TBLD Data Exchange.jpg	TBLD Data Exchange.png	10f371a4f3601932/jpeg90-375
 TBLD Davriel Cane Diabolist.jpg	TBLD Davriel Cane Diabolist.jpg	9ab184744e556599/jpeg90-375
 TBLD Dawn to Dusk.jpg	TBLD Dawn to Dusk.jpg	d407c5a1f4b8bf8e/jpeg90-375
 TBLD Dawnbringer Charioteers.jpg	TBLD Dawnbringer Charioteers.png	bfd44a5e12c0aec8/jpeg90-375
+TBLD Dawnglow Kirin.jpg	For Reddit/TBLD Dawnglow Kirin.png	c585448bb8b1599f/jpeg90-375
 TBLD Dazzling Angel.jpg	TBLD Dazzling Angel.png	6260e7c7b18ca710/jpeg90-375
 TBLD Dazzling Ritual.jpg	TBLD Dazzling Ritual.jpg	f58ccbec595b78e9/jpeg90-375
 TBLD Dazzling Zebracorn.jpg	TBLD Dazzling Zebracorn.png	cd6981d4e8c943cd/jpeg90-375
@@ -506,6 +515,8 @@ TBLD Deadwood Stomper.jpg	TBLD Deadwood Stomper.jpg	b0dff55beef14c58/jpeg90-375
 TBLD Death of a Champion.jpg	TBLD Death of a Champion.jpg	1b5926b38b1e56bf/jpeg90-375
 TBLD Death-Hood Cobra.jpg	TBLD Death-Hood Cobra.png	347184c4e5556d7a/jpeg90-375
 TBLD Deathblow.jpg	TBLD Deathblow.jpg	03e037b7f3bf3c78/jpeg90-375
+TBLD Deathbonnet Hulk.jpg	Split Cards/TBLD Deathbonnet Sprout.png	b5550bffb9bbf5fc/jpeg90-375/right
+TBLD Deathbonnet Sprout.jpg	Split Cards/TBLD Deathbonnet Sprout.png	b5550bffb9bbf5fc/jpeg90-375/left
 TBLD Deathless Behemoth.jpg	TBLD Deathless Behemoth.png	c1900530e232b5d7/jpeg90-375
 TBLD Debt to the Kami.jpg	TBLD Debt to the Kami.png	66954164554f7b1b/jpeg90-375
 TBLD Debug_Unplug.jpg	TBLD Debug_Unplug.jpg	094bfe4e1762043d/jpeg90-375
@@ -540,6 +551,7 @@ TBLD Deserted Fairground.jpg	TBLD Deserted Fairground.png	cd3814c23b2fd196/jpeg9
 TBLD Desolation Twin.jpg	TBLD Desolation Twin.jpg	7852da8b296c0cd4/jpeg90-375
 TBLD Despark.jpg	TBLD Despark.jpg	e497f018babd2d8a/jpeg90-375
 TBLD Despoiler of Souls.jpg	TBLD Despoiler of Souls.jpg	f03f2838311e8048/jpeg90-375
+TBLD Devil-Dagger Belligerent.jpg	For Reddit/TBLD Devil-Dagger Belligerent.png	f8dde9d82858f227/jpeg90-375
 TBLD Devil.jpg	TBLD Devil.jpg	83d79cf08c74ed6b/jpeg90-375
 TBLD Devils Bargain.jpg	TBLD Devils Bargain.png	21c3048edb6fd7c3/jpeg90-375
 TBLD Devious Cover-Up.jpg	TBLD Devious Cover-Up.jpg	ddafd015ebc171fc/jpeg90-375
@@ -567,6 +579,7 @@ TBLD Distant Kingdom.jpg	TBLD Distant Kingdom.png	6f5c86ae70be4395/jpeg90-375
 TBLD Distant Melody.jpg	TBLD Distant Melody.jpg	3c12377c524fbbc1/jpeg90-375
 TBLD Distortion Barrier.jpg	TBLD Distortion Barrier.png	d4681dd7a2e2c755/jpeg90-375
 TBLD District Explorers.jpg	TBLD District Explorers.png	88cffd2d70f1863d/jpeg90-375
+TBLD Dive_Bottom.jpg	For Reddit/TBLD Dive_Bottom.png	8afe2f7c695bcc52/jpeg90-375
 TBLD Divest.jpg	TBLD Divest.jpg	32fe2a65a7e34a39/jpeg90-375
 TBLD Divination.jpg	TBLD Divination.png	f92a2e6ea5644e53/jpeg90-375
 TBLD Divine Aid.jpg	TBLD Divine Aid.png	2f35ccbfa5ae5158/jpeg90-375
@@ -936,6 +949,7 @@ TBLD Furnace Fodder.jpg	TBLD Furnace Fodder.png	ad00988238f00f19/jpeg90-375
 TBLD Fusion Elemental.jpg	TBLD Fusion Elemental.png	be8069876da4b112/jpeg90-375
 TBLD Future Sight.jpg	TBLD Future Sight.png	c0890cc0ad7193c4/jpeg90-375
 TBLD Gaeas Gift.jpg	TBLD Gaeas Gift.png	0ba23d30e58ae104/jpeg90-375
+TBLD Gallant Charge.jpg	For Reddit/TBLD Gallant Charge.png	b5c451d15f499565/jpeg90-375
 TBLD Galloping Blaze.jpg	TBLD Galloping Blaze.png	1f02ef755e1f0fab/jpeg90-375
 TBLD Galvanic Blast.jpg	TBLD Galvanic Blast.png	94dcf94dfbadc1eb/jpeg90-375
 TBLD Gamblers Bauble.jpg	TBLD Gamblers Bauble.png	e748ddc7457efd00/jpeg90-375
@@ -1383,7 +1397,9 @@ TBLD Labast Empire Baron.jpg	TBLD Labast Empire Baron.jpg	0030b80ac58ece6c/jpeg9
 TBLD Laboratory Aperture.jpg	TBLD Laboratory Aperture.png	0ea103337045413f/jpeg90-375
 TBLD Laboratory Guildmage.jpg	TBLD Laboratory Guildmage.png	f548a9a0af9444f2/jpeg90-375
 TBLD Lampads Touch.jpg	TBLD Lampads Touch.png	47ae28783304ed42/jpeg90-375
+TBLD Lantern Bearer.jpg	Split Cards/TBLD Lantern Bearer.png	05902a07ac2d2b1d/jpeg90-375/left
 TBLD Lantern-Lit Marsh.jpg	TBLD Lantern-Lit Marsh.png	ba16cd3df0f36e6c/jpeg90-375
+TBLD Lanterns Lift.jpg	Split Cards/TBLD Lantern Bearer.png	05902a07ac2d2b1d/jpeg90-375/right
 TBLD Last of Us.jpg	TBLD Last of Us.jpg	a27e01c857696866/jpeg90-375
 TBLD Lathnu Hellion.jpg	TBLD Lathnu Hellion.png	9f4c1c8a45679390/jpeg90-375
 TBLD Lava Dart.jpg	TBLD Lava Dart.jpg	91dd47972a155b10/jpeg90-375
@@ -1762,6 +1778,7 @@ TBLD Nesting Grounds.jpg	TBLD Nesting Grounds.png	d0d91d01c7198b80/jpeg90-375
 TBLD Neutralizing Blast.jpg	TBLD Neutralizing Blast.png	bb84dcf1cb8d85e6/jpeg90-375
 TBLD Nevermore.jpg	TBLD Nevermore.png	0d17d8c2227ae422/jpeg90-375
 TBLD New Perspectives.jpg	TBLD New Perspectives.png	005e1388b4c91b66/jpeg90-375
+TBLD Nezumi Bandit.jpg	For Reddit/TBLD Nezumi Bandit.png	8f8c7d575584a3b7/jpeg90-375
 TBLD Nibbling Whelp.jpg	TBLD Nibbling Whelp.jpg	1b6002367ea9c78a/jpeg90-375
 TBLD Night Call.jpg	TBLD Night Call.png	52d299feb764a48f/jpeg90-375
 TBLD Nightveil Aristocrat.jpg	TBLD Nightveil Aristocrat.png	82369e990bcb10c2/jpeg90-375
@@ -2348,6 +2365,7 @@ TBLD Shrewd Sphinx.jpg	TBLD Shrewd Sphinx.png	05bb8d35a29c44f7/jpeg90-375
 TBLD Shriekgeist.jpg	TBLD Shriekgeist.png	08149916fef7a615/jpeg90-375
 TBLD Shriekhorn.jpg	TBLD Shriekhorn.png	bddbad1b38ec1cb3/jpeg90-375
 TBLD Shrieking Affliction.jpg	TBLD Shrieking Affliction.png	3f2288ca6feac3de/jpeg90-375
+TBLD Shrieking Chain Fiend.jpg	For Reddit/TBLD Shrieking Chain Fiend.png	a2d8ed394c38800b/jpeg90-375
 TBLD Shrine of the Forsaken Gods.jpg	TBLD Shrine of the Forsaken Gods.png	4cc0e86d54e58fca/jpeg90-375
 TBLD Shrivel.jpg	TBLD Shrivel.png	24a52498081a165d/jpeg90-375
 TBLD Shrouded Square.jpg	TBLD Shrouded Square.png	103886e80bd56b75/jpeg90-375
