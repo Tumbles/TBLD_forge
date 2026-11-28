@@ -9,3 +9,5 @@ Horribly Awry | text=Devoid (This card has no color.)\nCounter target creature s
 Maximize Altitude | type=Flash Sorcery
 Maximize Altitude | text=Target creature gets +1/+2 and gains flying this turn.\nJump-start (You may cast this from your graveyard by discarding a card in addition to paying its other costs. Then exile this.)
 Memorys Journey | text=Target player shuffles up to four target cards from their graveyard into their library.\nFlashback G (You may cast this from your graveyard for its flashback cost. Then exile it.)
+Sightless Ghoul | cost=2B
+Sightless Ghoul | pt=3/1

@@ -1,7 +1,7 @@
 Name:Sightless Ghoul
-ManaCost:1 B
+ManaCost:2 B
 Types:Creature Zombie Soldier
-PT:2/1
+PT:3/1
 S:Mode$ CantBlock | ValidCard$ Card.Self | Description$ CARDNAME can't block.
 K:Undying
 Oracle:This can't block.\nUndying (When this dies, if it had no +1/+1 counters, return it to play under its owner's control with a +1/+1 counter.)

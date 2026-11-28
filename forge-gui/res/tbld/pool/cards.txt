@@ -18030,9 +18030,9 @@ color=B
 tags=ELDRAZI
 
 [Sightless Ghoul]
-cost=1B
+cost=2B
 type=Creature - Zombie Soldier
-pt=2/1
+pt=3/1
 text=This can't block.\nUndying (When this dies, if it had no +1/+1 counters, return it to play under its owner's control with a +1/+1 counter.)
 rarity=Uncommon
 color=B

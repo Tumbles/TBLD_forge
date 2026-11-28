@@ -611,13 +611,30 @@ public class TbldBlackCards3Test extends TbldCardTest {
 
     @Test
     public void sightlessGhoul() {
+        // Its picture is {2}{B}, 3/1; the XML said {1}{B}, 2/1 until 2026-11-28 and a cast with two lands went through
+        newGame();
+        swamps(2);
+        final Card cast = hand("Sightless Ghoul", me);
+        AssertJUnit.assertEquals("costs three", 3, cast.getManaCost().getCMC());
+        final SpellAbility spell = cast.getFirstSpellAbility();
+        spell.setActivatingPlayer(me);
+        AssertJUnit.assertFalse("two lands can't pay for it", forge.ai.ComputerUtilMana.canPayManaCost(spell, me, 0, false));
+        AssertJUnit.assertFalse("and it isn't cast", forge.ai.ComputerUtil.handlePlayingSpellAbility(me, spell, null));
+        AssertJUnit.assertTrue("still in hand", in(cast, ZoneType.Hand));
+        swamps(1);
+        cast(cast);
+        AssertJUnit.assertTrue("cast with three lands", in(cast, ZoneType.Battlefield));
+        AssertJUnit.assertEquals("all three tapped", 3, me.getLandsInPlay().stream().filter(Card::isTapped).count());
+        AssertJUnit.assertEquals(3, current(cast).getNetPower());
+        AssertJUnit.assertEquals(1, current(cast).getNetToughness());
+
         newGame();
         final Card ghoul = creature("Sightless Ghoul", me);
         AssertJUnit.assertFalse(canBlock(ghoul));
         kill(ghoul);
         AssertJUnit.assertTrue("undying", in(ghoul, ZoneType.Battlefield));
         AssertJUnit.assertEquals(1, p1p1(current(ghoul)));
-        AssertJUnit.assertEquals(3, current(ghoul).getNetPower());
+        AssertJUnit.assertEquals(4, current(ghoul).getNetPower());
     }
 
     @Test
