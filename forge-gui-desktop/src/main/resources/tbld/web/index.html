@@ -348,6 +348,18 @@
   .popup .order-btns { position: absolute; left: 50%; bottom: -26px; transform: translateX(-50%); display: flex; gap: 4px; z-index: 6; }
   .popup .order-btns button { padding: 1px 8px; font-size: 12px; border-radius: 6px; border: 1px solid #4a5163; background: var(--panel2); cursor: pointer; }
   .popup .ends { display: flex; justify-content: space-between; color: var(--muted); font-size: 12px; padding: 0 4px; }
+  /* Ordering simultaneous abilities: one row, left to right in the order they resolve; the tiles are dragged */
+  .popup .sa-row { position: relative; display: flex; flex-wrap: nowrap; gap: 14px; overflow-x: auto; padding: 18px 4px 10px; }
+  .popup .sa-tile { position: relative; flex: 0 0 220px; display: flex; flex-direction: column; gap: 5px; padding: 10px 12px; border-radius: 10px;
+    border: 1px dashed rgba(170, 140, 255, .6); background: linear-gradient(135deg, rgba(150, 110, 255, .16), rgba(150, 110, 255, .04)); }
+  .popup .sa-tile .sa-rank { font-size: 13px; font-weight: 800; color: var(--gold); }
+  .popup .sa-tile .sa-sub { font-size: 11.5px; color: var(--muted); margin-top: -3px; }
+  .popup .sa-tile .sa-text { flex: 1; font-size: 13px; line-height: 1.4; margin-top: 3px; }
+  .popup .sa-tile .order-btns { position: static; transform: none; justify-content: center; margin-top: 6px; }
+  .popup .draggable { cursor: grab; user-select: none; -webkit-user-select: none; touch-action: none; }
+  .popup .draggable.dragging { transition: none; cursor: grabbing; z-index: 8; box-shadow: 0 12px 30px rgba(0, 0, 0, .75); border-style: solid; border-color: var(--gold); }
+  .popup .pile-box .choices { position: relative; }
+  .popup .drop-mark { position: absolute; width: 4px; border-radius: 2px; background: var(--gold); box-shadow: 0 0 10px var(--gold); pointer-events: none; z-index: 7; }
   .popup input[type=text], .popup input[type=number] { font: inherit; padding: 8px; border-radius: 8px; border: 1px solid var(--line);
     background: #10131a; color: var(--text); min-width: 260px; }
 </style>
@@ -1269,6 +1281,61 @@ const isCardRef = o => o && typeof o === "object" && o.card !== undefined;
 const asCard = o => ({ ...o, id: o.card });
 
 /**
+ * Lets the player drag {@code n}, the item at place {@code pos} of an ordered row (or wrapped rows) of
+ * siblings, to another place: it follows the pointer, a gold bar shows where it will land, and on release
+ * {@code move(pos, newPos)} is called. A plain click is left alone.
+ */
+function dragToReorder(n, pos, move) {
+  n.classList.add("draggable");
+  n.addEventListener("dragstart", e => e.preventDefault());
+  n.addEventListener("pointerdown", e => {
+    if (e.button !== 0 || e.target.closest(".order-btns")) return;
+    const row = n.parentElement;
+    const startX = e.clientX, startY = e.clientY;
+    let dragging = false, target = pos, mark = null;
+    // Where the dragged item would land: the number of the other items that come before its centre
+    const place = () => {
+      const r = n.getBoundingClientRect(), cx = r.left + r.width / 2, cy = r.top + r.height / 2;
+      const others = [...row.children].filter(c => c !== n && !c.classList.contains("drop-mark"));
+      const rects = others.map(c => c.getBoundingClientRect());
+      target = rects.filter(o => o.bottom <= cy || (o.top <= cy && o.left + o.width / 2 < cx)).length;
+      if (!others.length) return;
+      const before = target < others.length, at = rects[before ? target : target - 1];
+      const box = row.getBoundingClientRect();
+      mark.style.left = (before ? at.left - 9 : at.right + 5) - box.left + row.scrollLeft + "px";
+      mark.style.top = at.top - box.top + row.scrollTop + "px";
+      mark.style.height = at.height + "px";
+    };
+    n.onpointermove = ev => {
+      const dx = ev.clientX - startX, dy = ev.clientY - startY;
+      if (!dragging) {
+        if (Math.hypot(dx, dy) < 5) return;
+        dragging = true;
+        n.setPointerCapture(ev.pointerId);
+        n.classList.add("dragging");
+        mark = el("div", "drop-mark");
+        row.append(mark);
+        hidePreview();
+      }
+      n.style.transform = `translate(${dx}px, ${dy}px)`;
+      place();
+    };
+    const finish = ev => {
+      n.onpointermove = n.onpointerup = n.onpointercancel = null;
+      if (!dragging) return;
+      n.style.transform = "";
+      n.classList.remove("dragging");
+      mark.remove();
+      if (ev.type !== "pointerup") return;
+      // The click that follows a drag must not count as a click on the item
+      n.addEventListener("click", c => { c.stopImmediatePropagation(); c.preventDefault(); }, { capture: true, once: true });
+      move(pos, target);
+    };
+    n.onpointerup = n.onpointercancel = finish;
+  });
+}
+
+/**
  * Shows the question at the head of the queue. Every popup marks its options with "opt" (and
  * "picked" once chosen), sets data-need to how many options must be picked, and marks the button
  * that confirms with "primary".
@@ -1452,8 +1519,13 @@ function showDialog() {
     const all = [...source, ...dest0];
     let left = source.map((_, i) => i);
     let right = dest0.map((_, i) => source.length + i);
-    const pureOrder = remMin === 0 && remMax === 0 && !dest0.length;
-    if (pureOrder) { right = left; left = []; }
+    // Only putting them in order: nothing is left unchosen. This is also the case when everything arrives
+    // already in the destination (reordering abilities whose order was set before).
+    const pureOrder = remMin === 0 && remMax === 0 && (!dest0.length || !source.length);
+    if (pureOrder) { right = [...left, ...right]; left = []; }
+    // Simultaneous abilities: shown as a row, left to right in the order they resolve
+    const abilities = pureOrder && all.length > 0 && all.every(o => o && o.sa !== undefined);
+    const ordinal = k => k + (k % 100 >= 11 && k % 100 <= 13 ? "th" : ["th", "st", "nd", "rd"][k % 10] || "th");
     const total = all.length;
     // How many may stay in the source pile
     const lo = remMin >= 0 ? remMin : 0, hi = remMax >= 0 ? remMax : total;
@@ -1465,14 +1537,30 @@ function showDialog() {
     const column = el("div");
     column.style.flex = "1";
     if (!pureOrder) column.append(el("div", "hint", "Click a card to move it to the other pile."));
+    if (abilities) {
+      column.append(el("div", "hint", "Drag the abilities, or use the arrows, to set the order. They resolve from left to right: " +
+        "the leftmost goes on the stack last, on top, and resolves first; the rightmost goes on the stack first and resolves last."));
+    }
     column.append(wrap);
     body.append(column);
     const need = el("div", "need");
     actions.append(need);
     const confirm = addButton(pureOrder ? "Done" : "Confirm", () => answer(right.slice()), true);
+    // Moves the item at place `from` of the order to place `to`
+    const reorder = (from, to) => { const [x] = right.splice(from, 1); right.splice(to, 0, x); draw(); };
     const node = (i, inDest) => {
       const o = all[i];
-      const n = isCards ? cardEl(asCard(o), null, { noClick: true }) : el("button", "btn", label(o));
+      let n;
+      if (abilities) {
+        const pos = right.indexOf(i), count = right.length;
+        n = el("div", "sa-tile");
+        n.append(el("div", "sa-rank", pos === 0 ? "Resolves first" : pos === count - 1 ? "Resolves last" : "Resolves " + ordinal(pos + 1)));
+        if (pos === 0) n.append(el("div", "sa-sub", "goes on the stack last, on top"));
+        else if (pos === count - 1) n.append(el("div", "sa-sub", "goes on the stack first"));
+        n.append(el("div", "sa-text", label(o)));
+      } else {
+        n = isCards ? cardEl(asCard(o), null, { noClick: true }) : el("button", "btn", label(o));
+      }
       n.dataset.index = i;
       if (!pureOrder) {
         n.classList.add("opt");
@@ -1496,6 +1584,7 @@ function showDialog() {
         const r = el("button", "", "▶"); r.title = "Later"; r.onclick = e => move(1, e);
         btns.append(l, r);
         n.append(btns);
+        dragToReorder(n, pos, reorder);
       }
       return n;
     };
@@ -1511,13 +1600,13 @@ function showDialog() {
         boxes.push(src);
       }
       const dst = el("div", "pile-box dest");
-      dst.append(el("div", "zone-label", caption + " (" + right.length + ")"));
-      if (right.length > 1) {
+      dst.append(el("div", "zone-label", (abilities ? "Order of resolution" : caption) + " (" + right.length + ")"));
+      if (right.length > 1 && !abilities) {
         const ends = el("div", "ends");
         ends.append(el("span", "", "◀ first"), el("span", "", "last ▶"));
         dst.append(ends);
       }
-      const g2 = el("div", "choices");
+      const g2 = el("div", abilities ? "sa-row" : "choices");
       right.forEach(i => g2.append(node(i, true)));
       dst.append(g2);
       boxes.push(dst);

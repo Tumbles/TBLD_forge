@@ -589,6 +589,91 @@ check((await page.locator("#dialog .pile-box.dest .card").evaluateAll(n => n.map
 await page.click("#dialog .primary");
 check(JSON.stringify((await replyFor(4))?.v) === "[1,0,2]", "the order is answered");
 
+// ordering simultaneous abilities: one row, left to right in the order they resolve, dragged into place
+const sas = [
+  { sa: 301, text: "Crackling Cyclops - Whenever you cast a noncreature spell, Crackling Cyclops gets +3/+0 until end of turn." },
+  { sa: 302, text: "Jungleborn Pioneer - When Jungleborn Pioneer enters the battlefield, create a 1/1 Merfolk token." },
+  { sa: 303, text: "Servant of the Conduit - When Servant of the Conduit enters the battlefield, you get EE." }];
+const tileOrder = () => page.locator("#dialog .sa-row .sa-tile").evaluateAll(n => n.map(x => x.dataset.index).join(","));
+const tileBoxes = () => page.locator("#dialog .sa-row .sa-tile").evaluateAll(n => n.map(x => { const r = x.getBoundingClientRect(); return { x: r.x, y: r.y, w: r.width, h: r.height }; }));
+call("order", ["Select order for simultaneous abilities", "Resolve first", 0, 0, sas, [], null, false, true], 11);
+await settle();
+let tiles = await tileBoxes();
+check(tiles.length === 3 && tiles.every((t, i) => Math.abs(t.y - tiles[0].y) < 2 && (i === 0 || t.x > tiles[i - 1].x + tiles[i - 1].w - 1)),
+  "simultaneous abilities are in one row, left to right");
+const rankTexts = () => page.locator("#dialog .sa-tile .sa-rank").allTextContents();
+check(JSON.stringify(await rankTexts()) === JSON.stringify(["Resolves first", "Resolves 2nd", "Resolves last"]), "each ability says when it resolves");
+check((await page.locator("#dialog .sa-tile").first().textContent()).includes("goes on the stack last, on top")
+  && (await page.locator("#dialog .sa-tile").last().textContent()).includes("goes on the stack first"), "the ends say which goes on the stack first and last");
+check((await page.locator("#dialog .hint").textContent()).includes("leftmost goes on the stack last"), "a hint explains the order");
+await page.screenshot({ path: path.join(here, "out/ui-popup-order-abilities.png") });
+// a click changes nothing
+await page.click('#dialog .sa-tile[data-index="1"] .sa-text');
+check(await tileOrder() === "0,1,2", "clicking an ability changes nothing");
+// drag the first ability past the last one
+{
+  const b = tiles[0], last = tiles[2];
+  await page.mouse.move(b.x + b.w / 2, b.y + 14);
+  await page.mouse.down();
+  await page.mouse.move(last.x + last.w / 2 + 30, b.y + 20, { steps: 10 });
+  check(await count("#dialog .sa-tile.dragging") === 1 && await count("#dialog .drop-mark") === 1, "dragging lifts the ability and shows where it will land");
+  const dragged = await page.locator("#dialog .sa-tile.dragging").boundingBox();
+  check(Math.abs(dragged.x - (b.x + (last.x + last.w / 2 + 30 - (b.x + b.w / 2)))) < 3, "the dragged ability follows the pointer");
+  await page.mouse.up();
+  await settle();
+}
+check(await tileOrder() === "1,2,0" && await count("#dialog .drop-mark") === 0, "dropping it after the last ability moves it to the end");
+check(JSON.stringify(await rankTexts()) === JSON.stringify(["Resolves first", "Resolves 2nd", "Resolves last"])
+  && (await page.locator("#dialog .sa-tile").first().getAttribute("data-index")) === "1", "the labels follow the new order");
+// and back to the front, from the right
+tiles = await tileBoxes();
+{
+  const b = tiles[2], first = tiles[0];
+  await page.mouse.move(b.x + b.w / 2, b.y + 14);
+  await page.mouse.down();
+  await page.mouse.move(first.x + 20, b.y + 14, { steps: 10 });
+  await page.mouse.up();
+  await settle();
+}
+check(await tileOrder() === "0,1,2", "dragging the last ability to the front moves it first");
+await page.click('#dialog .sa-tile[data-index="0"] .order-btns button:text-is("▶")');
+check(await tileOrder() === "1,0,2", "the arrows still work");
+await page.click("#dialog .primary");
+check(JSON.stringify((await replyFor(11))?.v) === "[1,0,2]", "the order is answered, first to resolve first");
+
+// the same question when the order was set before: everything arrives in the chosen pile
+call("order", ["Reorder simultaneous abilities", "Resolve first", 0, 0, [], sas, null, false, true], 12);
+await settle();
+tiles = await tileBoxes();
+check(tiles.length === 3 && tiles.every(t => Math.abs(t.y - tiles[0].y) < 2) && await count("#dialog .pile-box:not(.dest)") === 0,
+  "a reorder question is the same row, with nothing to choose");
+{
+  const b = tiles[0], last = tiles[2];
+  await page.mouse.move(b.x + b.w / 2, b.y + 14);
+  await page.mouse.down();
+  await page.mouse.move(last.x + last.w, b.y + 14, { steps: 10 });
+  await page.mouse.up();
+  await settle();
+}
+await page.click("#dialog .primary");
+check(JSON.stringify((await replyFor(12))?.v) === "[1,2,0]", "a reordered row is answered");
+
+// cards in an order question can be dragged too
+call("order", ["Arrange cards to be put on top of your library", "Top of library", 0, 0, three, null, null, false, false], 13);
+await settle();
+{
+  const cards = await page.locator("#dialog .pile-box.dest .card").evaluateAll(n => n.map(x => { const r = x.getBoundingClientRect(); return { x: r.x, y: r.y, w: r.width, h: r.height }; }));
+  const b = cards[2];
+  await page.mouse.move(b.x + b.w / 2, b.y + b.h / 2);
+  await page.mouse.down();
+  await page.mouse.move(cards[0].x + 10, b.y + b.h / 2, { steps: 10 });
+  await page.mouse.up();
+  await settle();
+}
+check((await page.locator("#dialog .pile-box.dest .card").evaluateAll(n => n.map(x => x.dataset.index).join(","))) === "2,0,1", "a card dragged to the front moves first");
+await page.click("#dialog .primary");
+check(JSON.stringify((await replyFor(13))?.v) === "[2,0,1]", "the dragged card order is answered");
+
 // choose exactly two of four (e.g. discard two)
 call("order", ["Choose 2 cards to discard", "Discarded", 2, 2, hand3, null, null, false, false], 5);
 await settle();
