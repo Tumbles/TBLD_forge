@@ -119,11 +119,14 @@ Ghastly Demise
 Ghor-Clan Rampager
 Ghoulraiser
 Gift of Orzhova
+Glare of Subdual
 Glaze Fiend
+Gleam of Battle
 Glint-Sleeve Siphoner
 Gnarled Scarhide
 Gnawing Vermin
 Go Blank
+Goblin Deathraiders
 Goblin Wardriver
 Gonti Night Minister
 Grasp of Darkness
@@ -131,20 +134,36 @@ Grave Scrabbler
 Gray Merchant of Asphodel
 Greenweaver Druid
 Grip of Desolation
+Grove Rumbler
+Hardened Tactician
 Harsh Mentor
 Haunted Dead
 Havoc Demon
+Herald of Kozilek
+Heroic Reinforcements
+High Priest of Penance
+Horned Kavu
 Hound of Griselbrand
 Hunger of the Howlpack
+Hussar Patrol
+Hypersonic Dragon
+Ideas Unbound
 Illness in the Ranks
 Indulgent Aristocrat
+Infernal Tribute
 Infernal Tutor
 Infinite Obliteration
 Ink-Eyes Servant of Oni
 Innocent Blood
 Ironscale Hydra
+Jeskai Ascendancy
+Jeskai Shrinekeeper
 Jungleborn Pioneer
+Knowledge is Power
 Knucklebone Witch
+Kraul Whipcracker
+Lazav Wearer of Faces
+Lightning Helix
 Lilianas Mastery
 Lilianas Steward
 Lord of the Accursed
@@ -152,16 +171,23 @@ Macabre Waltz
 Marauding Blight-Priest
 Mardu Shadowspear
 Markov Dreadknight
+Marrow Chomper
 Massacre Girl
 Masterminds Acquisition
 Megrim
 Memoricide
+Merfolk Mistbinder
 Mob
+Moderation
 Moonglove Winnower
 Moriok Scavenger
+Mortify
 Nim Lasher
+Nivmagus Elemental
 Nullpriest of Oblivion
 Oathsworn Vampire
+Obeka Brute Chronologist
+Ochran Assassin
 Okiba-Gang Shinobi
 Ordeal of Erebos
 Orzhov Enforcer
@@ -177,23 +203,32 @@ Poison the Cup
 Priest of the Blood Rite
 Pulse Tracker
 Putrid Goblin
+Putrid Leech
 Qarsi Sadist
 Queens Agent
 Raiders Spoils
+Rakdos Headliner
 Rancid Rats
 Ransack the Lab
 Ravenous Rats
 Ravens Crime
+Razorfin Hunter
 Reapers Talisman
 Reaping the Graves
 Reaver Drone
+Recoil
 Return Upon the Tide
 Revenge of the Rats
+Riddle Gate Gargoyle
 Rigging Runner
+Righteous Authority
 Rot Hulk
+Rubblebelt Rioters
+Ruination Rioter
 Sacred Wolf
 Salvage Slasher
 Sanctum Seeker
+Scab-Clan Mauler
 Scheming Symmetry
 Scion of the Swarm
 Scrounge
@@ -211,17 +246,26 @@ Silent Skimmer
 Skinrender
 Skirsdag High Priest
 Skulduggery
+Slippery Bogle
 Smallpox
 Smothering Abomination
+Song of the Dryads
 Souldrinker
+Spike Jester
 Spoils of the Vault
+Staggering Insight
 Stand Together
 Stingerfling Spider
+Stitch in Time
 Stroke of Midnight
 Stromkirk Condemned
 Sudden Edict
 Sultai Scavenger
+Sultai Soothsayer
+Swiftblade Vindicator
+Tajic Blade of the Legion
 Tangled Colony
+Terminal Agony
 The Creation of Avacyn
 The Last Ride
 Thriving Rats
@@ -232,14 +276,18 @@ Torment of Scarabs
 Tormented Hero
 Tragic Slip
 Treacherous Pit-Dweller
+Treasury Thrull
 Twist of Fate
 Typhoid Rats
+Tyrants Scorn
 Undead Butler
 Underworld Connections
+Unmake
 Vampire Cutthroat
 Vampire Nighthawk
 Vampire of the Dire Moon
 Vengeful Reaper
+Venomthrope
 Vicious Conquistador
 Vicious Rumors
 Victim of Night
@@ -247,6 +295,7 @@ Vile Manifestation
 Vito Thorn of the Dusk Rose
 Voldaren Epicure
 Volley Veteran
+Vona Butcher of Magan
 Voracious Null
 Voracious Vermin
 Wail of War
@@ -256,3 +305,5 @@ Whisper Blood Liturgist
 Wishclaw Talisman
 Wits End
 Young Wolf
+Zhur-Taa Ancient
+Zhur-Taa Goblin

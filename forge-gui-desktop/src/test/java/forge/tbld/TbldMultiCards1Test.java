@@ -103,7 +103,7 @@ public class TbldMultiCards1Test extends TbldCardTest {
         AssertJUnit.assertEquals(2, current(b).getNetToughness());
         AssertJUnit.assertEquals("investigate", 1, tokens(me).size());
         final Card clue = tokens(me).get(0);
-        AssertJUnit.assertTrue(clue.getName().startsWith("Clue") && clue.isEnchantment());
+        AssertJUnit.assertTrue("a Clue enchantment", clue.isEnchantment() && clue.getType().hasSubtype("Clue"));
     }
 
     @Test

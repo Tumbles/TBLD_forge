@@ -399,6 +399,7 @@ Background
 Cartouche
 Case
 Class
+Clue:Clues
 Curse:Curses
 Plan:Plans
 Role
