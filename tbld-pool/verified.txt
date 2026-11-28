@@ -1,9 +1,59 @@
-# Cards whose abilities an automated in-game test plays (forge.tbld.TbldTestDecksTest.VERIFIED).
-# "java tbld-pool/TbldPool.java verify" counts only these, and cards with no abilities, as implemented.
-# TbldCardPoolTest fails unless this list and the test's list are the same.
+# Cards whose abilities an automated in-game test plays (the VERIFIED lists of the card tests, collected in
+# forge.tbld.TbldVerified). "java tbld-pool/TbldPool.java verify" counts only these, and cards with no
+# abilities, as implemented. TbldCardPoolTest fails unless this list and the tests' lists are the same.
+Aether Snap
+Alms of the Vein
+Ambitions Cost
+Arbiter of Woe
+Army of the Damned
+Bankrupt in Blood
+Bearer of Silence
 Blanchwood Armor
+Blood Fountain
+Blood Pet
+Blood Scrivener
+Bloodcrazed Paladin
+Bloodgift Demon
+Bloodthrone Vampire
+Bone Miser
+Cabal Therapist
+Callous Bloodmage
+Carrion Feeder
+Caustic Crawler
+Caustic Tar
+Cleaving Reaper
+Cling to Dust
 Crackling Cyclops
+Cruel Reality
+Culling Drone
+Daggerdrome Imp
+Dead Drop
+Dead Revels
+Debt to the Kami
 Deeproot Champion
+Defeat
+Defiant Bloodlord
+Despoiler of Souls
+Diabolic Tutor
+Discordant Piper
+Disfigure
+Dispossess
+Divest
+Drakestown Forgotten
+Dread Defiler
+Dread Shade
+Dream Devourer
+Dregscape Zombie
+Drossclaw
+Dutiful Return
+Easy Prey
+Endless Ranks of the Dead
+Entomber Exarch
+Ereboss Intervention
+Eternal Taskmaster
+Ever After
+Evernight Shade
+Execute
 Feed the Clan
 Firebolt
 Galvanic Blast

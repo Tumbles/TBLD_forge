@@ -76,6 +76,16 @@ public class CountersRemoveAllEffect extends SpellAbilityEffect {
                 game.updateLastStateForCard(tgtCard);
             }
         }
+        // TBLD (Aether Snap): ValidPlayers with AllCounterTypes removes every counter from those players too
+        if (sa.hasParam("ValidPlayers") && sa.hasParam("AllCounterTypes")) {
+            for (final Player p : game.getPlayers()) {
+                if (p.isValid(sa.getParam("ValidPlayers"), sa.getActivatingPlayer(), sa.getHostCard(), sa)) {
+                    for (Multiset.Entry<CounterType> e : Lists.newArrayList(p.getCounters().entrySet())) {
+                        numberRemoved += p.subtractCounter(e.getElement(), e.getCount(), sa.getActivatingPlayer());
+                    }
+                }
+            }
+        }
         if (sa.hasParam("RememberAmount")) {
             sa.getHostCard().addRemembered(numberRemoved);
         }

@@ -171,7 +171,7 @@ public class TbldPool {
 
     static void writePool(final Path file, final String what, final Map<String, Entry> pool) throws IOException {
         final StringBuilder b = new StringBuilder();
-        b.append("# TBLD ").append(what).append(", written by \"java tbld-pool/TbldPool.java import\" from Brett's Cockatrice export.\n");
+        b.append("# TBLD ").append(what).append(", written by \"java tbld-pool/TbldPool.java import\" from Brett's Cockatrice card files.\n");
         b.append("# Do not edit: change the cards in Brett's files and import again.\n");
         for (final Entry e : pool.values()) {
             b.append('\n').append('[').append(e.name).append("]\n");

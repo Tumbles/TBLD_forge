@@ -56,7 +56,7 @@ public class TbldCardPoolTest extends AITest {
 
     /**
      * tbld-pool/verified.txt, the cards "TbldPool verify" counts as implemented, lists exactly the
-     * cards whose abilities TbldTestDecksTest plays, and each is a scripted card matching the pool.
+     * cards whose abilities the card tests play (TbldVerified), and each is a scripted card matching the pool.
      */
     @Test
     public void verifiedCardsAreTheOnesTheTestsPlay() throws Exception {
@@ -66,8 +66,9 @@ public class TbldCardPoolTest extends AITest {
                 listed.add(l.trim());
             }
         }
-        AssertJUnit.assertEquals("tbld-pool/verified.txt and TbldTestDecksTest.VERIFIED differ",
-                new java.util.TreeSet<>(TbldTestDecksTest.VERIFIED), new java.util.TreeSet<>(listed));
+        AssertJUnit.assertNull("a card is verified by two tests", TbldVerified.duplicate());
+        AssertJUnit.assertEquals("tbld-pool/verified.txt and the card tests' VERIFIED lists (TbldVerified) differ",
+                TbldVerified.all(), new java.util.TreeSet<>(listed));
         final String java = Paths.get(System.getProperty("java.home"), "bin", "java").toString();
         final Process p = new ProcessBuilder(java, "tbld-pool/TbldPool.java", "verify").directory(root().toFile()).redirectErrorStream(true).start();
         final String out = new String(p.getInputStream().readAllBytes(), StandardCharsets.UTF_8);

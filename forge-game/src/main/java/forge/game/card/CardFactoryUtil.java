@@ -1321,7 +1321,8 @@ public class CardFactoryUtil {
                     + "| Secondary$ True | TriggerZones$ Battlefield | TriggerDescription$ Ingest ("
                     + inst.getReminderText() + ")";
 
-            final String abStr = "DB$ Dig | DigNum$ 1 | ChangeNum$ All | DestinationZone$ Exile | Defined$ TriggeredTarget";
+            // TBLD: ingest exiles the top two cards
+            final String abStr = "DB$ Dig | DigNum$ 2 | ChangeNum$ All | DestinationZone$ Exile | Defined$ TriggeredTarget";
 
             final Trigger trigger = TriggerHandler.parseTrigger(trigStr, card, intrinsic);
 
