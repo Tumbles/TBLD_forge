@@ -19638,7 +19638,7 @@ color=MBGU
 [Summary Dismissal]
 cost=2UU
 type=Flash Sorcery
-text=Exile all other spells and counter all abilities.\nCycling 2 (2, Discard this card: Draw a card.)
+text=Exile all other spells and counter all abilities.
 rarity=Uncommon
 color=U
 tags=COUNTERSPELL
@@ -19750,7 +19750,7 @@ rarity=Common
 color=MGUR
 
 [Surtland Elementalist]
-cost=5U
+cost=4UU
 type=Creature - Giant Elementalist
 pt=8/8
 text=As an additional cost to cast this, reveal a Giant card from your hand or pay 2.\nWhenever this attacks, you may cast a sorcery spell from your hand without paying its mana cost.
@@ -20839,7 +20839,7 @@ tags=ZOMBIE
 [Thought Collapse]
 cost=1UU
 type=Flash Sorcery
-text=Counter target spell. Its controller mills two cards for every spell cast this turn.
+text=Counter target spell. Its controller mills three cards.\nCycling 2 (2, Discard this: Draw a card.)
 rarity=Uncommon
 color=U
 tags=COUNTERSPELL
@@ -21482,9 +21482,9 @@ tags=MERFOLK
 
 [Triton Shorestalker]
 cost=U
-type=Enchantment Creature - Merfolk Rogue
+type=Creature - Merfolk Rogue
 pt=1/1
-text=This can't be blocked.
+text=This can't be blocked.\nCycling 1 (1, Discard this: Draw a card.)
 rarity=Uncommon
 color=U
 tags=MERFOLK
@@ -21586,7 +21586,7 @@ tags=ADDED NEW POKEMON
 [Twiddle]
 cost=U
 type=Flash Sorcery
-text=You may tap or untap target permanent.\nJump-Start (You may cast this from your graveyard by discarding a card in addition to paying its other costs. Then exile this.)
+text=You may tap or untap target artifact, creature, or land.\nJump-Start (You may cast this from your graveyard by discarding a card in addition to paying its other costs. Then exile this.)
 rarity=Uncommon
 color=U
 

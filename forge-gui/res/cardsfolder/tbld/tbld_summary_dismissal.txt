@@ -3,6 +3,5 @@ ManaCost:2 U U
 Types:Flash Sorcery
 A:SP$ ChangeZoneAll | ChangeType$ Card.Other | Origin$ Stack | Destination$ Exile | SubAbility$ DBCounter | SpellDescription$ Exile all other spells and counter all abilities.
 SVar:DBCounter:DB$ Counter | Defined$ ValidStack Activated,Triggered
-K:Cycling:2
 AI:RemoveDeck:All
-Oracle:Exile all other spells and counter all abilities.\nCycling 2 (2, Discard this card: Draw a card.)
+Oracle:Exile all other spells and counter all abilities.

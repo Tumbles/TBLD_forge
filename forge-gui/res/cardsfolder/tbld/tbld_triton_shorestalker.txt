@@ -1,6 +1,7 @@
 Name:Triton Shorestalker
 ManaCost:U
-Types:Enchantment Creature Merfolk Rogue
+Types:Creature Merfolk Rogue
 PT:1/1
 S:Mode$ CantBlockBy | ValidAttacker$ Creature.Self | Description$ CARDNAME can't be blocked.
-Oracle:This can't be blocked.
+K:Cycling:1
+Oracle:This can't be blocked.\nCycling 1 (1, Discard this: Draw a card.)

@@ -4,10 +4,14 @@ Types:Creature Merfolk Wizard
 PT:2/2
 K:Kicker:1 R:1 G
 K:etbCounter:P1P1:X:CheckSVar$ X:CARDNAME enters with two +1/+1 counters on it for each time it was kicked.
-T:Mode$ ChangesZone | Origin$ Any | Destination$ Battlefield | ValidCard$ Card.Self | Execute$ TrigChange | TriggerDescription$ When CARDNAME enters, gain control of target creature with power less than CARDNAME's power for as long as you control CARDNAME.
-SVar:TrigChange:DB$ GainControl | TgtPrompt$ Choose target creature with power less than CARDNAME's power | ValidTgts$ Creature.powerLTY | LoseControl$ LeavesPlay,LoseControl
+T:Mode$ ChangesZone | Origin$ Any | Destination$ Battlefield | ValidCard$ Card.Self | Execute$ TrigChange | TriggerDescription$ When CARDNAME enters, gain control of target creature with power less than CARDNAME's power for as long as you control a Merfolk Wizard.
+SVar:TrigChange:DB$ Effect | ValidTgts$ Creature.powerLTY | TgtPrompt$ Choose target creature with power less than CARDNAME's power | RememberObjects$ Targeted | ForgetOnMoved$ Battlefield | Triggers$ ExileMe | StaticAbilities$ GainControl | Duration$ Permanent
+SVar:GainControl:Mode$ Continuous | Affected$ Card.IsRemembered | GainControl$ You | Description$ You gain control of that creature for as long as you control a Merfolk Wizard.
+SVar:ExileMe:Mode$ Always | Static$ True | Execute$ ExileEffect | CheckSVar$ W | SVarCompare$ EQ0
+SVar:ExileEffect:DB$ ChangeZone | Defined$ Self | Origin$ Command | Destination$ Exile
 SVar:X:Count$TimesKicked/Twice
 SVar:Y:TriggeredCard$CardPower
+SVar:W:Count$Valid Creature.Merfolk+Wizard+YouCtrl
 DeckHints:Color$Red|Green
 DeckHas:Ability$Counters
 Oracle:Kicker 1R and/or 1G\nThis enters with two +1/+1 counters on it for each time it was kicked.\nWhen this enters, gain control of target creature with power less than this creature’s power for as long as you control a Merfolk Wizard.

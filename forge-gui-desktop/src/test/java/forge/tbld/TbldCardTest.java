@@ -55,6 +55,8 @@ public abstract class TbldCardTest extends AITest {
         public String cardName;
         /** The number chosen for "choose a number", and for how often a keyword cost is paid (replicate, multikicker). */
         public Integer number;
+        /** The X paid for a spell cast by an effect (madness), instead of the AI's choice. */
+        public Integer xValue;
         /** Whether the player pays an "unless" cost (ward, "counter unless", "do this unless"); null for the AI's choice. */
         public Boolean payUnless;
         /** The creatures that attack (the opponent), declared in place of the AI's attack; none unless set, null for the AI's. */
@@ -259,6 +261,9 @@ public abstract class TbldCardTest extends AITest {
             }
             if (!choices.confirm) {
                 return false;
+            }
+            if (choices.xValue != null) {
+                tgtSA.setXManaCostPaid(choices.xValue);
             }
             if (choices.targets != null) {
                 setTargets(tgtSA, choices.targets);
