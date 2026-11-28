@@ -53,8 +53,10 @@ public abstract class TbldCardTest extends AITest {
         public Predicate<GameEntity> prefer;
         /** The card name chosen for "choose a card name". */
         public String cardName;
-        /** The number chosen for "choose a number". */
+        /** The number chosen for "choose a number", and for how often a keyword cost is paid (replicate, multikicker). */
         public Integer number;
+        /** Whether the player pays an "unless" cost (ward, "counter unless", "do this unless"); null for the AI's choice. */
+        public Boolean payUnless;
         /** The creatures that attack (the opponent), declared in place of the AI's attack; none unless set, null for the AI's. */
         public List<Card> attackers = List.of();
         /** Blocks, blocker to attacker, declared in place of the AI's blocks; none unless set, null for the AI's. */
@@ -127,6 +129,24 @@ public abstract class TbldCardTest extends AITest {
         @Override
         public int chooseNumber(final SpellAbility sa, final String title, final int min, final int max, final Map<String, Object> params) {
             return choices.number != null ? choices.number : super.chooseNumber(sa, title, min, max, params);
+        }
+
+        @Override
+        public int chooseNumberForKeywordCost(final SpellAbility sa, final forge.game.cost.Cost cost,
+                final forge.game.keyword.KeywordInterface keyword, final String prompt, final int max) {
+            return choices.number != null ? Math.min(choices.number, max) : super.chooseNumberForKeywordCost(sa, cost, keyword, prompt, max);
+        }
+
+        @Override
+        public boolean payCostToPreventEffect(final forge.game.cost.Cost cost, final SpellAbility sa, final boolean alreadyPaid,
+                final FCollectionView<Player> allPayers) {
+            if (choices.payUnless == null) {
+                return super.payCostToPreventEffect(cost, sa, alreadyPaid, allPayers);
+            }
+            if (!choices.payUnless || !forge.ai.ComputerUtilCost.canPayCost(cost, sa, player, true)) {
+                return false;
+            }
+            return new forge.game.cost.CostPayment(cost, sa).payComputerCosts(new forge.ai.AiCostDecision(player, sa, true));
         }
 
         private <T extends GameEntity> List<T> pick(final Iterable<T> options, final int min, final int max) {
@@ -347,6 +367,7 @@ public abstract class TbldCardTest extends AITest {
     protected Card enter(final String name, final Player p) {
         final Card c = addCardToZone(name, p, ZoneType.Hand);
         final Card inPlay = game.getAction().moveToPlay(c, null, null);
+        game.copyLastState(); // so leaving play later is seen (dies triggers use the last known state)
         resolve();
         return inPlay;
     }
