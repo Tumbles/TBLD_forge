@@ -462,6 +462,9 @@ n = received.length;
 await page.click("#yield-label");
 check(!!(await waitFor(() => received.slice(n).find(m => m.t === "act" && m.m === "yieldAll" && m.id === 1), "yield all on")), "switching Yield all on tells the game");
 await page.locator("#settings").screenshot({ path: path.join(here, "out/ui-settings.png") });
+check(await count("#settings #deck") === 0 && (await count("#settings #restart")) === 0 && (await count("#playtest #deck")) === 1 && (await count("#playtest #restart")) === 1,
+  "the deck picker and Restart are in their own playtest panel, apart from the settings");
+check(await page.locator("#playtest").evaluate(e => e.scrollWidth <= e.clientWidth + 1), "the playtest panel fits the side panel");
 send({ t: "state", state: makeState() });
 await settle();
 

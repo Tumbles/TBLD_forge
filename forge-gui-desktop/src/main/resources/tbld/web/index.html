@@ -254,6 +254,14 @@
   /* Lines from each blocker to the attacker it blocks */
   #arrows path.block { stroke: var(--block); stroke-width: 3; filter: drop-shadow(0 0 4px rgba(108, 182, 255, .8)); }
   #arrows circle.block { fill: var(--block); stroke: #07121e; stroke-width: 1.5; filter: drop-shadow(0 0 4px rgba(108, 182, 255, .8)); }
+  #playtest { flex: none; display: flex; flex-direction: column; gap: 6px; font-size: 12px; color: var(--muted); padding: 8px 12px;
+    border: 1px dashed #6b5a2e; background: rgba(242, 193, 78, .04); }
+  #playtest .pt-head { font-size: 10px; text-transform: uppercase; letter-spacing: .08em; color: #b59a52; }
+  #playtest .set-row { display: flex; align-items: center; justify-content: space-between; gap: 10px; min-width: 0; }
+  #playtest label { cursor: pointer; display: flex; align-items: center; gap: 6px; white-space: nowrap; min-width: 0; flex: 1; }
+  #playtest select { flex: 1; min-width: 0; font: inherit; color: var(--text); background: var(--panel2); border: 1px solid var(--line);
+    border-radius: 6px; padding: 3px 4px; cursor: pointer; }
+  #playtest .btn { padding: 4px 12px; font-size: 12px; }
   #settings { flex: none; display: flex; flex-direction: column; gap: 8px; font-size: 12px; color: var(--muted); }
   #settings .set-row { display: flex; align-items: center; justify-content: space-between; gap: 10px; min-width: 0; }
   #settings label { cursor: pointer; display: flex; align-items: center; gap: 6px; white-space: nowrap; min-width: 0; }
@@ -382,10 +390,6 @@
     </div>
     <div class="panel" id="settings">
       <div class="set-row">
-        <label id="deck-label" title="The deck this seat plays. Choosing another one starts a new game.">Deck
-          <select id="deck"></select></label>
-      </div>
-      <div class="set-row">
         <label id="autopass-label" title="Pass priority automatically. Off: no auto-pass. If only mana abilities: pass when you could only tap for mana. If no actions: pass only when you couldn't even tap for mana.">Auto-pass
           <select id="autopass">
             <option value="off">Off</option>
@@ -398,9 +402,16 @@
       <div class="set-row">
         <label class="switch" id="hold-label" title="Keep priority after you cast a spell or activate an ability. Off: priority passes to your opponent.">
           <input type="checkbox" id="holdpriority"> Hold priority</label>
-        <button class="btn" id="restart">Restart</button>
       </div>
       <div class="set-row" id="yields"></div>
+    </div>
+    <div class="panel" id="playtest" title="Temporary controls for playtesting; not part of the finished client">
+      <div class="pt-head">Playtest only</div>
+      <div class="set-row">
+        <label id="deck-label" title="The deck this seat plays. Choosing another one starts a new game.">Deck
+          <select id="deck"></select></label>
+        <button class="btn" id="restart">Restart</button>
+      </div>
     </div>
   </aside>
 </div>
